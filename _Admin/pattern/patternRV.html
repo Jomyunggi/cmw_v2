@@ -1,0 +1,287 @@
+<?php
+	ini_set('include_path', realpath(dirname(__FILE__) ."/../../_Common"));
+
+	@include_once "Inc/inc.include.php";
+	@include_once "Inc/inc.adm.header.php";
+	
+	@include_once COMMON_CLASS . "/class.account.php";
+	$M_ACCOUNT = new M_ACCOUNT;
+
+	@include_once COMMON_CLASS . "/class.pattern.php";
+	$M_PATTERN = new M_PATTERN;
+
+	$m_id = $M_FUNC->M_Filter(GET, "m_id");
+	$pattern = $M_FUNC->M_Filter(GET, "pattern");
+	
+	$addWhere = "";
+	if($pattern == ""){
+		$pattern = 1;	
+	}
+	$addWhere = " AND pattern = " . $pattern;
+
+	$db_pattern					= new M_DB("PATTERN");
+	$companyRow = $M_ACCOUNT->getCompanyInfoByIdx($m_id);
+	$companyIdx = $companyRow->get("idx");
+	$companyName = $companyRow->get("companyName");
+	
+	$patternRow = $M_PATTERN->getPatternInfoByIdx($M_PATTERN->companyTable[$companyIdx],$addWhere);
+	$patternGrape = $patternRow->toArray();
+	for($i=0; $i<count($patternGrape); $i++){
+		$maxValue = max($maxValue, $patternGrape[$i]['Tx']);
+	}
+	$maxValue = $maxValue + 20;
+
+	if($patternRow->size() == 0){
+		$P_ACTION = "R";
+	} else {
+		$P_ACTION = "V";
+	}
+
+	$pattern_arr = $M_PATTERN->pattern_arr;
+	$hour_Arr = $M_PATTERN->hour_Arr;
+	$minType_Arr = $M_PATTERN->minType_Arr;
+	$min_Arr = $M_PATTERN->min_Arr;
+?>
+<style type="text/css">
+.scroll {
+ margin-left: 0px;
+ margin-top: 0px;
+ margin-right: 0px;
+ margin-bottom: 0px;
+ overflow-y: auto;
+ overflow-x: hidden;
+ height:550px;
+}
+</style>
+<script type="text/javascript" src="<?php	echo JS_DIR;	?>/fusioncharts-suite-xt/js/fusioncharts.js"></script>
+<script type="text/javascript" src="<?php	echo JS_DIR;	?>/fusioncharts-suite-xt/js/themes/fusioncharts.theme.fint.js?cacheBust=56"></script>
+<script>
+function networkChart_cpuAndNetwork(data){
+	var opt = {
+		type: 'zoomline',
+		renderAt: 'chart-container_cpu',
+		width: '500',
+		height: '300',
+		dataFormat: 'json',
+		dataSource: {
+			"chart": {
+				"caption": "",
+				"subCaption": "",
+				"xAxisName": "", //시간
+				"yAxisName": "MB",
+				"theme": "fint",
+				"labelStep": "5",
+				"labelDisplay" : 'WRAP',
+				"showValues":"0",
+				"tooltip" : "true",
+				"yAxisMinValue" : "0",
+				"yAxisMaxValue" : "<?php echo $maxValue;?>"
+			},
+		"categories": [{
+            "category": [
+					
+			]
+        }],
+         "dataset": [{
+            "seriesname": "In",
+			"color" : "1aaf5d",
+            "data": [	]
+		},
+		{
+            "seriesname": "Out",
+			"color" : "0075c2",
+            "data": [	]
+		}]	
+		}
+	};	
+	
+	for(var i=0; i<data.length; i++){
+		tx_max = {"value" : data[i]['Tx']};		
+		rx_max = {"value" : data[i]['Rx']};		
+		opt.dataSource.dataset[0].data.push(tx_max);
+		opt.dataSource.dataset[1].data.push(rx_max);
+
+		labal = { 'label' : data[i]['hour'] };
+		opt.dataSource.categories[0].category.push(labal);
+	}
+
+	var fusioncharts = new FusionCharts(opt);
+	fusioncharts.render();
+}
+
+function patternClick(obj){
+	pRadioValue = obj.value;
+	m_id = "<?php echo $m_id; ?>";
+	var url = "patternRV.html?m_id="+m_id+"&pattern="+pRadioValue;
+	
+	location.href = url;
+
+}
+</script>
+<div class="container">
+	<div id="chart-container_cpu" style="width:350px;"></div>
+
+	<div class="contents-wrapper">
+		<h2 class="page-header">고객사 : <?php echo $companyName;?></h2>
+	</div>
+
+	<!-- 회원등록  -->
+	<form name="frm_join" method="post" action="patternProc.php" onsubmit="" enctype="multipart/form-data">
+		<div class="scroll">
+			<div class="contents-wrapper">
+				<input type="hidden" id="table" name="table" value="<?php echo $table;	?>">
+				<input type="hidden" id="p_act" name="p_act" value="<?php echo $P_ACTION; ?>">
+				<fieldset>
+					<legend>고객사등록</legend>
+					<div class="panel panel-default">
+						<table class="table table-bordered">
+							<colgroup>
+								<col width="10%">
+								<col width="15%">
+								<col width="15%">
+								<col width="25%">
+								<col width="25%">
+							</colgroup>
+							<tbody class="dddd">
+								<tr>
+									<th>고객사명</th>
+									<td colspan="5">
+										<div class="col-xs-6"><?php echo $companyName;?></div>
+									</td>
+								</tr>
+								<tr>
+									<th>패턴</th>
+									<td colspan="5">
+										<div class="col-xs-6">
+										<?php	echo $M_HTML->input_Radio2("pattern", $pattern_arr, $pattern, 'style="vertical-align:middle; margin:0 4px 0 4px;" onclick="patternClick(this)"', '');	?>
+										</div>
+									</td>
+								</tr>
+								<?php if($P_ACTION == "R"){ ?>
+										<tr class="patternView"style="text-align:center;">
+											<th rowspan="145">시간</th>
+											<td>시</td>
+											<td>분</td>
+											<td>TX</td>
+											<td>RX</td>
+										</tr>
+									<?php 
+										for($i=0;$i<count($hour_Arr);$i++){ 
+											for($j=0;$j<count($minType_Arr);$j++){	
+									?>
+										<tr class="patternView"style="text-align:center;">	
+											<td style="text-align:center;">
+												<div class="col-xs-5">
+												<?php 
+													echo $M_HTML->input_Hidden("hour[]", $hour_Arr[$i]);
+													echo $hour_Arr[$i]."시";
+												?>
+												</div>
+											</td>
+
+											<td style="text-align:center;">
+												<div class="col-xs-7">
+												<?php 
+													echo $M_HTML->input_Hidden("minType[]", $minType_Arr[$j]); 
+													
+													switch($minType_Arr[$j]){
+														case 1 : $min = "0분 ~ 10분"; break;
+														case 2 : $min = "10분 ~ 20분"; break;
+														case 3 : $min = "20분 ~ 30분"; break;
+														case 4 : $min = "30분 ~ 40분"; break;
+														case 5 : $min = "40분 ~ 50분"; break;
+														case 6 : $min = "50분 ~ 60분"; break;
+													}
+													echo $min;
+												?>
+												</div>
+											</td>
+											<td>
+												<div class="col-xs-9">
+													<?php echo $M_HTML->input_Text2("Tx[]", '', "form-control", "", "placeholder='tx입력'"); ?>
+												</div>
+											</td>
+											<td>
+												<div class="col-xs-9">
+													<?php echo $M_HTML->input_Text2("Rx[]", '', "form-control", "", "placeholder='rx입력'"); ?>
+												</div>
+											</td>
+										</tr>
+									<?php 
+											}
+										}
+									} else { 
+									?>
+									<tr class="patternView"style="text-align:center;">
+										<th rowspan="145">시간</th>
+										<td>시</td>
+										<td>분</td>
+										<td>TX</td>
+										<td>RX</td>
+									</tr>
+									<?php 
+											for($i=0; $i<$patternRow->size(); $i++){
+												$patternRow->next();
+									?>
+									<tr class="patternView"style="text-align:center;">	
+										<td style="text-align:center;">
+											<div class="col-xs-5">
+											<?php 
+												echo $M_HTML->input_Hidden("idx[]", $patternRow->get('idx'));
+												echo $M_HTML->input_Hidden("hour[]", $patternRow->get('hour'));
+												echo $patternRow->get('hour')."시";
+											?>
+											</div>
+										</td>
+
+										<td style="text-align:center;">
+											<div class="col-xs-7">
+											<?php 
+												echo $M_HTML->input_Hidden("minType[]", $patternRow->get('minType'));
+												switch($patternRow->get('minType')){
+													case 1 : $min = "0분 ~ 10분"; break;
+													case 2 : $min = "10분 ~ 20분"; break;
+													case 3 : $min = "20분 ~ 30분"; break;
+													case 4 : $min = "30분 ~ 40분"; break;
+													case 5 : $min = "40분 ~ 50분"; break;
+													case 6 : $min = "50분 ~ 60분"; break;
+												}
+												echo $min;
+											?>
+											</div>
+										</td>
+										<td>
+											<div class="col-xs-9">
+												<?php echo $M_HTML->input_Text2("Tx[]", $patternRow->get("Tx"), "form-control", "", "placeholder='tx입력'"); ?>
+											</div>
+										</td>
+										<td>
+											<div class="col-xs-9">
+												<?php echo $M_HTML->input_Text2("Rx[]", $patternRow->get("Rx"), "form-control", "", "placeholder='rx입력'"); ?>
+											</div>
+										</td>
+									</tr>
+								<?php 
+										}
+									}
+								?>
+							</tbody>
+						</table>
+					</div><!--/* panel -->
+				</fieldset>
+			</div><!--/* contents-wrapper -->
+		</div>
+	
+		<div class="text-center" style="margin-top:30px;">
+			<button type="submit" class="btn btn-sm btn-success" onclick="javascript:doMemberJoin(); return false;">저장</button>
+		</div>
+	</form>
+	<h3>&nbsp;</h3>
+	<!--/* 회원등록 끝 -->
+
+</div><!-- container -->
+<?php if($P_ACTION == "V"){	?>
+<script>
+networkChart_cpuAndNetwork(<?php echo json_encode($patternGrape); ?>);
+</script>
+<?php }	?>

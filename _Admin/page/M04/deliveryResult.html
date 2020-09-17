@@ -1,0 +1,203 @@
+<script type="text/javascript" src="<?php	echo JS_DIR;	?>/adm_common.js"></script>
+
+<script>
+	$(document).ready(function(){
+		
+	});
+
+	function searchSubmit(){
+		var frm = document.search_frm;
+		frm.submit();
+	}
+
+	function searching(){
+		window.location.href="/?M0404&searchYear="+$('#searchYear').val()+"&searchMonth="+$('#searchMonth').val();
+	}
+
+	function viewPage(date){
+		var tmp = "";
+		var html = "";
+		var ajax_url = "/page/ajax/M04/ajax.deliveryByDay.php";
+		var ajax_data = {
+			'date'	: date
+		}
+
+		$.ajax({
+			url : ajax_url,
+			data : ajax_data,
+			type : 'POST',
+			dataType : 'json',
+			contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+			success : function(response){
+				$(".Front_detailPage").show();
+
+				if(response){
+					var len = Object.keys(response).length;
+					if(len > 0){
+						$.each(response, function(no, entry){
+							tmp = '<tr>'
+									+'<td>'+entry['num']+'</td>'
+									+'<td>'+entry['companyName']+'</td>'
+									+'<td>'+entry['recipient']+'</td>'
+									+'<td>'+entry['boxCnt']+'</td>'
+									+'<td>'+entry['totalP']+'</td>'
+									+'<td>'+entry['price']+'</td>'
+									+'<td>'+entry['exceptP']+'</td>'
+									+'<td style="text-align:left; padding-left:10px;">'+entry['dealName']+'</td>'
+								+'</tr>';
+							html = html + tmp;
+						});
+					} else {
+						html += '<tr><td colspan="7">상세내역이 없습니다.</td></tr>';	
+					}
+					$('#detailPage').html(html);
+				}
+			},
+			failure: function(msg) {
+				$(".Front_detailPage").show();
+				alert(msg);
+			}
+		});
+	}
+</script>
+<div class="container">
+	<div class="contents-wrapper">
+		<h2 class="page-header">집하실적 현황</h2>
+	</div>
+
+	<!--/* 검색 월 배송 집하실적 시작 ---------------------------------------------------------------------------------------------------------------------->
+	<div class="contents-wrapper" style='float:left; width:40%;'>
+		<div class="panel panel-default">
+			<div class="panel-heading text-center">
+				<?php 
+					echo $M_HTML->b_Form("search_frm", "", "get", 1);
+					echo $M_HTML->input_Hidden($MENU_ID.$P_ACTION, "");
+				?>
+				<div class="form-inline">
+					<div style="text-align:center;">
+						<div class="form-group">
+							<?php	echo $M_HTML->_Select2("searchYear", $this->searchYear, $searchYear, "form-control");	?>
+							<?php	echo $M_HTML->_Select2("searchMonth", $this->searchMonth, $searchMonth, "form-control", "");	//"onchange='searching()'"	?>
+							<a href="javascript:searchSubmit();" class="btn btn-sm btn-default" role="button" style="padding:7px 15px;">검색</a>
+						</div>
+					</div>
+				</div>
+				<?php
+					echo $M_HTML->e_Form();
+				?>
+			</div>
+			<table class="table table-bordered table-hover">
+				<colgroup>
+					<col width="5%">
+					<col width="18%">
+					<col width="13%">
+					<col width="14%">
+					<col width="18%">
+					<col width="18%">
+					<col width="14%">
+				</colgroup>
+				<thead>
+					<tr>
+						<th style="padding:10px;">#</th>
+						<th style="padding:10px;">집하일자</th>
+						<th style="padding:10px;">건수</th>
+						<th style="padding:10px;">박스수량</th>
+						<th style="padding:10px;">금액</th>
+						<th style="padding:10px;">기본운임</th>
+						<th style="padding:10px;">기타운임</th>
+					</tr>
+				</thead>
+
+				<tbody>
+			<?php
+				if(count($deliveryRow) > 0){
+					$NO = 1;
+					foreach($deliveryRow as $key => $value){
+
+						$price = $value['S'] * 2500 + $value['M'] * 3000 + $value['L'] * 3500;
+						$exceptP = $value['except'] * 3000;
+						$totalP = $price + $value['except'] * 3000;
+
+						//최하단 총합계 데이터
+						$totalCnt += $value['cnt'];
+						$totalSum += $totalP;
+						$totalPrice += $price;
+						$totalExcept += $exceptP;
+						
+			?>
+					<tr data-href="javascript:viewPage('<?php echo $key;?>');" class="text-center_memberList" style="text-align:center;" >
+						<td><?php echo $NO;	?></td>		
+						<td><?php echo date('Y-m-d',strtotime($key));	?></td>		
+						<td style="text-align:right; padding-right:10px;"><?php echo $value['cnt'];	?>개</td>
+						<td style="text-align:right; padding-right:10px;"><?php echo $value['cnt'];	?>개</td>
+						<td style="text-align:right; padding-right:10px;"><?php echo number_format($totalP);	?>원</td>	
+						<td style="text-align:right; padding-right:10px;"><?php echo number_format($price);	?>원</td>	
+						<td style="text-align:right; padding-right:10px;"><?php echo number_format($exceptP);	?>원</td>
+					</tr>
+			<?php	
+						$NO++;
+					}
+			?>
+					<tr>
+						<th colspan='2' style="padding-left:10px;">합 계</th>		
+						<th style="text-align:right; padding-right:10px;"><?php echo number_format($totalCnt);	?>개</th>	
+						<th style="text-align:right; padding-right:10px;"><?php echo number_format($totalCnt);	?>개</th>	
+						<th style="text-align:right; padding-right:10px;"><?php echo number_format($totalSum);	?>원</th>	
+						<th style="text-align:right; padding-right:10px;"><?php echo number_format($totalPrice);	?>원</th>	
+						<th style="text-align:right; padding-right:10px;"><?php echo number_format($totalExcept);	?>원</th>	
+					</tr>
+			<?php
+				} else {
+			?>
+					<tr style="text-align:center;">
+						<td colspan="5"><?php echo $searchYear."년 ".$searchMonth."월에 대한 판매가 없습니다."; ?></td>
+					</tr>
+			<?php	
+				}
+			?>
+				</tbody>
+			</table>
+		</div><!--/* panel -->
+	</div><!--/* contents-wrapper 1-->
+	<!--/* 검색 월 배송 집하실적 끝  ---------------------------------------------------------------------------------------------------------------------->
+
+	<!--/* 집하실적 일별 선택시 오른쪽 Ajax로 뷰페이지 시작  --------------------------------------------------------------------------------------------------------------------->
+	<div class="contents-wrapper Front_detailPage" style='display:none; float:left; width:60%;'>
+		<div class="panel panel-default">
+			<div class="panel-heading text-center" style="padding:10px 10px;">
+				운송장 상세내역				
+			</div>
+			<table class="table table-bordered table-hover">
+				<colgroup>
+					<col width="4%">
+					<col width="10%">
+					<col width="15%">
+					<col width="10%">
+					<col width="10%">
+					<col width="10%">
+					<col width="10%">
+					<col width="*">
+				</colgroup>
+				<thead>
+					<tr>
+						<th style="background-color:#BDBDBD; padding:2px;">#</th>
+						<th style="background-color:#BDBDBD; padding:2px;">사이트명</th>
+						<th style="background-color:#BDBDBD; padding:2px;">수취인</th>
+						<th style="background-color:#BDBDBD; padding:2px;">박스수량</th>
+						<th style="background-color:#BDBDBD; padding:2px;">운임합계</th>
+						<th style="background-color:#BDBDBD; padding:2px;">기본운임</th>
+						<th style="background-color:#BDBDBD; padding:2px;">기타운임합계</th>
+						<th style="background-color:#BDBDBD; padding:2px;">상품명</th>
+					</tr>
+				</thead>
+				<tbody id="detailPage" style="text-align:center;">
+			
+				</tbody>
+			</table>
+		</div><!--/* panel -->
+	</div><!-- contents-wrapper2 -->
+	<!--/* 집하실적 일별 선택시 오른쪽 Ajax로 뷰페이지 끝  --------------------------------------------------------------------------------------------------------------------->
+
+</div><!-- container -->
+
+<div style="clear:both;"></div>

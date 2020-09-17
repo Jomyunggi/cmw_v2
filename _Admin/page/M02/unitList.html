@@ -1,0 +1,164 @@
+<script type="text/javascript" src="<?php	echo JS_DIR;	?>/adm_common.js"></script>
+
+<script>
+$(document).ready(function(){
+	$("#all").click(function(){
+		if($("#all").prop("checked")){
+			$("input[name=userIdx]").prop("checked",true);
+		} else {
+			$("input[name=userIdx]").prop("checked",false);
+		}
+	});
+	
+	//paging
+	comm_getPaging("/?<?php echo $MENU_ID.$P_ACTION;?>", "<?php echo $PAGE;?>", "<?php echo $total_page;?>", 10);
+
+	$("#unitPrice").change("change keyup paste", function(){
+		var unitPrice = $(this).val();
+		var supplyValue = parseInt(unitPrice / 11 * 10);
+		var vat = parseInt(unitPrice / 11);
+		
+
+		$('#supplyValue').val(supplyValue);
+		$('#vat').val(vat);
+	});
+});
+
+function unite_delete() {
+	var $checkboxes = $(".text-center_memberList").find(':checkbox:checked');
+
+	var checkArr = new Array();
+	$checkboxes.each(function(index){
+		checkArr.push($(this).val());
+	});
+
+	if (checkArr.length < 1)	{
+		alert("삭제 할 고객사를 하나 이상 선택하여 주세요");
+		return;
+	} else {
+		
+		var conf = confirm("선택한 고객사를 모두 삭제하시겠습니까?");
+		var ajax_url = "/page/ajax/M01/ajax.company_proc.php";
+		var ajax_data = {
+			'mode' : 'delete',
+			'idx' : checkArr,
+			'MENU_ID' : '<?=$MENU_ID?>',
+		}
+		if(conf){
+			$.ajax({
+				url : ajax_url,
+				data : ajax_data,
+				type : 'POST',
+				dataType : 'text',
+				contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+				success : function(response){
+					if(response == "success"){
+						alert("선택한 아이디들이 삭제되었습니다.");
+						location.href="/?M0101L";
+					} else {
+						alert("매칭값이 있으면 삭제 할 수 없습니다. Sales관리에서 매칭값이 있는지 확인해주세요.");
+						location.href="/?M0101L";
+					}
+				}
+			});
+		}
+	}	
+}
+
+function searchSubmit(){
+	var frm = document.search_frm;
+	frm.submit();
+}
+</script>
+<div class="container">
+	<div class="contents-wrapper">
+		<h2 class="page-header" style="font-size:22px; font-weight:bold; margin:20px 0 10px;">단가표</h2>
+		<div class="form-inline">
+			단가 : 
+			<input type="text" name="unitPrice" id="unitPrice" class="form-control" value=""5>
+			공급가액 :
+			<input type="text" name="supplyValue" id="supplyValue" class="form-control" value="">
+			부가세 :
+			<input type="text" name="vat" id="vat" class="form-control" value="">
+		</div>
+	</div>
+
+	<!--/* 회원리스트  -->
+	<div class="contents-wrapper">
+		<div class="panel panel-default">
+			<div class="panel-heading text-center">
+				<?php 
+					echo $M_HTML->b_Form("search_frm", "", "get", 0);
+					echo $M_HTML->input_Hidden($MENU_ID.$P_ACTION, "");
+					echo $M_HTML->input_Hidden("PAGE", $PAGE);
+				?>
+				<div class="form-inline" style="display:flex;">
+					<div style="text-align:left; flex:1;">
+						<!--button class="btn btn-sm btn-danger" type="bytton" onclick="unite_delete();"><i class="fa fa-times" aria-hidden="true"></i> 선택삭제</button-->
+						<a href="?M0201R" class="btn btn-sm btn-info" role="button"><i class="fa fa-plus fa-fw"></i> 단가 등록</a>
+					</div>
+					<div style="text-align:center; flex:3;">
+						<div class="form-group input-group">
+							<input type="text" name="searchTxt" id="searchTxt" class="form-control" value="<?php echo $searchTxt;?>" placeHolder="거래처명">
+							<span class="input-group-btn">
+								<button class="btn btn-default" type="button" onclick="searchSubmit();"><i class="fa fa-search"></i> 검색</button>
+							</span>
+						</div>
+					</div>
+					<div style="text-align:center; flex:1;"></div>
+				</div>
+				<?php
+					echo $M_HTML->e_Form();
+				?>
+			</div>
+			<table class="table table-bordered table-hover" style="padding:10px;">
+				<?php include_once "unitTable.html"; ?>
+				<tbody style="font-size:11.5px;">
+				<?php	
+				if($goodsRow->size() > 0){
+					for($i=0; $i<$goodsRow->size(); $i++){
+						$goodsRow->next();
+				?>
+					<tr class="text-center_memberList" style="text-align:center; padding:5px;" >
+						<!--td><input type="checkbox" value="<?php echo $goodsRow->get("idx");?>" id="idx2" name="goodsIdx" /></td-->
+						<td style="text-align:left; padding-left:10px;"><?php echo $goodsRow->get("code");?></td-->
+						<td style="text-align:left; padding-left:10px;"><?php echo $goodsRow->get("companyName");?></td>
+				<?php
+						$goodsArr = explode('|', $goodsRow->get('goodsPrice'));
+						for($j=0; $j<sizeof($goodsArr); $j++){
+
+				?>
+						<td data-href="/?M0201V&m_id=<?php echo $goodsRow->get("idx");	?>&companyIdx=<?php echo $goodsRow->get("companyIdx");?>" style="text-align:right; padding-right:5px;"><?php echo number_format($goodsArr[$j]);	?></td>
+				<?php	}	?>
+					</tr>					
+			<?php	
+						$NO--;
+					}
+				} else {
+			?>
+					<tr style="text-align:center;">
+						<td colspan="21">등록된 거래처별 단가가 없습니다.</td>
+					</tr>
+			<?php	}	?>
+				</tbody>
+			</table>
+		</div><!--/* panel -->
+
+
+		<div id="paging" style="margin-top:0px;">
+		<?php	
+			$page = $PAGE;
+			$totalPage = $total_page;
+			$pageURL = '';
+			$URLParam = $URLParam;
+			echo $M_FUNC->pagingJumper3($page, $totalPage, $pageURL, $URLParam);
+			echo $M_HTML->input_Hidden("page", '');
+		?>
+		</div>
+
+
+	</div><!--/* contents-wrapper -->
+	<!--/* 상품단가표 리스트 끝  -->
+
+
+</div><!-- container -->

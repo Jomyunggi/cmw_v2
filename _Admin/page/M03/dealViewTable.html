@@ -1,0 +1,133 @@
+<div class="panel panel-default">
+	<table class="table table-bordered">
+		<colgroup>
+			<col width="4%">
+			<col width="4%">
+			<col width="4%">
+			<col width="4%">
+			<col width="3%">
+
+			<col width="12%">
+			<col width="3%">
+
+			<col width="8%">
+
+			<col width="3%">
+			<col width="12%">
+			<col width="3%">
+			<col width="10%">
+			<col width="6%">
+			<col width="8%">
+			<col width="6%">
+			<col width="8%">
+		</colgroup>
+		<tbody>
+			<tr>
+				<td colspan='16' style="text-align:center; padding:10px;">
+				<span style="font-size:24px; font-weight:bold;">거 래 명 세 표</span>
+				<span style="font-size:14px;"> (공급받는자 보관용)</span></td>
+				
+			</tr>
+			<tr>
+				<td rowspan='4' class="table_th_left" style="padding:10px;">공급받는자</td>
+				<td colspan='3' style="text-align:center; padding:10px;">상 &nbsp;&nbsp;호</br>(법인명)</td>
+				<td colspan='4' style="text-align:center; padding:10px;"><?php echo $dealViewRow->get('companyName');?></td>
+				<td rowspan='4' class="table_th_left" style="padding:10px;">공급자</td>
+				<td style="text-align:center; padding:10px;">등록번호</td>
+				<td colspan='6' style="text-align:center; padding:10px; font-size:18px; font-weight:bold;">123-06-52024</td>
+			</tr>
+			<tr>
+				<td colspan='3' style="text-align:center; padding:10px;">사업장</br>주 &nbsp;&nbsp;&nbsp;소</td>
+				<td colspan='4' class="table_th_left" style="padding:10px;"><?php echo $dealViewRow->get('addr');?></td>
+				<td style="text-align:center; padding:10px;">상 &nbsp;&nbsp;호</br>(법인명)</td>
+				<td colspan='3' style="text-align:center; padding:10px;">C.M.W</td>
+				<td style="text-align:center; padding:10px;">성 명</td>
+				<td colspan='2' style="text-align:center; padding:10px;">조 순 철</td>
+			</tr>
+			<tr>
+				<td colspan='3' style="text-align:center; padding:10px;">전화번호</td>
+				<td colspan='4' class="table_th_left" style="padding:10px;"><?php echo $dealViewRow->get('tel');?></td>
+				<td style="text-align:center; padding:10px;">사업장</br>주 &nbsp;&nbsp;&nbsp;소</td>
+				<td colspan='6' class="table_th_left" style="padding:10px;">경기도 시흥시 금화로 445번길 112(금이동)</td>
+			</tr>
+			<tr>
+				<td colspan='3' style="text-align:center; padding:10px;">합계금액</td>
+				<td id="PriceSum" colspan='4' class="table_th_right" style="padding:10px; font-size:18px; font-weight:bold;"></td>
+				<td style="text-align:center; padding:10px;">전 &nbsp;&nbsp;&nbsp;화</td>
+				<td colspan='3' style="text-align:center; padding:10px;">031-314-3765</td>
+				<td style="text-align:center; padding:10px;">팩 &nbsp;&nbsp;&nbsp;스</td>
+				<td colspan='2' class="table_th_left" style="padding:10px;"></td>
+			</tr>
+			<tr>
+				<td style="padding:10px; text-align:center;">년</td>
+				<td style="padding:10px; text-align:center;">월</td>
+				<td style="padding:10px; text-align:center;">일</td>
+				<td colspan='4'  style="padding:10px; text-align:center;">품 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;목</td>
+				<td colspan='2'  style="padding:10px; text-align:center;">규 격</td>
+				<td style="padding:10px; text-align:center;">수 량</td>
+				<td colspan='2'  style="padding:10px; text-align:center;">단가(원)</td>
+				<td colspan='3'  style="padding:10px; text-align:center;">공 급 가 액</td>
+				<td style="padding:10px;"></td>
+			</tr>
+			<?php
+				$line = 0;
+				$goodsSum = 0;
+				$deal = explode("|", $dealViewRow->get('deal'));
+				$dealNum = explode("|", $dealViewRow->get('dealNum'));
+				for($i=0; $i<sizeof($M_UnitPage->goodsNum_Arr); $i++){
+					if($deal[$i] != 0 && $deal[$i] != "0"){
+						$goodsSum += (int)$deal[$i];
+						$unit = (int)$deal[$i] / (int)$dealNum[$i];
+						$goodsName = $M_UnitPage->goodsNum_Arr[$i]['name'];
+						if($M_UnitPage->goodsNum_Arr[$i]['roll'] == 16){
+							$goodsName = $M_UnitPage->goodsNum_Arr[$i]['name'] ." ".$M_UnitPage->goodsNum_Arr[$i]['length']."m";
+						}
+						
+
+			?>
+			<tr>
+				<td style="text-align:center;"><?php echo substr(date('Y', strtotime($dealViewRow->get('date'))), 2,2);?></td>
+				<td style="text-align:center;"><?php echo date('n', strtotime($dealViewRow->get('date')));?></td>
+				<td style="text-align:center;"><?php echo date('d', strtotime($dealViewRow->get('date')));?></td>
+				<td colspan='4' style="padding-left:10px;"><?php echo $goodsName;?></td>
+				<td colspan='2' style="text-align:center;"><?php echo $M_UnitPage->goodsNum_Arr[$i]['roll'];?></td>
+				<td class="table_th_right" style="padding-right:10px;"><?php echo $dealNum[$i];?></td>
+				<td colspan='2' class="table_th_right" style="padding-right:10px;"><?php echo number_format($unit);?></td>
+				<td colspan='3' class="table_th_right" style="padding-right:10px;"><?php echo number_format($deal[$i]);?></td>
+				<td class="table_th_left" style="padding:10px;"></td>
+			</tr>
+			<?php
+						$line++;
+					}
+				}
+				echo $M_HTML->input_Hidden('goodsSum', $goodsSum);
+				echo $M_HTML->input_Hidden('receivable', $dealViewRow->get('cash'));
+
+				$lineNum = 13 - $line;
+				for($i=0; $i<$lineNum; $i++){
+			?>
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td colspan='4'></td>
+				<td colspan='2'></td>
+				<td></td>
+				<td colspan='2'></td>
+				<td colspan='3' class="table_th_left" style="padding:10px;"></td>
+				<td class="table_th_left" style="padding:10px;"></td>
+			</tr>
+			<?php
+				}
+			?>
+			<tr>
+				<td colspan='5' class="table_th_left" style="padding:10px;">인수자</td>
+				<td class="table_th_right" style="padding:10px;">인</td>
+				<td colspan='2' class="table_th_left" style="padding:10px;">미수금</td>
+				<td colspan='3' class="table_th_right" style="padding-right:20px;"><?php echo number_format($dealViewRow->get('cash')); ?></td>
+				<td colspan='2' class="table_th_left" style="padding:10px;">총미수금</td>
+				<td id="totalPrice" colspan='3' class="table_th_right" style="padding-right:10px;"></td>
+			</tr>
+		</tbody>
+	</table>
+</div><!--/* panel -->

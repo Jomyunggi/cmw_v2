@@ -1,0 +1,31 @@
+<chart caption='Market Activity' yAxisName='Listings' showvalues='0' stack100Percent='1' showPercentValues='1' >
+
+	<categories>
+		<category label='Jan' />
+		<category label='Feb' />
+		<category label='Mar' />
+		<category label='Apr' />
+		<category label='May' />
+		<category label='Jun' />
+		<category label='Jul' />
+		<category label='Aug' />
+		<category label='Sep' />
+		<category label='Oct' />
+		<category label='Nov' />
+		<category label='Dec' />
+	</categories>
+
+	<dataset seriesName='New Listings' color='FBAB35'>
+		<set value='100' />
+		<set value='401' />
+		<set value='200' />
+		<set value='250' />
+		<set value='300' />
+		<set value='350' />
+		<set value='400' />
+		<set value='450' />
+		<set value='500' />
+		<set value='550' />
+		<set value='600' />
+	</dataset>
+</chart>

@@ -1,0 +1,234 @@
+<script>
+	function doMemberJoin() {
+		var frm = document.frm_join;
+		var companyIdx = $('#companyIdx').val();
+		var p_action = $('#p_action').val();
+		var content = "";
+		
+		if(p_action == "R"){
+			if(companyIdx == 0){
+				alert('판매처를 선택해주시기 바랍니다.');
+				return false;
+			}
+			
+			content = "한번더 확인해 주세요.\n저장하시겠습니까?";
+		} else {
+			content = "한번더 확인해 주세요.\n수정하시겠습니까?";
+		}
+		
+
+		if(confirm(content)){
+			frm.submit();
+		} else {
+			return;
+		}
+	}
+
+	function deal_TakeOver() {
+		var frm = document.frm_join;
+		
+		frm.action = "?M0301T";
+
+		frm.submit();
+	}
+
+	function selectCompany(){
+		var ajax_url = "/page/ajax/M03/ajax.priceBycompanyIdx.php";
+		var html = "<th>-</th>";
+		var tmp = "";
+		var goodsArr = <?php echo json_encode($M_UnitPage->goodsNum_Arr);?>;
+		var companyIdx = $('select[name="companyIdx"]').val();
+		var ajax_data = {
+			//select박스 판매처 선택된 companyIdx값
+			'companyIdx' : companyIdx
+		};
+
+		$.ajax({
+			url : ajax_url,
+			data : ajax_data,
+			type : 'GET',
+			dataType : 'json',
+			contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+			success: function (response) {
+				if(response){
+					var len = Object.keys(response).length;
+					if(len > 0){
+						$.each(response, function (no, entry){							
+							tmp ='<td><input type="text" id="'+goodsArr[no]['num']+'" name="'+goodsArr[no]['num']+'" value="'+response[no]+'" class="table-bordered" style="vertical-align:middle; width:100%; text-align:right; padding-right:5px;"></td>';
+
+							html = html + tmp;
+						});
+						
+					}
+					$('#goodsInfo').html(html);
+				}
+			},
+			failure: function(msg) {
+			}
+		});
+	}
+
+	function goBack(url){
+		window.location.href=url;
+	}
+
+	$(document).ready(function(){
+		var p_action = $('#p_action').val();
+		
+		var ajax_url = "/page/ajax/M03/ajax.priceBycompanyIdx.php";
+		var html = "<th>-</th>";
+		var tmp = "";
+		var goodsArr = <?php echo json_encode($M_UnitPage->goodsNum_Arr); ?>;
+		var companyIdx = <?php echo $companyIdx; ?>;
+		var ajax_data = {
+			'companyIdx' : companyIdx
+		};
+		
+		//최종 송장 등록할떄 필요하기 때문
+		$('#companyIdx').val(companyIdx);
+
+		$.ajax({
+			url : ajax_url,
+			data : ajax_data,
+			type : 'GET',
+			dataType : 'json',
+			contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+			success: function (response) {
+				if(response){
+					var len = Object.keys(response).length;
+					if(len > 0){
+						$.each(response, function (no, entry){							
+							tmp ='<td><input type="text" id="'+goodsArr[no]['num']+'" name="'+goodsArr[no]['num']+'" value="'+response[no]+'" class="table-bordered" style="vertical-align:middle; width:100%; text-align:right; padding-right:5px;"></td>';
+
+							html = html + tmp;
+						});
+						
+					} else {
+						html += '<tr><td colspan="18">해당 판매처의 상품단가가 없습니다.</td></tr>';	
+					}
+					$('#goodsInfo').html(html);
+				}
+			},
+			failure: function(msg) {
+			}
+		});
+
+		$("#date").datepicker({
+			showOn: "both",
+			buttonImage: "images/20)calendar.png",
+			buttonImageOnly: true,
+			buttonText: "Select date"
+		});
+	});
+</script>
+
+<div class="container">
+
+	<div class="contents-wrapper">
+		<h2 class="page-header">거래명세서 등록</h2>
+	</div>
+	
+
+	<!-- 회원등록  -->
+	<div class="contents-wrapper">
+		<form name="frm_join" method="post" action="<?php echo $action;	?>" onsubmit="" enctype="multipart/form-data">
+
+			<!--div class="text-right" style="padding:0 0 10px 0;">
+			<?php	if($P_ACTION == "V"){	?>
+				<a href="/?M0301C&m_id=<?php echo $dealViewRow->get('idx'); ?>&companyIdx=<?php echo $companyIdx; ?>&date=<?php echo $date;	?>" class="btn btn-sm btn-info" role="button" style="width:60px;"><span style="font-size:15px;">인 &nbsp;쇄</span></a>
+			<?php	}	?>		
+			</div-->
+
+			<fieldset>
+				<legend>거래명세서 등록</legend>
+				<input type="hidden" id="p_action" name="p_action" value="<?php echo $P_ACTION;	?>">
+				<input type="hidden" id="level" name="level" value="<?php echo $_SESSION['Level'];	?>">
+				<input type="hidden" id="searchMonth" name="searchMonth" value="">
+				<input type="hidden" id="m_id" name="m_id" value="<?php echo $m_id;?>">
+				<input type="hidden" id="onoff" name="onoff" value="<?php echo $dealViewRow->get('onoff');?>">
+				<div class="panel panel-default">
+					<table class="table table-bordered">
+						<colgroup>
+							<col width="12%">
+							<col width="88%">
+						</colgroup>
+						<tbody>
+							<tr>
+								<th class="table_th_left" style="padding:10px;">판매처</th>
+								<td style="padding:10px;"><div class="col-xs-12">
+								<?php	
+									if($P_ACTION == "R") echo $M_HTML->_Select2("companyIdx", $companyArr, $companyIdx, "form-control", "onchange='selectCompany()'");
+									else { 
+										echo $companyArr[$companyIdx];
+										echo $M_HTML->input_Hidden('companyIdx', $companyIdx);
+									}
+								?>
+								</div></td>
+							</tr>
+							<tr>
+								<th class="table_th_left" style="padding:10px;">년/월/일</th>
+								<td style="padding:10px;"><div class="col-xs-12">
+								<?php
+									echo $M_HTML->input_Text2('date', $date, "table-bordered", 'vertical-align:middle;');
+								?>
+								</div></td>
+							</tr>
+							<tr>
+								<th class="table_th_left" style="padding:10px;">상품별 단가</th>
+								<td style="padding:10px;"><div class="col-xs-12">
+									<table class="table-bordered table-hover">
+										<?php include_once ADMIN_PAGE_DIR . "/M02/unitTable.html"; ?>
+										<tbody>
+											<tr id="goodsInfo"></tr>
+											<tr>
+												<th>수량</th>
+											<?php
+												$goodsMax = sizeof($M_UnitPage->goodsNum_Arr);
+												for($i=0; $i<$goodsMax; $i++){
+											?>
+												<td><?php	echo $M_HTML->input_Text2("num".$i, $goodsNum[$i], "table-bordered", 'vertical-align:middle; width:100%; text-align:right;');	?></td>
+											<?php
+												}
+											?>
+											</tr>
+										</tbody>
+									</table>	
+								</div></td>
+							</tr>
+						</tbody>
+					</table>
+				</div><!--/* panel -->
+
+
+				<div class="text-center">
+				<?php
+					if($P_ACTION == "V"){
+				?>
+					<button type="submit" class="btn btn-sm btn-warning" onclick="javascript:doMemberJoin(); return false;">수정</button>
+					<button class="btn btn-sm btn-default" onclick="javascript:goBack('/?M0301L&m_id=<?php echo $companyIdx; ?>&year=<?php echo $year; ?>&month=<?php echo $month; ?>'); return false;">목록</button>
+				<?php
+					} else {
+				?>
+					<button type="submit" class="btn btn-sm btn-success" onclick="javascript:doMemberJoin(); return false;">등록</button>
+				<?php
+						if($companyIdx != ""){
+				?>
+					<button class="btn btn-sm btn-default" onclick="javascript:goBack('/?M0301L&m_id=<?php echo $companyIdx; ?>&year=<?php echo $year; ?>&month=<?php echo $month; ?>'); return false;">취소</button>
+				<?php
+						} else {
+				?>
+					<button class="btn btn-sm btn-default" onclick="javascript:goBack('/?M0301S'); return false;">취소</button>
+				<?php
+						}
+					}
+				?>					
+				</div>
+
+
+			</fieldset>
+		</form>
+	</div><!--/* contents-wrapper -->
+	<h3>&nbsp;</h3>
+	<!--/* 회원등록 끝 -->
+
+</div><!-- container -->

@@ -1,0 +1,215 @@
+<div class="container" style="width:100%;">
+	<div class="contents-wrapper">
+		<h2 class="page-header">데쉬보드</h2>
+	</div>
+
+<!-- /* 왼쪽 30% 공간 */ -->
+	<div class="contents-wrapper" style="float:left; width:30%;">
+		<!--/* 온/오프라인 매출현황  -->
+		<div class="panel panel-default">
+			<table class="table table-bordered table-hover">
+				<colgroup>
+					<col width="20%">
+					<col width="80%">
+				</colgroup>
+				<thead>
+					<tr><th colspan='2' style="padding:10px 0 10px 0; font-size:20px; font-weight:500; background:#2F4050; color:white">
+					<?php echo date('Y년 m월', time()); ?>&nbsp;&nbsp; 매출</th></tr>
+				</thead>
+				<tbody>
+			<?php
+				$total = 0;
+				for($i=0; $i<$salesRow->size(); $i++){
+					$salesRow->next();
+					
+					if($salesRow->get('onoff') === "On") $onoff = "온라인";
+					else $onoff = "오프라인";
+
+					$total += $salesRow->get('sum');
+			?>
+					<tr style="text-align:center;" >
+						<th style="font-size:18px; font-weight:500;"><?php echo $onoff; ?></th>
+						<td style="font-size:21px; text-align:right; padding-right:10px; font-weight:500;"><?php echo number_format($salesRow->get('sum')); ?>원</td>
+					</tr>
+			<?php	
+				}
+			?>
+					<tr style="text-align:center; background:#848484; color:white;" >
+						<td style="font-size:18px; font-weight:500;">합계</td>
+						<td style="font-size:21px; text-align:right; padding-right:10px; font-weight:500;"><?php echo number_format($total); ?>원</td>
+					</tr>
+				</tbody>
+			</table>
+		</div><!--/* panel -->
+		<!--/* 온/오프라인 매출현황 끝  -->
+
+		<!--/* C.M.W 미수금내역  -->
+		<div class="panel panel-default">
+			<table class="table table-bordered table-hover">
+				<colgroup>
+					<col width="10%">
+					<col width="30%">
+					<col width="20%">
+					<col width="20%">
+					<col width="20%">
+				</colgroup>
+				<thead>
+					<tr>
+						<th colspan='5' style="padding:10px 0 10px 0; font-size:20px; font-weight:500; background:#2F4050; color:white">사이트별 미수금 내역</th>
+					</tr>
+					<tr style="font-size:16px;">
+						<th>번호</th>
+						<th>사이트명</th>
+						<th>금액</th>
+						<th>택배비</th>
+						<th>수령금액</th>
+					</tr>
+				</thead>
+				<tbody>
+				<?php
+					if($receiveRow->size() > 0){
+						$companyByPrice = array();
+						for($i=0; $i<$receiveRow->size(); $i++){
+							//상품금액, 택배비 구하기
+							$goods = $receiveRow->get('priceKinds');
+						}
+					} else {
+				?>
+					<tr>
+						<td colspan='5'>데이터가 없습니다.</td>
+					</tr>
+				<?php
+					}
+				?>
+				</tbody>
+			</table>
+		</div><!--/* panel -->
+		<!--/* C.M.W 공지사항 끝  -->
+		
+		<!--/* C.M.W 작업내역  -->
+		<div class="panel panel-default">
+			<table class="table table-bordered table-hover">
+				<colgroup>
+					<col width="5%">
+					<col width="15%">
+					<col width="*%">
+					<col width="10%">
+				</colgroup>
+				<thead>
+					<tr><th colspan='6' style="padding:10px 0 10px 0; font-size:20px; font-weight:500; background:#2F4050; color:white">
+					작업내역</th></tr>
+					<tr style="font-size:16px;">
+						<th>번호</th>
+						<th>2차메뉴</th>
+						<th>제목</th>
+						<th>상태</th>
+					</tr>
+				</thead>
+				<tbody>
+				<?php
+					$NUM = $historyRow->size();
+					for($i=0; $i<$historyRow->size(); $i++){
+						$historyRow->next();
+						
+						switch($historyRow->get('status')){
+							case 1	: $status = '등록'; break;
+							case 4	: $status = '중지'; break;
+							case 11	: $status = '작업중'; break;
+							case 14	: $status = '보류'; break;
+						}
+				?>
+					<tr style="text-align:center; font-size:16px;" data-href="?M0601V&m_id=<?php echo $historyRow->get('idx');?>">
+						<td style="padding:3px;"><?php echo $NUM; ?></td>
+						<td style="padding:3px;"><?php echo $this->itemLength2[$historyRow->get('item')]; ?></td>
+						<td align="left" style="padding:3px 20px;"><?php echo $historyRow->get('subject'); ?></td>
+						<td style="padding:3px;"><?php echo $status; ?></td>
+					</tr>
+				<?php
+						$NUM--;
+					}
+				?>
+				</tbody>
+			</table>
+		</div><!--/* panel -->
+		<!--/* C.M.W 작업내역 끝  -->
+	</div><!--/* contents-wrapper -->
+<!-- /* 왼쪽 30% 공간 끝 */ -->
+
+
+<!-- /* 중간 30% 공간 */ -->
+	<!--/* 온라인 배송현황 매출현황  -->
+	<div class="contents-wrapper" style="float:left; width:65%;">
+		<div class="panel panel-default">
+			<table class="table table-bordered table-hover">
+				<colgroup>
+					<col width="5%">
+					<col width="10%">
+					<col width="*%">
+					<col width="*%">
+					<col width="10%">
+					<col width="10%">
+				</colgroup>
+				<thead>
+					<tr>
+						<th colspan='7' style="padding:10px 0 10px 0; font-size:20px; font-weight:500; background:#2F4050; color:white">
+						<a href="?M0406D" class="btn btn-sm btn-warning" role="button" style="float:left; margin-left:10px;">배송 완료처리</a>
+						<?php echo date('Y.m.d', strtotime("7 day ago", time()))."~". date('Y.m.d', time()); ?>&nbsp;&nbsp; 배송현황</th>
+					</tr>
+					<tr style="font-size:16px;">
+						<th>번호</th>
+						<th>사이트명</th>
+						<th>수취인</th>
+						<th>주소</th>
+						<th>발송일</th>
+						<th>배송상태</th>
+					</tr>
+				</thead>
+				<tbody>
+				<?php
+					$NO = $deliveryRow->size();
+					for($i=0; $i<$deliveryRow->size(); $i++){
+						$deliveryRow->next();
+
+						$dstart = $deliveryRow->get('dstart') == 0 ? "-" : date('Y.m.d', $deliveryRow->get('dstart'));
+						$dend	= $deliveryRow->get('dend') == 0 ? "-" : date('Y.m.d', $deliveryRow->get('dend'));
+						
+						if($deliveryRow->get('dstart') == 0){
+							//발송처리해야되는 부분
+							$background = "red";
+							$dstatus = "발송 처리";
+						} else {
+							if($deliveryRow->get('dend') == 0){
+								$background = "blue";
+								$dstatus = "배송중";
+							} else {
+								$dstatus = "배송 완료";
+							}
+						}
+
+				?>
+					<tr style="text-align:center; font-size:12px; background-color:<?php echo $background;?>; color:white; font-weight:400;" data-href="?M0403&searchDelivery=1&searchTerm=4">
+						<td style="padding:2px;"><?php echo $NO; ?></td>
+						<td style="padding:2px;"><?php echo $deliveryRow->get('companyName'); ?></td>
+						<td align="left" style="padding:2px;"><?php echo $deliveryRow->get('recipient'); ?></td>
+						<td align="left" style="padding:2px 20px;"><?php echo substr($deliveryRow->get('addr'), 0, 90); ?></td>
+ 						<td style="padding:2px;"><?php echo $dstart; ?></td>
+						<td style="padding:2px;"><?php echo $dstatus; ?></td>
+					</tr>
+				<?php
+						$NO--;
+						if($i > 32) break;
+					}
+				?>
+				</tbody>
+			</table>
+		</div><!--/* panel -->
+	</div><!--/* contents-wrapper -->
+	<!--/* 온라인 배송현황 매출현황 끝 -->
+<!-- /* 중간 30% 공간 */ -->
+
+
+<!-- /* 오른쪽 30% 공간 */ -->
+
+<!-- /* 오른쪽 30% 공간 */ -->
+
+</div><!-- container -->

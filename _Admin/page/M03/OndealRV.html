@@ -1,0 +1,196 @@
+<script>
+	function doMemberJoin() {
+		var frm = document.frm_join;
+		var companyIdx = $('#companyIdx').val();
+		var p_action = $('#p_action').val();
+		var content = "";
+		
+		if(p_action == "R"){
+			if(companyIdx == 0){
+				alert('판매처를 선택해주시기 바랍니다.');
+				return false;
+			}
+			
+			content = "한번더 확인해 주세요.\n저장하시겠습니까?";
+		} else {
+			content = "한번더 확인해 주세요.\n수정하시겠습니까?";
+		}
+		
+
+		if(confirm(content)){
+			frm.submit();
+		} else {
+			return;
+		}
+	}
+
+	function goBack(url){
+		window.location.href=url;
+	}
+
+	$(document).ready(function(){
+		
+	});
+</script>
+
+<div class="container">
+
+	<div class="contents-wrapper">
+		<h2 class="page-header">운송장 등록</h2>
+	</div>
+	
+
+	<!-- 회원등록  -->
+	<div class="contents-wrapper55">
+		<form name="frm_join" method="post" action="<?php echo $action;	?>" onsubmit="" enctype="multipart/form-data">
+			<fieldset>
+				<legend>운송장 등록</legend>
+				<input type="hidden" id="p_action" name="p_action" value="<?php echo $P_ACTION;	?>">
+				<input type="hidden" id="level" name="level" value="<?php echo $_SESSION['Level'];	?>">
+				<input type="hidden" id="m_id" name="m_id" value="<?php echo $m_id;?>">
+				<input type="hidden" id="onoff" name="onoff" value="<?php echo $dealViewRow->get('onoff');?>">
+				<div class="panel panel-default">
+					<table class="table table-bordered">
+						<colgroup>
+							<col width="15%">
+							<col width="35%">
+							<col width="15%">
+							<col width="15%">
+							<col width="20%">
+						</colgroup>
+						<tbody>
+							<tr>
+								<th class="table_th_left" style="padding:10px;">사이트</th>
+								<td colspan='4' style="padding:10px;"><div class="col-xs-6">
+								<?php	
+									if($P_ACTION == "R") echo $M_HTML->_Select2("companyIdx", $companyArr, $companyIdx, "form-control", "");
+									else { 
+										echo $companyArr[$companyIdx];
+										echo $M_HTML->input_Hidden('companyIdx', $companyIdx);
+									}
+									echo $M_HTML->input_File("companyFile", '', '', '');
+								?>
+								</div></td>
+							
+							</tr>
+							<tr>
+								<th class="table_th_left" style="padding:10px;">주문일<?php //echo date('Ymd H:i', strtotime('201906131815'));?></th>
+								<td colspan='2' style="padding:10px;"><div class="col-xs-12">
+								<?php echo $M_HTML->input_Text2('buyDay_Time', $buyDay_Time, "table-bordered", 'vertical-align:middle; width:100%;'); ?>
+								</div></td>
+								<th class="table_th_left" style="padding:10px;">결제일</th>
+								<td style="padding:10px;"><div class="col-xs-12"><?php echo date("Y.m.d", time());	?>
+								<?php //echo $M_HTML->input_Text2('buyDay_Time', $buyDay_Time, "table-bordered", 'vertical-align:middle; width:100%;'); ?>
+								</div></td>
+							</tr>
+							<tr>
+								<th class="table_th_left" style="padding:10px;">상풍명</th>
+								<td colspan='2' style="padding:10px;"><div class="col-xs-12">
+								<?php echo $M_HTML->input_Text2('deal', $deal, "table-bordered", 'vertical-align:middle; width:100%;'); ?>
+								</div></td>
+								<th class="table_th_left" style="padding:10px;">수량</th>
+								<td style="padding:10px;"><div class="col-xs-12">
+								<?php echo $M_HTML->input_Text2('dealNum', $dealNum, "table-bordered", 'vertical-align:middle; width:100%;'); ?>
+								</div></td>
+							</tr>
+							<tr>
+								<th class="table_th_left" style="padding:10px;">금액</th>
+								<td colspan='2' style="padding:10px;"><div class="col-xs-12">
+								<?php echo $M_HTML->input_Text2('price', $price, "table-bordered", 'vertical-align:middle; width:100%;'); ?>
+								</div></td>
+								<th class="table_th_left" style="padding:10px;">택배비</th>
+								<td style="padding:10px;"><div class="col-xs-12">
+								<?php echo $M_HTML->input_Text2('D_price', $dealNum, "table-bordered", 'vertical-align:middle; width:100%;'); ?>
+								</div></td>
+							</tr>
+							<tr>
+								<th class="table_th_left" style="padding:10px;">주소</th>
+								<td colspan='4' style="padding:10px;"><div class="col-xs-12">
+								<?php echo $M_HTML->input_Text2('addr', $addr, "table-bordered", 'vertical-align:middle; width:100%;'); ?>
+								</div></td>
+							</tr>
+							<tr>
+								<th class="table_th_left" style="padding:10px;">수취인</th>
+								<td style="padding:10px;"><div class="col-xs-12">
+								<?php echo $M_HTML->input_Text2('recipient', $recipient, "table-bordered", 'vertical-align:middle; width:100%;'); ?>
+								</div></td>
+								<th class="table_th_left" style="padding:10px;">핸드폰</th>
+								<td colspan='2' style="padding:10px;"><div class="col-xs-12">
+								<?php echo $M_HTML->input_Text2('tel', $tel, "table-bordered", 'vertical-align:middle; width:100%;'); ?>
+								</div></td>
+							</tr>
+							<tr>								
+								<th class="table_th_left" style="padding:10px;">배송메세지</th>
+								<td style="padding:10px;"><div class="col-xs-12">
+								<?php echo $M_HTML->input_Text2('deliveryTxt', $deliveryTxt, "table-bordered", 'vertical-align:middle; width:100%;'); ?>
+								</div></td>
+								<th class="table_th_left" style="padding:10px;">전화번호</th>
+								<td colspan='2' style="padding:10px;"><div class="col-xs-12">
+								<?php echo $M_HTML->input_Text2('tel2', $tel2, "table-bordered", 'vertical-align:middle; width:100%;'); ?>
+								</div></td>
+							</tr>
+							<tr>
+								<th class="table_th_left" style="padding:10px;">택배수량</th>
+								<td colspan='4' style="padding:10px;">
+								<div class="col-xs-3"><?php echo $M_HTML->input_Text2('small', $small, "table-bordered", 'vertical-align:middle; width:35%; text-align:center;'); ?> 수량(소)</div>
+								<div class="col-xs-3"><?php echo $M_HTML->input_Text2('medium', $medium, "table-bordered", 'vertical-align:middle; width:35%; text-align:center;'); ?> 수량(중)</div>
+								<div class="col-xs-3"><?php echo $M_HTML->input_Text2('large', $large, "table-bordered", 'vertical-align:middle; width:35%; text-align:center;'); ?> 수량(대)</div>
+								</td>
+							</tr>
+							<?php
+								if($P_ACTION == "V"){
+							?>
+							<tr>
+								<th class="table_th_left" style="padding:10px;">운송장번호</th>
+								<?php
+									//배송상태 변경시 날짜를 쓸수 있게 input text를 만들어준다.
+									echo $M_HTML->input_Text2('date', $date, "table-bordered", 'vertical-align:middle;');
+								?>
+								</div></td>
+								<th class="table_th_left" style="padding:10px;">배송상태</th>
+								<td style="padding:10px;"><div class="col-xs-12">
+								<?php
+									//배송상태 변경시 날짜를 쓸수 있게 input text를 만들어준다.
+									echo $M_HTML->input_Text2('date', $date, "table-bordered", 'vertical-align:middle;');
+								?>
+								</div></td>
+							</tr>
+							<tr>
+								<th class="table_th_left" style="padding:10px;">정산상태</th>
+								<td colspan='3' style="padding:10px;"><div class="col-xs-12">
+								<?php
+									//라디오를 했다가 정산했음 상태를 클릭하면 날짜를 입력할수 있게 만들어준다.
+									echo $M_HTML->input_Text2('date', $date, "table-bordered", 'vertical-align:middle;');
+								?>
+								</div></td>
+							</tr>
+							<?php
+								}
+							?>
+						</tbody>
+					</table>
+				</div><!--/* panel -->
+
+
+				<div class="text-center">
+				<?php
+					if($P_ACTION == "V"){
+				?>
+					<button type="submit" class="btn btn-sm btn-warning" onclick="javascript:doMemberJoin(); return false;">수정</button>
+					<button class="btn btn-sm btn-default" onclick="javascript:goBack('/?M0301L&m_id=<?php echo $companyIdx; ?>&year=<?php echo $year; ?>&month=<?php echo $month; ?>'); return false;">취소</button>
+				<?php
+					} else {
+				?>
+					<button type="submit" class="btn btn-sm btn-success" onclick="javascript:doMemberJoin(); return false;">등록</button>
+					<button class="btn btn-sm btn-default" onclick="javascript:goBack('/?M0303S'); return false;">취소</button>
+				<?php
+					}
+				?>					
+				</div>
+			</fieldset>
+		</form>
+	</div><!--/* contents-wrapper -->
+	<h3>&nbsp;</h3>
+	<!--/* 회원등록 끝 -->
+
+</div><!-- container -->

@@ -1,0 +1,69 @@
+<script>
+function login() {
+	if(value_check() == false) {
+		return;
+	}
+	var frm = document.frm_login;
+	frm.action = "/page/common/loginProc.php";
+	frm.target = "_HIDDEN_FRAME";
+	frm.submit();
+}
+function value_check() {
+	if (!$("#userID").val()) {
+		alert("아이디를 입력해 주세요");
+		$('#userID').focus();
+		return false;
+	}
+	if (!$("#userPW").val()) {
+		alert("패스워드를 입력해 주세요");
+		$('#userPW').focus();
+		return false;
+	}
+	return true;
+}
+</script>
+<?php
+$status_arr = array (
+	1 => "",
+);
+if($_COOKIE["cookie_id"]) {
+	$checked = "1";
+}else {
+	$checked = "0";
+}
+?>
+<div class="container-fluid">
+	<div class="login-box">
+		<div class="login-panel panel panel-default">
+			<div class="panel-heading" align="center">
+				<!--img src="./images/login_logo_1.png" width="200px" height="48px"-->
+				C.M.W & SHIM
+				<h3 class="panel-title"></h3>
+			</div>
+			<div class="panel-body">
+				<form id="frm_login" name="frm_login" action="" method="POST" onsubmit="return false;">
+				<input type="hidden" id="action" name="action" value="login">
+					<fieldset>
+						<div class="form-group">
+							<input class="form-control" placeholder="ID" id="userID" name="userID" value="<?php echo $_COOKIE['cookie_id']; ?>">
+						</div>
+						<div class="form-group">
+							<input class="form-control" placeholder="Password" id="userPW" name="userPW" type="password">
+						</div>
+						<div class="checkbox">
+							<label>
+								<?php echo $M_HTML->input_Checkbox("userID_save",$status_arr,"",$checked); ?>아이디 기억
+							</label>
+						</div>
+						<button onclick="javascript:login();" class="btn btn-success btn-block">Login</a>
+					</fieldset>
+				</form>
+			</div>
+			<div class="login_alert" name="login_alert">
+			<div class="panel-heading">
+				<!--h3 class="panel-title">▶ 계정 등록이 필요하신 경우에는 소속, 성명, 이메일, 휴대폰번호를 ondemand@skbroadband.com 이메일로 보내주시면 확인 후 등록하고 이메일로 회신을 드립니다.</h3-->
+				<!-- <h3 class="panel-title"><span class="text-danger">SK</span> Ondemand</h3> -->
+			</div>
+		</div>
+	</div>
+</div>

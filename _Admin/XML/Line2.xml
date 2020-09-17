@@ -1,0 +1,10 @@
+<chart caption='Monthly Sales Summary' subcaption='For the year 2004' xAxisName='Month' yAxisName='Sales' numberPrefix='$' showLabels='1' showColumnShadow='1' animation='1' showAlternateHGridColor='1' AlternateHGridColor='ff5904' divLineColor='ff5904' divLineAlpha='20' alternateHGridAlpha='5' canvasBorderColor='666666' baseFontColor='666666' lineColor='FF5904' lineAlpha='85' showValues='1' rotateValues='1' valuePosition='auto'>
+<set label='1' value='2' />
+<set label='2' value='2' />
+<set label='3' value='3' />
+<set label='4' value='3' />
+<set label='5' value='3' />
+<set label='6' value='3' />
+<set label='7' value='2' />
+<set label='8' value='2' />
+</chart> 

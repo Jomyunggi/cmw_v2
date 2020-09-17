@@ -1,0 +1,290 @@
+<script type="text/javascript" src="<?php	echo JS_DIR;	?>/adm_common.js"></script>
+<script>
+	$(document).ready(function(){
+		$('#searchItem').click(function(){
+			if(this.value == 0){
+				if($("#searchItem").prop("checked")){
+					$("input[id=searchItem]").prop("checked",true);
+				} else {
+					$("input[id=searchItem]").prop("checked",false);
+				}
+					}
+		});
+	});
+
+	function searchSubmit(){
+		var frm = document.search_frm;
+		
+		frm.submit();
+	}
+</script>
+<div class="container">
+	<div class="contents-wrapper">
+		<h2 class="page-header">상품별 판매현황</h2>
+	</div>
+
+	<!--/* 회원리스트  -->
+	<div class="contents-wrapper" style='float:left; width:50%;'>
+		<div class="panel panel-default">
+			<div class="panel-heading text-center">
+				<?php 
+					echo $M_HTML->b_Form("search_frm", "", "get", 0);
+					echo $M_HTML->input_Hidden($MENU_ID.$P_ACTION, "");
+				?>
+				<div class="form-inline">
+					<div class="form-group"><?php
+						echo $M_HTML->_Select2("analyCompany", $CompanyArr, $analyCompany, "form-control");
+						echo $M_HTML->_Select2("analyTerm", $this->analyTerm, $analyTerm, "form-control");
+					?></div>
+					<div class="form-group input-group" style="padding-right:70px;">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button" onclick="searchSubmit();"><i class="fa fa-search"></i> 검색</button>
+						</span>
+					</div>
+				</div>
+				<?php
+					echo $M_HTML->e_Form();
+				?>
+			</div>
+			<table class="table table-bordered table-hover">
+				<colgroup>
+					<col width="*">
+					<col width="*">
+					<col width="*">
+					<col width="*">
+					<col width="*">
+					<col width="*">
+					<col width="*">
+					<col width="*">
+				</colgroup>
+				<thead>
+					<th>비용명</th>
+					<th>금액</th>
+					<th>비용명</th>
+					<th>금액</th>
+					<th>비용명</th>
+					<th>금액</th>
+					<th>비용명</th>
+					<th>금액</th>
+				</thead>
+				<?php
+					$fixedSum = 0;
+					foreach($this->fixedRatio as $num => $arr){
+						if($num == 1 || $num == 5 || $num == 9)	echo "<tr>";
+						echo "<td class='left-name'>".$arr[0]."</td><td class='right-number'>".number_format($arr[1])."</td>";
+						if($num == 4 || $num == 8 || $num == 12){
+							echo "</tr>";
+						}
+						$fixedSum += $arr[1];
+					}
+				?>
+				<tr>
+					<td colspan='6' class='left-name-stress'>총 합계</td><td colspan='2' class='right-number-stress'><?php echo number_format($fixedSum); ?></td>
+				</tr>
+				</thead>
+				<tr>
+					<th>번호</th>
+					<th>상품명</th>
+					<th>원가</th>
+					<th>판매가</th>
+					<th>판매량</th>
+					<th>원가매출</th>
+					<th>판매매출</th>
+					<th>순수익</th>					
+				</tr>
+				<tbody>
+				<?php	
+					$NO = 1;
+					if(count($modifyRow) > 0){
+						foreach($modifyRow as $key => $arr){
+							if(!empty($arr)) {
+								$productNumber = 0;
+								$productCostPrice = 0;
+								$productSales = 0;
+								$productbenefit = 0;
+								foreach($arr as $price => $num){
+									$goodName = $this->goodsName[$key];
+
+									//원가매출
+									if($key == 8 && ($price == 16500 || $price == 17000)){
+										//충무황토는 자연,꿈집 원가로 잡는다.
+										$costSales = $this->online_goods_info[5]*$num;
+									} else $costSales = $this->online_goods_info[$key]*$num;
+
+									//판매매출
+									$sales = $price*$num;
+
+									$Sumbenefit += $sales - $costSales;		//순수익
+
+									//총 합계 구하는 부분
+									$totalNum += $num;						//총판매량
+									$costSalesSum += $costSales;			//총 원가매출액
+									$salesSum += $sales;					//총 판매매출액
+									$Sum += $Sumbenefit;					//총 순수익
+
+									//상품별 판매량, 원가매출, 판매매출, 순수익 합계
+									$productNumber += $num;
+									$productCostPrice += $costSales;
+									$productSales += $sales;
+									$productbenefit += $Sumbenefit;
+				?> 
+					<tr>
+						<td align="center"><?php echo $NO; ?></td>
+						<td class='left-name'><?php echo $goodName; ?></td>
+						<td class='right-number'><?php echo number_format($this->online_goods_info[$key]); ?></td>
+						<td class='right-number'><?php echo number_format($price); ?></td>
+						<td class='right-number'><?php echo number_format($num, 2); ?></td>
+						<td class='right-number'><?php echo number_format($costSales, 2); ?></td>
+						<td class='right-number'><?php echo number_format($sales, 2); ?></td>
+						<td class='right-number'><?php echo number_format($Sumbenefit, 2); ?></td>
+					</tr>
+				<?php
+									$NO++;
+									$Sumbenefit = 0;
+								}
+				?>
+					<tr style='background:grey; color:white;'>
+						<td align='center' colspan='4'><?php echo $goodName; ?></td>
+						<td class='right-number'><?php echo number_format($productNumber,2); ?></td>
+						<td class='right-number'><?php echo number_format($productCostPrice,2); ?></td>
+						<td class='right-number'><?php echo number_format($productSales,2); ?></td>
+						<td class='right-number'><?php echo number_format($productbenefit,2); ?></td>
+					</tr>
+				<?php
+							}
+						}
+				?>
+					<tr>
+						<td colspan='4' class='left-name-stress'>총 합계</td>
+						<td class='right-number-stress'><?php echo number_format($totalNum, 2); ?></td>
+						<td class='right-number-stress'><?php echo number_format($costSalesSum, 2); ?></td>
+						<td class='right-number-stress'><?php echo number_format($salesSum, 2); ?></td>
+						<td class='right-number-stress'><?php echo number_format($Sum, 2); ?></td>
+					</tr>
+
+				<?php
+					} else {						
+				?>
+					<tr>
+						<td>검색에 대한 알맞는 데이터가 없습니다.</td>
+					</tr>
+				<?php	
+					}
+				?>
+				</tbody>
+			</table>
+		</div><!--/* panel -->
+	</div><!--/* contents-wrapper 1-->
+	<!--/* 해당 월 합계 끝  ---------------------------------------------------------------------------------------------------------------------->
+	
+	<?php
+		if($analyCompany == 51){
+	?>
+	<!--/* 온라인거래철일 경우 오른쪽에 인테넛으로 남긴 수익보여주기  -->
+	<div class="contents-wrapper" style='float:left; width:45%;'>
+		<div class="panel panel-default">
+			<div class="panel-heading text-center" style="height:133px;"></div>
+			<table class="table table-bordered table-hover">
+				<colgroup>
+					<col width="*">
+					<col width="*">
+					<col width="*">
+					<col width="*">
+					<col width="*">
+					<col width="*">
+					<col width="*">
+					<col width="*">
+					<col width="*">
+					<col width="*">
+				</colgroup>
+				<tr>
+					<th>번호</th>
+					<th>상품명</th>
+					<th>판매가</th>
+					<th>매입가</th>
+					<th>판매량</th>
+					<th>판매매출</th>
+					<th>매입매출</th>
+					<th>판매수수료</th>
+					<th>대략택배비</th>
+					<th>순수익</th>					
+				</tr>
+				<tbody>
+				<?php	
+					$NO = 1;
+					if(count($modifyRow) > 0){
+						$salesSum = 0;
+						$deliverySum = 0;
+						$Sum = 0;
+						foreach($modifyRow as $key => $arr){
+							if(!empty($arr)) {
+								foreach($arr as $price => $num){
+									$goodName = $this->goodsName[$key];
+
+									//판매수수료 합계
+									$salesFee_S = $this->online_price[$key]*$num*0.085;
+									//판매매출
+									$sales_S = $this->online_price[$key]*$num;
+									//매입매출
+									$purchase_S = $price * $num;
+									//대략택배비
+									if($key == 0){
+										$delivery_S = 3000 * ceil($num/10);
+									} else {
+										$delivery_S = 3000 * ceil($num);
+									}
+
+									$Sumbenefit += $sales_S - $purchase_S - $salesFee_S - $delivery_S;		//순수익
+
+									//총 합계 구하는 부분
+									$salesSum += $salesFee_S;				//총 판매수수료
+									$deliverySum += $delivery_S;			//총 대략배송비
+									$Sum += $Sumbenefit;					//총 순수익
+				?> 
+					<tr>
+						<td align="center"><?php echo $NO; ?></td>
+						<td class='left-name'><?php echo $goodName; ?></td>
+						<td class='right-number'><?php echo number_format($this->online_price[$key]); ?></td>
+						<td class='right-number'><?php echo number_format($price); ?></td>
+						<td class='right-number'><?php echo number_format($num, 2); ?></td>
+						<td class='right-number'><?php echo number_format($sales_S); ?></td>
+						<td class='right-number'><?php echo number_format($purchase_S); ?></td>
+						<td class='right-number'><?php echo number_format($salesFee_S); ?></td>
+						<td class='right-number'><?php echo number_format($delivery_S); ?></td>
+						<td class='right-number'><?php echo number_format($Sumbenefit); ?></td>
+					</tr>
+				<?php
+									$NO++;
+									$Sumbenefit = 0;
+								}
+							}
+						}
+				?>
+					<tr>
+						<td colspan='7' class='left-name-stress'>총 합계</td>
+						<td class='right-number-stress'><?php echo number_format($salesSum); ?></td>
+						<td class='right-number-stress'><?php echo number_format($deliverySum); ?></td>
+						<td class='right-number-stress'><?php echo number_format($Sum); ?></td>
+					</tr>
+
+				<?php
+					} else {						
+				?>
+					<tr>
+						<td>검색에 대한 알맞는 데이터가 없습니다.</td>
+					</tr>
+				<?php	
+					}
+				?>
+				</tbody>
+			</table>
+		</div><!--/* panel -->
+	</div><!--/* contents-wrapper 1-->
+	<!--/* 해당 월 합계 끝  ---------------------------------------------------------------------------------------------------------------------->
+	<?php
+		}
+	?>
+
+</div><!-- container -->
+
+<div style="clear:both;"></div>

@@ -1,0 +1,146 @@
+<script type="text/javascript" src="<?php	echo JS_DIR;	?>/adm_common.js"></script>
+<script>
+	function goBack(){
+		window.location.href="/?M0301S&searchMonth=<?php echo $month;?>";
+	}
+
+	function deal_TakeOver() {
+		var frm = document.frm_join;
+		
+		frm.action = "?M0301T";
+
+		frm.submit();
+	}
+
+	function deal_TakeOver(gubun, m_id, date, onoff, table){
+		var ajax_url = "/page/ajax/M03/ajax.dealTakeOver.php";
+
+		var companyIdx = '<?php echo $companyIdx;?>';
+		var ajax_data = {
+			'gubun'		 : gubun,
+			'm_id'		 : m_id,
+			'companyIdx' : companyIdx,
+			'date'		 : date,
+			'onoff'		 : onoff,
+			'table'		 : table
+		};
+
+		$.ajax({
+			url : ajax_url,
+			data : ajax_data,
+			type : 'POST',
+			dataType : 'html',
+			contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+			success: function (response) {
+				if(response == 'success'){
+					alert('해당 건에 대하여 인수하였습니다.');
+					location.reload();
+				} else {
+					alert('인수 할 건이 없습니다.');
+				}
+			},
+			failure: function(msg) {
+			}
+		});
+	}
+
+	function golocation(url){
+		window.location.href=url;
+	}
+</script>
+<div class="container">
+	<div class="contents-wrapper">
+		<h2 class="page-header"><?php echo $year;?>년 <?php echo $month;?>월 <?php echo $companyArr[$companyIdx];?> 거래현황</h2>
+	</div>
+	
+	<!--모두 인수하기 버튼 -->
+	<div class="contents-wrapper" style="padding-bottom:5px;">
+		<!--button class="btn btn-sm btn-warning" onclick="javascript:deal_TakeOver('all', 0, '<?php echo $year.$whereforMonth;?>', 'off', 'Deal_<?php echo $year;?>'); return false;" style="font-size:13px; font-weight:bold;">전체 인수</button-->
+
+		<button class="btn btn-sm btn-success" onclick="javascript:golocation('/?M0301L&m_id=<?php echo $companyIdx; ?>&year=<?php echo $beforY; ?>&month=<?php echo $beforM; ?>'); return false;" style="font-size:13px; font-weight:bold;"><?php echo $beforY; ?>년 <?php echo $beforM; ?>월 이동</button>
+		<button class="btn btn-sm btn-success" onclick="javascript:golocation('/?M0301L&m_id=<?php echo $companyIdx; ?>&year=<?php echo $afterY; ?>&month=<?php echo $afterM; ?>'); return false;" style="font-size:13px; font-weight:bold;"><?php echo $afterY; ?>년 <?php echo $afterM; ?>월 이동</button>
+	</div>
+
+	<!--/* 회원리스트  -->
+	<div class="contents-wrapper">
+		
+		<div class="panel panel-default">
+			<table class="table table-bordered table-hover" style="padding:10px;">
+				<?php include_once ADMIN_PAGE_DIR . "/M03/unitTable.html"; ?>
+				<tbody>
+				<?php	
+				if($dealRow->size() > 0){
+					$totalPrice = 0;
+					$totalNum = 0;
+					$paperArr = array();
+					$paperNum = array();
+					for($i=0; $i<$dealRow->size(); $i++){
+						$dealRow->next();
+						$tdUrl = "/?M0301V&m_id=". $dealRow->get("idx") ."&companyIdx=". $dealRow->get("companyIdx") ."&date=". $dealRow->get('date');
+				?>
+					<tr class="text-center_memberList" style="text-align:center; font-size:11.5px;">
+						<td data-href=<?php echo $tdUrl;?> style="padding:7px;"><?php echo date('j', strtotime($dealRow->get('date')));?>일</td>
+				<?php
+						$goodsSum = 0;
+						$goodsPriceArr = explode('|', $dealRow->get('deal'));
+						$goodsNumArr = explode('|', $dealRow->get('dealNum'));
+						for($j=0; $j<sizeof($goodsPriceArr); $j++){
+							$goodsSum += (int)$goodsPriceArr[$j];
+							
+							//각 상품별 합계
+							$paperArr[$j] += $goodsPriceArr[$j];
+							//각 상품별 수량합계
+							$paperNum[$j] += $goodsNumArr[$j];
+				?>		
+							<td data-href=<?php echo $tdUrl;?>><?php echo $goodsNumArr[$j]." | ".number_format($goodsPriceArr[$j]);	?></td>
+				<?php	}	?>
+						<td data-href=<?php echo $tdUrl;?> style="text-align:right; padding:0 5px;"><?php echo number_format($goodsSum);	?></td>
+		
+				<?php	//리스트내에 인수버튼 보이고&감추기
+						if($dealRow->get('takeover') == 0){	?>
+						<td><button class="btn btn-sm btn-warning" onclick="javascript:deal_TakeOver('one', '<?php echo $dealRow->get('idx');?>', '<?php echo $dealRow->get('date'); ?>', '<?php echo $dealRow->get('onoff');?>', 'Deal_<?php echo substr($dealRow->get('date'), 0, 4);?>'); return false;" style="padding:2px 4px;">인 수</button></td>
+				<?php	} else {	?>
+						<td>-</td>
+				<?php	} ?>
+
+						<td><a href="/?M0301C&m_id=<?php echo $dealRow->get("idx");?>&companyIdx=<?php echo $dealRow->get("companyIdx");?>&date=<?php echo $dealRow->get('date');?>" class="btn btn-sm btn-info" role="button" style="padding:2px 4px;">인 쇄</a></td>
+					</tr>
+			<?php	
+						$totalPrice += $goodsSum;	
+
+						$NO--;
+					}
+			?>
+					<tr class="text-center_memberList" style="background:yellow;">
+						<td style="padding:7px;"><span style="font-size:14px; font-weight:bold;">각 합계</span></td>
+					<?php
+						for($k=0; $k<count($paperArr); $k++){
+					?>
+						<td style="text-align:center;"><?php echo number_format($paperNum[$k])." | ".number_format($paperArr[$k]);?></td>
+					<?php
+						}
+					?>
+						<td colspan="3" style="text-align:center; padding-left:10px;"><?php echo number_format($totalPrice);?></td>
+					</tr>
+			<?php
+				} else {
+			?>
+					<tr style="text-align:center;">
+						<td colspan="21">등록된 데이터가 없습니다.</td>
+					</tr>
+			<?php	}	?>
+				</tbody>
+			</table>
+		</div><!--/* panel -->
+
+
+		<div class="pull-left">
+			<a href="?M0301R&companyIdx=<?php echo $companyIdx;?>&year=<?php echo $year;?>&month=<?php echo $month;?>" class="btn btn-sm btn-success" role="button">송장 등록</a>
+			<button class="btn btn-sm btn-default" onclick="javascript:goBack(); return false;">목록</button>		
+		</div>
+
+	</div><!--/* contents-wrapper -->
+	<!--/* 상품단가표 리스트 끝  -->
+
+
+</div><!-- container -->

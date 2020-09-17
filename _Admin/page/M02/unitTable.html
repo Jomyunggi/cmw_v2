@@ -1,0 +1,92 @@
+<?php include_once 'Inc/inc.adm.header.php'; ?>
+<colgroup>
+<?php
+	$P_ACTION = $P_ACTION == "" ? "L" : $P_ACTION;
+	
+	if($P_ACTION == "L"){
+?>
+	<!--col width="2%"-->
+	<col width="3%">
+	<col width="16%">
+<?php
+	}
+	if($MENU_ID == "M0301"){
+?>
+	<col width="3%">
+<?php
+	}
+?>
+	<col width="5%">
+	<col width="4%">
+
+	<col width="5%">
+
+	<col width="4%">
+	<col width="4%">
+	<col width="4%">
+	<col width="4%">
+	<col width="4%">
+	<col width="4%">
+	<col width="4%">
+
+	<col width="3%">
+	<col width="3%">
+	<col width="3%">
+	<col width="3%">
+	<col width="3%">
+	<col width="3%">
+	<col width="3%">
+	<col width="3%">
+
+	<col width="5%">
+	<col width="5%">
+</colgroup>
+<thead style="font-size:11px;">
+	<tr>
+	<?php
+		if($P_ACTION == "L"){
+	?>
+		<!--th rowspan='3' style="vertical-align:middle; padding:2px;"><input type="checkbox" id="all"></th>
+		<th rowspan='3' style="vertical-align:middle; padding:2px;">번호</th-->
+		<th rowspan='3' style="vertical-align:middle; padding:2px;">싸부넷코드</th>
+		<th rowspan='3' style="vertical-align:middle; padding:2px;">거래처명</th>
+	<?php
+		}
+		if($MENU_ID == "M0301"){
+	?>
+		<th rowspan='3' style="padding:2px;">-</th>
+	<?php
+		}
+	?>
+		<th colspan='2' style="padding:2px;">10롤</th>
+		<th style="padding:2px;">24롤</th>
+		<th colspan='7' style="padding:2px;">30롤</th>
+		<th colspan='8' style="padding:2px;">점보롤</th>
+		<th rowspan='3' style="vertical-align:middle; padding:2px;">네프킨</th>
+		<th rowspan='3' style="vertical-align:middle; padding:2px;">핸드타월</th>
+	</tr>
+	<tr>
+		<th rowspan='2' style="vertical-align:middle; padding:2px;">새피아</th>
+		<th rowspan='2' style="vertical-align:middle; padding:2px;">땡큐</th>
+		<th rowspan='2' style="vertical-align:middle; padding:2px;">새피아</th>
+		<th rowspan='2' style="vertical-align:middle; padding:2px;">땡큐</th>
+		<th rowspan='2' style="vertical-align:middle; padding:2px;">순수</th>
+		<th rowspan='2' style="vertical-align:middle; padding:2px;">자연</th>
+		<th rowspan='2' style="vertical-align:middle; padding:2px;">꿈집</th>
+		<th rowspan='2' style="vertical-align:middle; padding:2px;">꽃지꿈집</th>
+		<th rowspan='2' style="vertical-align:middle; padding:2px;">황토</th>
+		<th rowspan='2' style="vertical-align:middle; padding:2px;">데코꿈집</th>
+		<th colspan='4'style="padding:2px;">고급</th>
+		<th colspan='4' style="padding:2px;">꽃지</th>
+	</tr>
+		<th style="padding:2px;">150m</th>
+		<th style="padding:2px;">180m</th>
+		<th style="padding:2px;">200m</th>
+		<th style="padding:2px;">300m</th>
+		<th style="padding:2px;">160m</th>
+		<th style="padding:2px;">180m</th>
+		<th style="padding:2px;">200m</th>
+		<th style="padding:2px;">300m</th>
+	<tr>
+	</tr>
+</thead>

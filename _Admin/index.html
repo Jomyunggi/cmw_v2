@@ -1,0 +1,259 @@
+<?php
+	ini_set('include_path', realpath(dirname(__FILE__) ."/../_Common"));
+
+	include_once 'Inc/inc.adm.header.php';
+	include_once 'Inc/inc.queryString.php';
+	
+	$IS_LOGIN = $M_SIGNUP->isLogin();
+
+	if($IS_LOGIN) {
+		echo $M_HTML->openDiv('wrapper');	// <!-- wrapper -->
+		
+		include_once 'Inc/inc.adm.gnb.php';
+
+		echo $M_HTML->openDiv('page-wrapper');	// <!-- page-wrapper -->
+
+		$PAGE_PATH = ADMIN_PAGE_PATH . '/' . substr($MENU_ID, 0, 3);
+
+		switch($MENU_1DEPTH) {
+			case 1 : // 관리자 > 게시판, 상품
+				include_once ADMIN_CLASS_PATH . '/class.managerPage.php';
+				$M_ManagerPage = new M_ManagerPage;
+
+				switch($P_ACTION) {
+					case 'L' : $M_ManagerPage->managerList(); break;
+					case 'V' : $M_ManagerPage->managerRV('view'); break;
+					case 'R' : $M_ManagerPage->managerRV('regist'); break;
+					case 'P' : $M_ManagerPage->managerProc(); break;
+					default : $M_ManagerPage->managerList(); break;
+				}
+				break;
+
+			case 2 : //거래처
+				include_once ADMIN_CLASS_PATH . '/class.unitPage.php';
+				$M_UnitPage = new M_UnitPage;
+				
+				switch($MENU_2DEPTH){
+					case 1: 
+						switch($P_ACTION){
+							case 'L' : $M_UnitPage->unitList(); break;
+							case 'R' : $M_UnitPage->unitRV('regist'); break;
+							case 'V' : $M_UnitPage->unitRV('view'); break;
+							case 'P' : $M_UnitPage->unitInsertProc(); break;
+							case 'U' : $M_UnitPage->unitUpdateProc(); break;
+							default : $M_UnitPage->unitList(); break;
+						}
+						break;
+					default : // 경로이탈(예외처리)
+						break;
+				}
+				break;
+			
+			case 3 : // 거래현황
+				include_once ADMIN_CLASS_PATH . "/class.dealPage.php";
+				$M_DealPage = new M_DealPage;
+				include_once ADMIN_CLASS_PATH . '/class.unitPage.php';
+				$M_UnitPage = new M_UnitPage;
+				
+				switch($MENU_2DEPTH) {
+					case 1 :	//오프라인 매출
+						switch($P_ACTION) {
+							case 'S' : $M_DealPage->dealSumList(); break;
+							case 'L' : $M_DealPage->dealList(); break;
+							case 'V' : $M_DealPage->dealRV("view"); break;
+							case 'R' : $M_DealPage->dealRV(); break;
+							case 'A' : $M_DealPage->dealDayList(); break;
+							case 'C' : $M_DealPage->dealPrint(); break;
+							case 'T' : $M_DealPage->dealTakeOver(); break;
+							case 'P' : $M_DealPage->dealInsertProc(); break;
+							case 'U' : $M_DealPage->dealUpdateProc(); break;
+							default : $M_DealPage->dealSumList(); break;
+						}
+						break;
+
+					default : // 경로이탈(예외처리)
+						break;
+				}
+				break;
+
+			case 4 : // 온라인
+				include_once ADMIN_CLASS_PATH . "/class.dealPage.php";
+				$M_DealPage = new M_DealPage;
+				include_once ADMIN_CLASS_PATH . '/class.unitPage.php';
+				$M_UnitPage = new M_UnitPage;
+
+				switch($MENU_2DEPTH) {
+					case 1 :	//온라인 매출
+						switch($P_ACTION) {
+							case 'S' : $M_DealPage->dealSumList(); break;
+							case 'L' : $M_DealPage->dealList(); break;
+							case 'V' : $M_DealPage->ondealRV("view"); break;
+							case 'Y' : $M_DealPage->Delivery(); break;
+							case 'I' : $M_DealPage->deliverySetting(); break;
+							case 'M' : $M_DealPage->deliveryUpdate(); break;
+							case 'R' : $M_DealPage->ondealRV(); break;
+							case 'P' : $M_DealPage->ondealInsertProc(); break;
+							case 'U' : $M_DealPage->ondealUpdateProc(); break;
+							case 'E' : $M_DealPage->uploadExcel(); break;
+							case 'X' : $M_DealPage->readExcel(); break;
+							default : $M_DealPage->dealSumList(); break;
+						}
+						break;
+
+					case 2 : // 오프라인 인수 & 정산
+						switch($P_ACTION) {
+							case 'L' : $M_DealPage->afterTheTransaction(); break;
+							case 'P' : $M_DealPage->costProc(); break;
+							case 'U' : $M_DealPage->costProc(); break;
+							default	 : $M_DealPage->afterTheTransaction(); break;
+						}
+						break;
+					case 3 : // 온라인 배송현황
+						switch($P_ACTION) {
+							case 'L' : $M_DealPage->Delivery(); break;
+							default : $M_DealPage->Delivery(); break;
+						}
+						break;
+					
+					case 4 : // 택배사 집하실적현황
+						switch($P_ACTION) {
+							case 'L' : $M_DealPage->deliveryResult(); break;
+							default : $M_DealPage->deliveryResult(); break;
+						}
+						break;
+					
+					case 5 :	//결제일별 통계
+						switch($P_ACTION) {
+							case 'L' : $M_DealPage->dealSumList2(); break;
+							default : $M_DealPage->dealSumList2(); break;
+						}
+						break;
+
+					case 6 :	//송장 대량등록 처리시스템
+						switch($P_ACTION) {
+							case 'U' : $M_DealPage->Upload(); break;
+							case 'D' : $M_DealPage->ReadDelivery(); break;
+							case 'C' : $M_DealPage->ReadDelivery(); break;
+							default : $M_DealPage->Upload(); break;
+						}
+						break;
+
+					case 7 :	//TEST
+						switch($P_ACTION) {
+							case 'L' : $M_DealPage->TEST(); break;
+							default : $M_DealPage->TEST(); break;
+						}
+						break;
+					
+					case 8 : // 교환/반품/환불/취소
+						switch($P_ACTION) {
+							case 'L' : $M_DealPage->dealUpdateByStatus(); break;
+							default : $M_DealPage->dealUpdateByStatus(); break;
+						}
+						break;
+				}
+				break;
+			
+			case 5 : //세금
+				include_once ADMIN_CLASS_PATH . '/class.taxPage.php';
+				$M_TaxPage = new M_TaxPage;
+
+				switch($MENU_2DEPTH){
+					case 1 : //오프라인
+						switch($P_ACTION){
+							case 'L' : $M_TaxPage->taxList(); break;
+							case 'V' : $M_TaxPage->boardRV('view'); break;
+							default : $M_TaxPage->taxList(); break;
+						}
+				}
+				break;
+
+			case 6 : //작업게시판
+				include_once ADMIN_CLASS_PATH . '/class.boardPage.php';
+				$M_BoardPage = new M_BoardPage;
+
+				switch($MENU_2DEPTH){
+					case 1 : //작업게시판
+						switch($P_ACTION){
+							case 'L' : $M_BoardPage->boardList(); break;
+							case 'R' : $M_BoardPage->boardRV(); break;
+							case 'V' : $M_BoardPage->boardRV('view'); break;
+							case 'P' : $M_BoardPage->boardDataInsertProc(); break;
+							case 'U' : $M_BoardPage->boardDataUpdateProc(); break;
+							case 'D' : $M_BoardPage->boardDataDeleteProc(); break;
+							default : $M_BoardPage->boardList(); break;
+						}
+						break;
+
+					case 3 : //공지사항
+						switch($P_ACTION){
+							case 'L' : $M_BoardPage->noticeList(); break;
+							case 'R' : $M_BoardPage->noticeRV(); break;
+							case 'P' : $M_BoardPage->noticeDataInsertProc(); break;
+							case 'U' : $M_BoardPage->noticeDataUpdateProc(); break;
+							case 'D' : $M_BoardPage->noticeDataDeleteProc(); break;
+							default : $M_BoardPage->noticeList(); break;
+						}
+						break;
+				}
+				break;
+
+			case 7 : //보고서
+				echo "here";
+				include_once ADMIN_CLASS_PATH . '/class.analysisAdPage.php';
+				$M_ADPage = new M_ADPage;
+
+				include_once ADMIN_CLASS_PATH . '/class.reportPage.php';
+				$M_ReportPage = new M_ReportPage;
+
+				switch($MENU_2DEPTH){
+					case 1 : //광고분석
+						switch($P_ACTION){
+							case 'L' : $M_ADPage->adReport(); break;
+							default : $M_ADPage->adReport(); break;
+						}
+						break;
+
+					case 2 : //상품별 판매량
+						switch($P_ACTION){
+							case 'L' : $M_ADPage->salesRateByGoods(); break;
+							default : $M_ADPage->salesRateByGoods(); break;
+						}
+						break;
+					
+					case 3 : //보고서DB 등록
+						echo $P_ACTION;
+						echo "where";
+						switch($P_ACTION){
+							case 'R' : $M_ReportPage->reportRV(); break;
+							case 'I' : $M_ReportPage->InsertByReportDB('COUPANG'); break;
+							default : $M_ReportPage->reportRV(); break;
+						}
+						break;
+					case 4 : //키워드 분석
+						switch($P_ACTION){
+							case 'L' : $M_ReportPage->reportAnaly('COUPANG'); break;
+							default : $M_ReportPage->reportAnaly('COUPANG'); break;
+						}
+						break;
+				}
+				break;
+
+			default :
+				include_once ADMIN_CLASS_PATH . '/class.dashPage.php';
+				$M_DashPage = new M_DashPage;
+				$M_DashPage->dashMain();
+				break;
+		}
+		
+		echo '<div class="clear"></div>';
+		echo $M_HTML->closeDiv();	// <!-- // page-wrapper -->	
+		echo $M_HTML->closeDiv();	// <!-- // wrapper -->
+	} else {
+		include_once ADMIN_PAGE_PATH . '/common/login.html';
+	}
+
+	include_once 'Inc/inc.adm.footer.php';
+
+	echo $M_HTML->iframe("_HIDDEN_FRAME", "100%", $height, "about:blank", "noresize");
+?>

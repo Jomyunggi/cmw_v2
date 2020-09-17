@@ -1,0 +1,146 @@
+<script type="text/javascript" src="<?php	echo JS_DIR;	?>/adm_common.js"></script>
+<script>
+	$(document).ready(function(){
+		//paging
+		comm_getPaging("/?<?php echo $MENU_ID.$P_ACTION;?>", "<?php echo $PAGE;?>", "<?php echo $total_page;?>", 10);
+	});
+
+	function searching(){
+		var searchCash		= document.getElementById('searchCash');
+		var searchCompany	= document.getElementById('searchCompany');
+		var searchTerm		= document.getElementById('searchTerm');
+		var cashV			= searchCash.options[searchCash.selectedIndex].value;
+		var companyV		= searchCompany.options[searchCompany.selectedIndex].value;
+		var termV			= searchTerm.options[searchTerm.selectedIndex].value;
+
+		var date = $('#date').val();
+
+		if(date == ""){		
+			window.location.href="/?M0304&searchCash="+cashV+"&searchCompany="+companyV+"&searchTerm="+termV;
+		} else {
+			window.location.href="/?M0304&searchCash="+cashV+"&searchCompany="+companyV+"&searchTerm="+termV+"&date="+date;
+		}
+	}
+
+</script>
+<div class="container">
+	<div class="contents-wrapper">
+		<h2 class="page-header">온라인 정산 & 광고비 내역</h2>
+	</div>
+
+	<!--/* 회원리스트  -->
+	<div class="contents-wrapper">
+		<div class="panel panel-default">
+			<div class="panel-heading text-center">
+				<?php 
+					echo $M_HTML->b_Form("search_frm", "", "get", 0);
+					echo $M_HTML->input_Hidden($MENU_ID.$P_ACTION, "");
+					echo $M_HTML->input_Hidden("PAGE", $PAGE);
+					echo $M_HTML->input_hidden("date", $date);
+				?>
+				<div class="form-inline">
+					<div class="form-group input-group">
+						<?php	
+							echo $M_HTML->_Select2("searchCash", $cashArr, $searchCash, "form-control", "", "style='width:19%;'");	
+							echo $M_HTML->_Select2("searchCompany", $companyArr, $searchCompany, "form-control", "", "style='width:34%;'");	
+							echo $M_HTML->_Select2("searchTerm", $this->searchTerm, $searchTerm, "form-control", "", "style='width:44%; text-decoration:underline; line-height:2px;'");
+						?>
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button" onclick="javascript:searching();"><i class="fa fa-search"></i> 검색</button>
+						</span>
+					</div>
+					
+				</div>
+				<?php
+					echo $M_HTML->e_Form();
+				?>
+			</div>
+			<table class="table table-bordered table-hover" >
+				<colgroup>
+					<col width="*%">
+					<col width="*%">
+					<col width="*%">
+					<col width="*%">
+					<col width="*%">
+				</colgroup>
+				<thead style="font-size:10.5px; padding:3px;">
+					<tr>
+						<th style="padding:4px;">번호</th>
+						<th style="padding:4px;">날짜</th>
+						<th style="padding:4px;">내역상태</th>
+						<th style="padding:4px;">거래처명</th>
+						<th style="padding:4px;">금액</th>
+					</tr>
+				</thead>
+
+				<tbody  style="font-size:11px;">
+				<?php
+					if($cashRow->size() > 0){
+						$totalPrice = 0;
+						for($i=0; $i<$cashRow->size(); $i++){
+							$cashRow->next();
+
+							switch($cashRow->get('cashType')){
+								case 1 : $cashType = "인수"; break;
+								case 2 : $cashType = "정산"; break;
+								case 3 : $cashType = "광고비"; break;
+							}
+
+							if($cashRow->get('cashType') == 1){
+								$price = "-".$cashRow->get('price');
+								$totalPrice -= $cashRow->get('price');
+							} else {
+								$price = "+".$cashRow->get('price');
+								$totalPrice += $cashRow->get('price');
+							}
+				?>
+					<tr class="text-center_memberList" style="text-align:center;">
+						<td style="padding:7px;"><?php echo $NO;?></td>
+						<td style="padding:7px;"><?php echo date('Y.m.d', strtotime($cashRow->get('date')));?></td>
+						<td style="padding:7px;"><?php echo $cashType;	?></td>
+						<td style="padding:7px;"><?php echo $companyArr[$cashRow->get('companyIdx')];?></td>
+						
+						<td style="padding:7px;"><?php echo number_format($price);	?></td>
+					</tr>
+			<?php	
+							$NO--;
+						}
+				} else {
+			?>
+					<tr class="text-center_memberList" style="text-align:center;">
+						<td colspan='6' style="padding:7px;">해당 데이터가 없습니다.</td>
+					</tr>
+			<?php
+				}
+			?>
+				</tbody>
+			</table>
+		</div><!--/* panel -->
+
+		<div id="paging" style="<?php echo $companyYN_style; ?>">
+		<?php	
+			$page = $PAGE;
+			$totalPage = $total_page;
+			$pageURL = ''; //
+			$URLParam = $URLParam;
+			echo $M_FUNC->pagingJumper3($page, $totalPage, $pageURL, $URLParam);
+			echo $M_HTML->input_Hidden("page", '');
+		?>
+		</div>
+		
+		<?php
+			if($companyYN){
+		?>
+		<div class="panel panel-default">
+			<div class="panel-heading text-center">
+				<?php echo $totalPrice;	?>
+			</div>
+		</div>
+		<?php
+			}
+		?>
+	</div><!--/* contents-wrapper -->
+	<!--/* 상품단가표 리스트 끝  -->
+
+
+</div><!-- container -->

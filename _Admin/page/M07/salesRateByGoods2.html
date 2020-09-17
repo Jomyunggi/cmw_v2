@@ -1,0 +1,199 @@
+<script type="text/javascript" src="<?php	echo JS_DIR;	?>/adm_common.js"></script>
+<script>
+	$(document).ready(function(){
+		$('#searchItem').click(function(){
+			if(this.value == 0){
+				if($("#searchItem").prop("checked")){
+					$("input[id=searchItem]").prop("checked",true);
+				} else {
+					$("input[id=searchItem]").prop("checked",false);
+				}
+					}
+		});
+	});
+
+	function searchSubmit(){
+		var frm = document.search_frm;
+		
+		frm.submit();
+	}
+</script>
+<div class="container">
+	<div class="contents-wrapper">
+		<h2 class="page-header">상품별 판매현황</h2>
+	</div>
+
+	<!--/* 회원리스트  -->
+	<div class="contents-wrapper">
+		<div class="panel panel-default">
+			<div class="panel-heading text-center">
+				<?php 
+					echo $M_HTML->b_Form("search_frm", "", "get", 0);
+					echo $M_HTML->input_Hidden($MENU_ID.$P_ACTION, "");
+				?>
+				<div class="form-inline">
+					<div class="form-group">
+						<?php	echo $M_HTML->_Select2("searchYear", $this->searchYear, $searchYear, "form-control");	?>
+						<?php	echo $M_HTML->_Select2("searchMonth", $this->searchMonth, $searchMonth, "form-control");	?>
+						<?php	//echo $M_HTML->_Select2("searchONOFF", $this->onoff, $searchONOFF, "form-control");	?>
+					</div>
+					<div class="form-group input-group" style="padding-right:70px;">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button" onclick="searchSubmit();"><i class="fa fa-search"></i> 검색</button>
+						</span>
+					</div>
+				</div>
+				<?php
+					echo $M_HTML->e_Form();
+				?>
+			</div>
+			<table class="table table-bordered table-hover">
+				<colgroup>
+					<col width="*">
+					<col width="*">
+					<col width="*">
+					<col width="*">
+					<col width="*">
+					<col width="*">
+					<col width="*">
+					<col width="*">
+					<col width="*">
+					<col width="*">
+					<col width="*">
+					<col width="*">
+					<col width="*">
+					<col width="*">
+					<col width="*">
+					<col width="*">
+					<col width="*">
+					<col width="*">
+					<col width="*">
+					<col width="*">
+				</colgroup>
+				<thead>
+					<th colspan='2'>새피아</th>
+					
+					<th colspan='6'>30롤</th>
+					
+					<th colspan='5'>고급점보롤</th>
+					
+					<th colspan='5'>꽃지점보롤</th>
+					
+					<th rowspan='2'>네프킨</th>
+					<th rowspan='2'>핸드타월</th>
+				</thead>
+				<tr>
+					<th>10롤</th>
+					<th>24롤</th>
+
+					<th>순수</th>
+					<th>자연</th>
+					<th>꿈집</th>
+					<th>꽃지꿈집</th>
+					<th>황토</th>
+					<th>데코꿈집</th>
+					
+					<th>150m</th>
+					<th>160m</th>
+					<th>180m</th>
+					<th>200m</th>
+					<th>300m</th>
+
+					<th>150m</th>
+					<th>160m</th>
+					<th>180m</th>
+					<th>200m</th>
+					<th>300m</th>
+
+					<th></th>
+					<th></th>
+				</tr>
+				<tbody>
+				<?php
+					if($goodsRow->size()>0){
+						//0:10롤,1:24롤, 2:순수, 3:자연, 4:꿈집, 5:꽃지꿈집, 6:황토, 7:데코꿈집, 8~12:고급, 13~17:꽃지, 18:네프킨, 19:핸드타월
+						//고급점보롤=> 150(13), 180(14), 꽃지점보롤=> 160, 180만
+						$rateArr = array();
+						for($i=0; $i<$goodsRow->size(); $i++){
+							$goodsRow->next();
+
+							if($goodsRow->get('onoff') == 'Off'){
+							//오프라인일때 dealNum으로 정리해서 재정의한다.
+								$goods = explode("|", $goodsRow->get('dealNum'));
+
+								for($k=0; $k<count($goods); $k++){
+									if($goodsRow->get('companyIdx') == 28 || $goodsRow->get('companyIdx') == 51){
+										if($k > 2 && $k < 10){
+											$rateArr[$k] += $goods[$k]/3;
+										} else {
+											$rateArr[$k] += $goods[$k];
+										}
+									} else {
+										$rateArr[$k] += $goods[$k];
+									}
+								}								
+							} else {
+							//온라인일때 deal, dealNum, priceKinds로 정리해서 재정의한다.
+								$goods = array();
+								//우선 1차적으로 팩이 들어가있는지 없는지 확인 후 상품별로 분류
+								if(strpos($goodsRow->get('deal'), "팩") !== false){
+									
+								} else {
+
+								}
+
+							}
+						}
+						
+						//배열 인덱스 재정렬  
+						$i = 0;  
+						foreach($rateArr as $key=>$val)  
+						{ 
+							unset($rateArr[$key]);  
+						  
+							switch($key){
+								case 0:		$rateArr[0]		= $val; break;	//새피아10
+								case 2:		$rateArr[1]		= $val; break;	//새피아24
+								case 4:		$rateArr[2]		= $val; break;	//순수
+								case 5:		$rateArr[3]		= $val; break;	//자연
+								case 6:		$rateArr[4]		= $val; break;	//꿈집
+								case 7:		$rateArr[5]		= $val; break;	//꽃지꿈집
+								case 8:		$rateArr[6]		= $val; break;	//황토
+								case 9:		$rateArr[7]		= $val; break;	//데코꿈집
+								case 11:	$rateArr[15]	= $val; break;	//꽃지점보롤 180
+								case 12:	$rateArr[16]	= $val; break;	//꽃지점보롤 200
+								case 13:	$rateArr[8]		= $val; break;	//고급점보롤 150
+								case 14:	$rateArr[10]	= $val; break;	//고급점보롤 180
+								case 15:	$rateArr[15]	= $val; break;	//꽃지점보롤 160
+								default :	
+									$rateArr[9]		= 0;
+									$rateArr[11]	= 0;
+									$rateArr[12]	= 0;
+									$rateArr[13]	= 0;
+									$rateArr[14]	= 0;
+									$rateArr[16]	= 0;
+									$rateArr[17]	= 0;
+									break;
+							}
+						}
+						ksort($rateArr);
+					
+						echo "<pre>";
+						print_r($rateArr);
+					} else {
+				?>
+					<tr>
+						<td>검색에 대한 알맞는 데이터가 없습니다.</td>
+					</tr>
+				<?php	
+					}
+				?>
+				</tbody>
+			</table>
+		</div><!--/* panel -->
+	</div><!--/* contents-wrapper 1-->
+	<!--/* 해당 월 합계 끝  ---------------------------------------------------------------------------------------------------------------------->
+
+</div><!-- container -->
+
+<div style="clear:both;"></div>

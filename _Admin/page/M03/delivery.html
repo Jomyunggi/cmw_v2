@@ -1,0 +1,182 @@
+<script type="text/javascript" src="<?php	echo JS_DIR;	?>/adm_common.js"></script>
+<script>
+	$(document).ready(function(){
+		//paging
+		comm_getPaging("/?<?php echo $MENU_ID.$P_ACTION;?>", "<?php echo $PAGE;?>", "<?php echo $total_page;?>", 10);
+	});
+
+	function goBack(){
+		window.location.href="/?M0303S&searchMonth=<?php echo (int)$month;?>";
+	}
+
+	function searchSubmit(){
+		var frm = document.search_frm;
+		frm.submit();
+	}
+
+	function searching(){
+		window.location.href="/?M0303YS&date=<?php echo $date;?>&searchDelivery="+$('#searchDelivery').val();
+	}
+
+	function updateDealBydelivery(gubun){
+		var ajax_url = "/page/ajax/M03/ajax.updateDealBydelivery.php";
+		var dealIdx = $('#dealIdx').val();
+		var year = $('#year').val();
+		var month = $('#month').val();
+		var ajax_data = {
+			//select박스 판매처 선택된 companyIdx값
+			'dealIdx'	: dealIdx,
+			'gubun'		: gubun,
+			'year'		: year,
+			'month'		: month
+		};
+
+		$.ajax({
+			url : ajax_url,
+			data : ajax_data,
+			type : 'POST',
+			dataType : 'html',
+			contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+			success: function (response) {
+				if(response == 'success') {
+					alert('발송처리 되었습니다.');
+					location.reload();
+				}
+			},
+			failure: function(msg) {
+			}
+		});
+	}
+</script>
+<div class="container">
+	<div class="contents-wrapper">
+		<h2 class="page-header"><?php echo date("Y.m.d", strtotime($date));?> &nbsp;&nbsp;배송상태</h2>
+	</div>
+
+	<!--/* 회원리스트  -->
+	<div class="contents-wrapper">
+		<div class="panel panel-default">
+			<div class="panel-heading text-center">
+				<?php 
+					echo $M_HTML->b_Form("search_frm", "", "get", 0);
+					echo $M_HTML->input_Hidden($MENU_ID.$P_ACTION, "");
+					echo $M_HTML->input_Hidden("PAGE", $PAGE);
+				?>
+				<div class="form-inline">
+				<?php
+					if($deliveryRow->size()> 0 && ($searchDelivery == 4 || $searchDelivery == 0)){
+				?>
+					<div class="form-group" style="float:left;">
+						<button class="btn btn-sm btn-success" onclick="javascript:goBack(); return false;">Excel</button>		
+					</div>
+				<?php
+					}
+				?>
+					<div class="form-group">
+						<?php	echo $M_HTML->_Select2("searchDelivery", $this->searchDelivery, $searchDelivery, "form-control", "onchange='searching()'");	?>
+					</div>
+					
+				</div>
+				<?php
+					echo $M_HTML->e_Form();
+				?>
+			</div>
+			<table class="table table-bordered table-hover" >
+				<colgroup>
+					<col width="*%">
+					<col width="*%">
+					<col width="*%">
+					<col width="*%">
+					<col width="*%">
+					<col width="*%">
+					<col width="*%">
+					<col width="*%">
+					<col width="15%">
+					<col width="15%">
+					<col width="*%">
+					<col width="*%">
+					<col width="*%">
+					<col width="*%">
+					<col width="*%">
+				</colgroup>
+				<thead style="font-size:11px; padding:3px;">
+					<tr>
+						<th style="padding:4px;">번호</th>
+						<th style="padding:4px;">배송상태</th>
+						<th style="padding:4px;">사이트명</th>
+						<th style="padding:4px;">수하인</th>
+						<th style="padding:4px;">핸드폰</th>
+						<th style="padding:4px;">전화번호</th>
+						<th style="padding:4px;">상품명</th>
+						<th style="padding:4px;">우편번호</th>
+						<th style="padding:4px;">주소</th>
+						<th style="padding:4px;">배송메세지</th>
+						<th style="padding:4px;">수량(소)</th>
+						<th style="padding:4px;">수량(중)</th>
+						<th style="padding:4px;">수량(대)</th>
+						<th style="padding:4px;">특기사항</th>
+						<th style="padding:4px;">운임</th>
+					</tr>
+				</thead>
+
+				<tbody  style="font-size:11px;">
+				<?php	
+				if($deliveryRow->size() > 0){
+					$NO = $deliveryRow->size();
+					for($i=0; $i<$deliveryRow->size(); $i++){
+						$deliveryRow->next();
+
+						$kinds = explode("|", $deliveryRow->get('priceKinds'));
+						$small = $kinds[2] == "" ? 0 : $kinds[2];
+						$medium = $kinds[3] == "" ? 0 : $kinds[3];
+						$large = $kinds[4] == "" ? 0 : $kinds[4];
+
+						//해당거래 배송상태 뽑아내기
+						$delTxt = "";
+						if($deliveryRow->get('dstart') == 0){
+							$delTxt = "발송처리";
+						} elseif($deliveryRow->get('dstart') > 0){
+							if($deliveryRow->get('dend') > 0){
+								$delTxt = "배송완료";
+							} else $delTxt = "배송중";
+						}
+				?>
+					<tr class="text-center_memberList" style="text-align:center;">
+						<td style="padding:7px;"><?php echo $NO;?></td>
+						<td style="padding:7px;"><?php echo $delTxt;?></td>
+						<td style="padding:7px;"><?php echo $deliveryRow->get('companyName');	?></td>
+						<td style="padding:7px;"><?php echo $deliveryRow->get('recipient');	?></td>
+						<td style="padding:7px;"><?php echo $deliveryRow->get('tel');	?></td>
+						<td style="padding:7px;"><?php echo $deliveryRow->get('tel2');	?></td>
+						<td style="padding:7px;"><?php echo $deliveryRow->get('deal').", ".$deliveryRow->get('dealNum')."개";	?></td>
+						<td style="padding:7px;"></td>
+						<td><?php echo $deliveryRow->get('addr');	?></td>
+						<td><?php echo $deliveryRow->get('deliveryTxt');	?></td>
+						<td><?php echo $small;	?></td>
+						<td><?php echo $medium;	?></td>
+						<td><?php echo $large;	?></td>
+						<td style="padding:7px;">없음</td>
+						<td style="padding:7px;"></td>
+					</tr>
+			<?php	
+						$NO--;
+					}
+				} else {
+			?>
+					<tr style="text-align:center;">
+						<td colspan="13">등록된 데이터가 없습니다.</td>
+					</tr>
+			<?php	}	?>
+				</tbody>
+			</table>
+		</div><!--/* panel -->
+
+
+		<div class="pull-left">
+			<button class="btn btn-sm btn-default" onclick="javascript:goBack(); return false;">목록</button>		
+		</div>
+	</div><!--/* contents-wrapper -->
+	<!--/* 상품단가표 리스트 끝  -->
+
+
+</div><!-- container -->

@@ -1,0 +1,179 @@
+<script type="text/javascript" src="<?php	echo JS_DIR;	?>/adm_common.js"></script>
+
+<script>
+	$(document).ready(function(){
+		$('#totalPrice').html(<?php echo $totalPrice;?>);
+	});
+
+	function searchSubmit(){
+		var frm = document.search_frm;
+		frm.submit();
+	}
+
+	function searching(){
+		window.location.href="/?M0303S&searchYear="+$('#searchYear').val()+"&searchMonth="+$('#searchMonth').val();
+	}
+</script>
+<div class="container"  style="width:100%;">
+	<div class="contents-wrapper">
+		<h2 class="page-header">온라인 거래현황</h2>
+	</div>
+
+	<!--/* 해당 월 합계 끝  ---------------------------------------------------------------------------------------------------------------------->
+	<div class="contents-wrapper" style='float:left; width:30%;'>
+		<div class="panel panel-default">
+			<div class="panel-heading text-center">
+				<?php 
+					echo $M_HTML->b_Form("search_frm", "", "get", 0);
+					echo $M_HTML->input_Hidden($MENU_ID.$P_ACTION, "");
+					echo $M_HTML->input_Hidden("PAGE", $PAGE);
+				?>
+				<div class="form-inline">
+					<div class="form-group">
+						<?php	echo $M_HTML->_Select2("searchYear", $this->searchYear, $searchYear, "form-control");	?>
+						<?php	echo $M_HTML->_Select2("searchMonth", $this->searchMonth, $searchMonth, "form-control", "onchange='searching()'");	?>
+					</div>
+				</div>
+				<?php
+					echo $M_HTML->e_Form();
+				?>
+			</div>
+			<table class="table table-bordered table-hover">
+				<colgroup>
+					<col width="10%">
+					<col width="40%">
+					<col width="15%">
+					<col width="35%">
+				</colgroup>
+				<thead>
+					<tr>
+						<th style="padding:10px;">번호</th>
+						<th style="padding:10px;">상호명</th>
+						<th style="padding:10px;">판매수</th>
+						<th style="padding:10px;">합계</th>
+					</tr>
+				</thead>
+
+				<tbody>
+			<?php	
+				if($dealRow->size() > 0){
+					$num = $dealRow->size();
+					$totalPrice = 0;
+					for($i=0; $i<$dealRow->size(); $i++){
+						$dealRow->next();
+
+						$totalPrice += $dealRow->get('price');
+			?>
+					<tr data-href="/?M0303L&m_id=<?php echo $dealRow->get("companyIdx");?>&year=<?php echo $searchYear;?>&month=<?php echo $searchMonth;?>" class="text-center_memberList" style="text-align:center;" >
+						<td style="padding:7px;"><?php echo $num;	?></td>
+						<td style="text-align:left; padding-left:10px;"><?php echo $dealRow->get('companyName');	?></td>		
+						<td style="text-align:right; padding-right:10px;"><?php echo $dealRow->get('cnt');	?>개</td>		
+						<td style="padding:3px 10px 3px 0; text-align:right;"><?php echo number_format($dealRow->get('price'));	?>원</td>
+					</tr>
+			<?php		
+						$num--;
+					}
+				} else {
+			?>
+					<tr style="text-align:center;">
+						<td colspan="5"><?php echo $searchYear."년 ".$searchMonth."월에 대한 판매가 없습니다."; ?></td>
+					</tr>
+			<?php	}	?>
+					<tr>
+						<th colspan='3' style="padding:8px; background-color:black; color:white; font-size:14px;">총 합계</th>
+						<th id="totalPrice" style="padding:5px; background-color:black; color:white; padding:3px 10px 3px 0; text-align:right; font-size:14px;"><?php echo number_format($totalPrice);?>원</th>
+					</tr>
+				</tbody>
+			</table>
+		</div><!--/* panel -->
+
+		<div class="pull-left">
+			<a href="?M0303R&searchMonth=<?php echo $searchMonth;?>" class="btn btn-sm btn-success" role="button">송장 등록</a>
+		</div>
+	</div><!--/* contents-wrapper 1-->
+	<!--/* 해당 월 합계 끝  ---------------------------------------------------------------------------------------------------------------------->
+
+
+	<!--/* 해당 월 일별 합계  --------------------------------------------------------------------------------------------------------------------->
+	<div class="contents-wrapper" style='float:left; width:70%;'>
+		<div class="panel panel-default">
+			<div class="panel-heading text-center" style="padding:10px 10px;">
+				<div class="form-inline">
+					<?php echo $searchMonth;?>월 달력 <span style="margin-left:30px; font-size:14px; font-weight:bold;">총 합계: <?php echo number_format($totalPrice);?>원</span>
+				</div>
+				<?php
+					echo $M_HTML->e_Form();
+				?>
+			</div>
+			<table class="table table-bordered table-hover">
+				<colgroup>
+					<col width="14%">
+					<col width="14%">
+					<col width="14%">
+					<col width="14%">
+					<col width="14%">
+					<col width="14%">
+					<col width="14%">
+				</colgroup>
+				<thead>
+					<tr>
+						<th style="background-color:red; color:white; padding:2px;">일</th>
+						<th style="background-color:#BDBDBD; padding:2px;">월</th>
+						<th style="background-color:#BDBDBD; padding:2px;">화</th>
+						<th style="background-color:#BDBDBD; padding:2px;">수</th>
+						<th style="background-color:#BDBDBD; padding:2px;">목</th>
+						<th style="background-color:#BDBDBD; padding:2px;">금</th>
+						<th style="background-color:red; color:white; padding:2px;">토</th>
+					</tr>
+					
+				<?php
+					//$tr_arr			= array(0, 6, 7, 13, 14, 20, 21, 27, 28, 34, 35, 41);
+					$day = 1;
+					for($i=0; $i<42; $i++){
+						if(strlen($searchMonth) < 2) $date = $searchYear."0".$searchMonth."01";
+						else $date = $searchYear.$searchMonth."01";
+
+						if($i%7 == 0) echo "<tr>";
+
+						while(date('w', strtotime($date)) > $i){
+							echo "<td></td>";
+							$i++;
+						}
+
+						if($day <= $this->monthByDay[$searchMonth]){
+							$selectDate = strlen($day) < 2 ? substr($date, 0, 6)."0".$day : substr($date, 0, 6).$day;
+				?>
+						<td data-href="?M0303Y&date=<?php echo $selectDate;?>" style='padding:3px;'><?php echo $day; ?>.</br>
+				<?php
+							$totalPrice = 0;
+							for($j=0; $j<sizeof($dayPriceArr[$day]); $j++){
+						
+								$totalPrice += (int)$dayPriceArr[$day][$j]['price'];
+
+								echo "<div class='calender_left'>".$dayPriceArr[$day][$j]['name']."</div><div class='calender_right'>".number_format($dayPriceArr[$day][$j]['price'])."원</div>";
+								echo "</br>";
+							}
+				?>
+						<div class='calender_total_left'>합계</div><div class='calender_total_right'><?php echo number_format($totalPrice); ?>원</div>
+					</td>
+				<?php
+						} else {
+							echo "<td></td>";
+						}
+
+						$day++;
+						if($i%7 == 6) echo "</tr>";
+					}
+				?>
+				</thead>
+				<tbody>
+			
+				</tbody>
+			</table>
+		</div><!--/* panel -->
+	</div><!-- contents-wrapper2 -->
+	<!--/* 해당 월 일별 합계  --------------------------------------------------------------------------------------------------------------------->
+
+</div><!-- container -->
+
+<div style="clear:both;"></div>

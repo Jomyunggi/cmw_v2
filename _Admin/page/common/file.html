@@ -1,0 +1,98 @@
+<link type="text/css" href="<?php echo CSS_DIR; ?>/uploadfile.css" rel="stylesheet">
+<script src="<?php echo PAGE_COMMON_DIR; ?>/editor/js/HuskyEZCreator.js"></script>
+<script src="<?php echo JS_DIR; ?>/jquery.uploadfile.min.js"></script>
+<script>
+	$(document).ready(function() {
+		filedata();
+	});
+	
+function filedata(){
+	// 파일 업로드용 리스트
+	var fn_list = new Array();
+	var fp_list = new Array();
+
+	var settings = {
+		url: "<?php echo AJAX_COMMON_DIR; ?>/ajax.fileUpload.php",
+		method: 'POST',
+		allowedTypes:'jpg,png,gif,pdf,zip,doc,docx,xls,xlsx,ppt,pptx',
+		fileName: 'myfile',
+		returnType:'json',
+		multiple: true,
+		uploadButtonClass:'ajax-file-upload-green',
+		formData: {'MENU_ID' : $('#MENU_ID').val()},
+		maxFileSize:1024*1024*10,		//* 10M
+		showStatusAfterSuccess:true,
+		maxFileCount:10,
+		dragDrop:true,
+		showDelete: true,
+		showDone:false,
+		showDownload:false,
+		statusBarWidth:600,
+		dragdropWidth:600,
+//		showPreview:true,
+//		previewHeight:'100px',
+//		previewWidth:'100px',
+//		showQueueDiv:"output",
+		onSuccess:function(files,data,xhr) {
+			//console.log(files); 현재 올린 오리지널 파일명
+			//console.log(data); tmpData에 올라간 파일명
+			//console.log(xhr);
+			fn_list.push( files.toString() );//fn_list배열에 files의 string 푸쉬
+			fp_list.push( data.toString() );//fp_list배열에 data의 string 푸쉬
+			$("#fileNameList").val(fn_list.join());
+			$("#filePathList").val(fp_list.join());
+		},
+		afterUploadAll:function() {
+			//alert("all images uploaded!!");
+		},
+		onError: function(files,status,errMsg) {		
+			//$("#status").html("<font color='red'>Upload is Failed</font>");
+		},
+		onCancel : function(files, pd) {
+			//console.log(files);
+			// console.log(pd);
+
+		},
+		deleteCallback : function (data, pd) {
+			// data : 템프에 올라간 파일명
+			var ajax_url = '/page/ajax/ajax.fileCancel.php';
+			var fileName = data.toString();
+			$.ajax({
+				url : ajax_url,
+				data : {fileName : fileName},
+				type : 'POST',
+				dateType : 'html',
+				cache : false,
+				success : function(response) {
+					if(response == 'OK') {
+						var index = fp_list.indexOf(fileName);
+						fn_list.splice(index, 1);
+						fp_list.splice(index, 1);
+						$('#fileNameList').val(fn_list.join());
+						$('#filePathList').val(fp_list.join());
+					} else if(response == 'FAIL') {
+						alert('File Delete Fail : <?php echo $SearchName[319]["Name"]; ?>');	//관리자에게 문의하여 주십시오.
+					} else {
+						alert('System Error : <?php echo $SearchName[319]["Name"]; ?>');	 //관리자에게 문의하여 주십시오.
+					}
+				},
+				failure : function(error) {
+					alert(error);
+				}
+			});
+			// pd.statusbar.hide(); //You choice.
+		},
+		onLoad : function(obj) {
+			// console.log(obj);
+		},
+		customProgressBar: function (obj, s) {
+			// console.log(obj);
+			// console.log(s);
+		}
+	}
+	
+	$("#mulitplefileuploader").uploadFile(settings);
+}
+</script>
+<input type="hidden" id="fileNameList" name="fileNameList" value="" />
+<input type="hidden" id="filePathList" name="filePathList" value="" />

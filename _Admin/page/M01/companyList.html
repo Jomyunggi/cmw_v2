@@ -1,0 +1,181 @@
+<script type="text/javascript" src="<?php	echo JS_DIR;	?>/adm_common.js"></script>
+<script>
+$(document).ready(function(){
+	$("#all").click(function(){
+		if($("#all").prop("checked")){
+			$("input[name=accountIdx]").prop("checked",true);
+		} else {
+			$("input[name=accountIdx]").prop("checked",false);
+		}
+	});
+	
+	//paging
+	comm_getPaging("/?<?php echo $MENU_ID.$P_ACTION;?>", "<?php echo $PAGE;?>", "<?php echo $total_page;?>", 10);
+
+	$('#level').change(function(){
+		if($(this).val() != 0){
+			location.href="/?M0103L&level="+$(this).val();
+		} else {
+			location.href="/?M0103L";
+		}
+	});
+});
+
+
+function member_delete() {
+	var $checkboxes = $(".text-center_memberList").find(':checkbox:checked');
+
+	var checkArr = new Array();
+	$checkboxes.each(function(index){
+		checkArr.push($(this).val());
+	});
+
+	if (checkArr.length < 1)	{
+		alert("삭제 할 고객사를 하나 이상 선택하여 주세요");
+		return;
+	} else {
+		
+		var conf = confirm("선택한 고객사를 모두 삭제하시겠습니까?");
+		var ajax_url = "/page/ajax/M01/ajax.company_proc.php";
+		var ajax_data = {
+			'mode' : 'delete',
+			'idx' : checkArr,
+			'MENU_ID' : '<?=$MENU_ID?>',
+		}
+		if(conf){
+			$.ajax({
+				url : ajax_url,
+				data : ajax_data,
+				type : 'POST',
+				dataType : 'text',
+				contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+				success : function(response){
+					if(response == "success"){
+						alert("선택한 아이디들이 삭제되었습니다.");
+						location.href="/?M0103L";
+					} else {
+						alert("매칭값이 있으면 삭제 할 수 없습니다. Sales관리에서 매칭값이 있는지 확인해주세요.");
+						location.href="/?M0103L";
+					}
+				}
+			});
+		}
+	}	
+}
+
+function searchSubmit(){
+	var frm = document.search_frm;
+	frm.submit();
+}
+</script>
+
+<div class="container">
+	<div class="contents-wrapper">
+		<div class="page-header" style="font-size:22px; font-weight:bold; margin:20px 0 10px;">거래처 조회</div>
+	</div>
+
+	<!--/* 회원리스트  -->
+	<div class="contents-wrapper" style="padding-top:6px; width:90%;">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				
+				<div class="form-inline" style="display:flex;">
+					<div style="text-align:left; flex:2;">
+						<button class="btn btn-sm btn-default" type="bytton" onclick="member_delete();"><i class="fa fa-trash" aria-hidden="true"></i> 휴지통</button>
+						<a href="?M0103R" class="btn btn-sm btn-info" role="button"><i class="fa fa-users fa-user-plus"></i> 거래처 등록</a>
+					</div>
+
+					<div style="text-align:center; flex:8;">
+						<div class="form-group">
+							
+						</div>
+						<div class="form-group input-group">
+							<?php	echo $M_HTML->_Select2("level", $this->cLevel, $level, "form-control");	?>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+			<table class="table table-bordered table-hover">
+				<colgroup>
+					<col width="3%">
+					<col width="10%">
+					<col width="*%">
+					<col width="20%">
+					<col width="10%">
+					<col width="10%">
+					<col width="15%">
+					<col width="10%">
+					
+				</colgroup>
+				<thead>
+					<tr>
+						<th style="padding:10px;"><input type="checkbox" id="all"></th>
+						<th style="padding:10px;">구분</th>
+						<th style="padding:10px;">비고</th>
+						<th style="padding:10px;">거래처명</th>						
+						<th style="padding:10px;">사업자번호</th>
+						<th style="padding:10px;">전화번호</th>
+						<th style="padding:10px;">이메일</th>						
+						<th style="padding:10px;">등록일</th>
+					</tr>
+				</thead>
+				<tbody>
+				<?php
+					if($row->size() > 0){
+						for($i=0; $i<$row->size(); $i++){
+							$row->next();
+				?>
+						<tr class="text-center_memberList" style="text-align:center; font-size:12px;" >
+							<td><input type="checkbox" value="<?php echo $row->get("idx");?>" id="idx2" name="accountIdx" /></td>
+
+							<td data-href="/?M0103V&PAGE=<?php echo $PAGE;?>&m_id=<?php echo $row->get("idx"); ?>"><?php echo $this->cLevel[$row->get('level')]; ?></td>
+
+							<td>
+								<!--거래처별 견적-->
+								<a href="/?M0104V&PAGE=<?php echo $PAGE;?>&companyIdx=<?php echo $row->get("idx"); ?>" class="btn btn-xs btn-default" role="button" style="line-height:1;"><i class="fa fa-glass fa-fw"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<!--송장쓰기-->
+								<a href="/?M0301R&companyIdx=<?php echo $row->get("idx"); ?>" class="btn btn-xs btn-default" role="button" style="line-height:1;"><i class="fa fa-file fa-fw" style=""></i></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<!--정산시스템-->
+								<a href="/?M0101C&accountIdx=<?php echo $row->get("idx"); ?>&onoff=<?php echo $row->get('onoff'); ?>" class="btn btn-xs btn-default" role="button" style="line-height:1;"><i class="fa fa-won fa-fw"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<!--입출금내역-->
+								<a href="/?M0102&searchCompany=<?php echo $row->get("idx"); ?>" class="btn btn-xs btn-default" role="button" style="line-height:1;"><i class="fa fa-list fa-fw" style=""></i></a>
+							</td>
+
+							<td data-href="/?M0103V&m_id=<?php echo $row->get("idx"); ?>" align="left" style="padding:3px 0 3px 15px; font-size:13px; font-weight:bold;"><?php echo $row->get('companyName');	?></td>
+
+							<td data-href="/?M0103V&PAGE=<?php echo $PAGE;?>&m_id=<?php echo $row->get("idx"); ?>"><?php echo $row->get('license'); ?></td>
+							<td data-href="/?M0103V&PAGE=<?php echo $PAGE;?>&m_id=<?php echo $row->get("idx"); ?>"><?php echo $row->get('tel'); ?></td>
+							<td data-href="/?M0103V&PAGE=<?php echo $PAGE;?>&m_id=<?php echo $row->get("idx"); ?>"><?php echo $row->get('email'); ?></td> 
+							<td data-href="/?M0103V&PAGE=<?php echo $PAGE;?>&m_id=<?php echo $row->get("idx"); ?>"><?php echo date('Y.m.d', $row->get('regUnixtime')); ?></td>
+						</tr>
+				<?php	
+							$NO--;
+						}
+					} else {
+				?>
+						<tr style="text-align:center;">
+							<td colspan="8">등록된 계정이 없습니다.</td>
+						</tr>
+				<?php	}	?>
+					</tbody>
+				</table>
+			</div><!--/* panel -->
+
+			<div id="paging" style="margin-top:0px;">
+			<?php	
+				$page = $PAGE;
+				$totalPage = $total_page;
+				$pageURL = '';
+				$URLParam = $URLParam;
+				echo $M_FUNC->pagingJumper3($page, $totalPage, $pageURL, $URLParam);
+				echo $M_HTML->input_Hidden("page", '');
+			?>
+			</div>
+
+
+	</div><!--/* contents-wrapper -->
+	<!--/* 회원리스트 끝  -->
+
+
+</div><!-- container -->

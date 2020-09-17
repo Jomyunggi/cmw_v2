@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link href="class/css/aux_common.css" rel="stylesheet">
+    <link href="class/css/aux_plugin.css" rel="stylesheet">
+    <link href="class/css/aux_admin.css" rel="stylesheet">
+
+    <title>온디맨드 어드민</title>
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <!-- 헤더 탑 -->
+            <div class="navbar-header">
+                <a class="navbar-brand" href="index.html">ONDEMAND</a>
+            </div>
+
+            <ul class="nav navbar-top-links navbar-right">
+                <li>
+                    <p>son 님 로그인 ( ip : 111.222.33.1 )  </p>
+                </li>
+                <li>
+                    <a href=""><span class="btn btn-danger btn-xs mtb-10">로그아웃</span></a>
+                </li>
+            </ul>
+            <!--/* 헤더 탑 끝 -->
+
+            <!-- 좌측 메뉴 -->
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li>
+                            <a href="#"><i class="fa fa-user fa-fw"></i> 회원관리<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li><a href="member.html"><i class="fa fa-caret-right" aria-hidden="true"></i> 회원목록</a></li>
+                                <li><a href="#"><i class="fa fa-caret-right" aria-hidden="true"></i> 회원정보</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-wrench fa-fw"></i> 서비스이용관리<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li><a href="service1.html"><i class="fa fa-caret-right" aria-hidden="true"></i> 서비스신청</a></li>
+                                <li><a href="service2.html"><i class="fa fa-caret-right" aria-hidden="true"></i> 상담완료</a></li>
+                                <li><a href="service3.html"><i class="fa fa-caret-right" aria-hidden="true"></i> 서비스세팅중</a></li>
+                                <li><a href="service4.html"><i class="fa fa-caret-right" aria-hidden="true"></i> 서비스진행중</a></li>
+                                <li><a href="service5.html"><i class="fa fa-caret-right" aria-hidden="true"></i> 서비스중지중</a></li>
+                                <li><a href="service6.html"><i class="fa fa-caret-right" aria-hidden="true"></i> 서비스종료</a></li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-envelope-o fa-fw"></i> 1:1문의관리<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li><a href="customer.html"><i class="fa fa-caret-right" aria-hidden="true"></i> 1:1 문의관리</a></li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-list fa-fw"></i> 게시판관리<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li><a href="bbs-board.html"><i class="fa fa-caret-right" aria-hidden="true"></i> 공지사항</a></li>
+                                <li><a href="bbs-faq.html"><i class="fa fa-caret-right" aria-hidden="true"></i> FAQ</a></li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-gear fa-fw"></i> 환경설정<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li><a href="setting.html"><i class="fa fa-caret-right" aria-hidden="true"></i> 관리자</a></li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!--/* 좌측메뉴 끝 -->
+<!-- ////////////   헤더 영역 끝  ///////////////////// -->
+
+<!--////// 컨텐츠 영역 /////////////////////////////////-->
+        <div id="page-wrapper">
+
+            <div class="container">
+                <div class="contents-wrapper">
+                    <h2 class="page-header">서비스 중지중</h2>
+                </div>
+                <!--/* 회원리스트  -->
+                <div class="contents-wrapper">
+                    <div class="panel panel-default">
+                        <div class="panel-heading text-center">
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <select class="form-control">
+                                        <option value="1">아이디</option>
+                                        <option value="">이름</option>
+                                        <option value="">전화번호</option>
+                                        <option value="">기업명</option>
+                                    </select>
+                                </div>
+                                 <div class="form-group input-group">
+                                    <input type="text" class="form-control">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" type="button"><i class="fa fa-search"></i> 검색</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <table class="table table-bordered table-hover">
+                            <colgroup>
+                                <col width="5%">
+                                <col width="15%">
+                                <col width="">
+                                <col width="">
+                                <col width="10%">
+                                <col width="10%">
+                                <col width="10%">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>번호</th>
+                                    <th>이름</th>
+                                    <th>서비스1차구분</th>
+                                    <th>서비스2차구분</th>
+                                    <th>등록일</th>
+                                    <th>서비스중지일</th>
+                                    <th>상세보기</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center">
+                                <tr>
+                                    <td>1</td>
+                                    <td>홍길동</td>
+                                    <td>서비스1차구분선택</td>
+                                    <td>서비스2차구분선택</td>
+                                    <td>2016.02.22</td>
+                                    <td></td>
+                                    <td><p class="btn btn-success btn-xs">보기</p></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>홍길동</td>
+                                    <td>서비스1차구분선택</td>
+                                    <td>서비스2차구분선택</td>
+                                    <td>2016.02.22</td>
+                                    <td></td>
+                                    <td><p class="btn btn-success btn-xs">보기</p></td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>홍길동</td>
+                                    <td>서비스1차구분선택</td>
+                                    <td>서비스2차구분선택</td>
+                                    <td>2016.02.22</td>
+                                    <td></td>
+                                    <td><p class="btn btn-success btn-xs">보기</p></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div><!--/* panel -->
+                    <div class="text-center">
+                        <ul class="pagination">
+                            <li><a href="#"><span aria-hidden="true"><i class="fa fa-angle-double-left" aria-hidden="true"></i></span></a></li>
+                            <li><a href="#"><span aria-hidden="true"><i class="fa fa-angle-left" aria-hidden="true"></i></span></a></li>
+                            <li class="active"><a href="#">1</a></li>
+                            <li><a href="#">2</a></li>
+                            <li><a href="#">3</a></li>
+                            <li><a href="#">4</a></li>
+                            <li><a href="#">5</a></li>
+                            <li><a href="#"><span aria-hidden="true"><i class="fa fa-angle-right" aria-hidden="true"></i></span></a></li>
+                            <li><a href="#"><span aria-hidden="true"><i class="fa fa-angle-double-right" aria-hidden="true"></i></span></a></li>
+                        </ul>
+                    </div>
+                </div><!--/* col-xs-12 -->
+                <!--/* 회원리스트 끝  -->
+            </div><!-- container -->
+        <div class="clear"></div>
+        </div><!-- /#page-wrapper -->
+<!--////// 컨텐츠 영역 끝  /////////////////////////////////-->
+    </div><!-- /#wrapper -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="class/js/aux_common.js"></script>
+<script src="class/js/aux_script.js"></script>
+
+</body>
+
+</html>

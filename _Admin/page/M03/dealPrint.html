@@ -1,0 +1,259 @@
+<style>
+	@media print{
+		@page margin 0
+	}
+</style>
+<script>
+var initBody;
+function beforePrint(){
+	initBody = document.body.innerHTML;
+	document.body.innerHTML = print_page.innerHTML;
+}
+
+function afterPrint(){
+	document.body.innerHTML = initBody;
+}
+
+function pagePrint(){
+	$('#won_YN0').hide();
+	$('#won_YN1').hide();
+	window.onbeforeprint = beforePrint;
+	window.onafterprint = afterPrint;
+
+	//상,하단 글귀 지우기
+
+	window.print();
+}
+
+function calculateCash(m_id, companyIdx, price, date, accountIdx){
+	if(confirm('부분정산 하시겠습니까?')){
+		location.href="?M0101C&accountIdx="+accountIdx+"&m_id="+m_id+"&date="+date+"&onoff=Off&type=print";
+	} else {
+		location.href="?M0101I&m_id="+m_id+"&companyIdx="+companyIdx+"&price="+price+"&date="+date+"&onoff=Off&type=print";
+	}
+}
+
+$(document).ready(function(){
+	//해당 년월일에 합계금액
+	$('#PriceSum0').html(addComma($('#goodsSum').val()));
+	$('#PriceSum1').html(addComma($('#goodsSum').val()));
+
+	//해당 년월일에 총미수금
+	var totalPrice = Number($('#goodsSum').val()) + Number($('#receivable').val());
+	$('#totalPrice0').html(addComma(totalPrice));
+	$('#totalPrice1').html(addComma(totalPrice));
+
+});
+
+function addComma(num) {
+  var regexp = /\B(?=(\d{3})+(?!\d))/g;
+  return num.toString().replace(regexp, ',');
+}
+</script>
+<object id="factory" style="display:none" classid="clsid:1663ed61-23eb-11d2-b92f-008048fdd814" codebase="http://www.meadroid.com/scriptx/ScriptX.cab#Version=6,1,429,14">
+</object>
+<div class="container">
+
+	<div class="contents-wrapper">
+		<h2 class="page-header">거래명세표 인쇄</h2>
+	</div>
+	
+	<!--저장, 수정버튼-->
+	<div class="contents-wrapper55" style="padding-bottom:20px;">
+		<!--a href="/?M0301S&m_id=<?php echo $companyIdx; ?>&year=<?php echo $year;?>&month=<?php echo $month;?>" class="btn btn-sm btn-default" role="button">목록</a-->
+		<a href="/?M0301L&m_id=<?php echo $companyIdx;?>&year=<?php echo $year;?>&month=<?php echo $month;?>" class="btn btn-sm btn-default" role="button">목록</a>
+		<button class="btn btn-sm btn-warning" onclick="javascript:pagePrint(); return false;">인쇄</button>		
+	</div>
+
+	<!-- 회원등록  -->
+	<div id="print_page" class="contents-wrapper50">
+	<?php
+		$gubunName = "";
+		for($k=0; $k<2; $k++){
+			if($k == 0) $gubunName = " (공급받는자 보관용)";
+			else{
+				$gubunName = " (공급자 보관용)";
+				echo "<div style='padding:18px 0 18px 0;'><hr style='border:dashed 0.5px black;'></hr></div>";
+			}
+
+			if($dealViewRow->get('companyIdx') == 41){
+				$companyName = substr($dealViewRow->get('companyName'), 0, 17);
+			} else if($dealViewRow->get('companyIdx') == 28 || $dealViewRow->get('companyIdx') == 31){
+				$companyName = "";
+			} else {
+				$companyName = $dealViewRow->get('companyName');
+			}
+	?>
+		<div class="panel panel-print" style="margin-bottom:0px;">
+			<table class="table table-bordered-print">
+				<colgroup>
+					<col width="4%">
+					<col width="4%">
+					<col width="4%">
+					<col width="4%">
+					<col width="3%">
+
+					<col width="12%">
+					<col width="3%">
+
+					<col width="8%">
+
+					<col width="3%">
+					<col width="12%">
+					<col width="3%">
+					<col width="10%">
+					<col width="6%">
+					<col width="8%">
+					<col width="6%">
+					<col width="8%">
+				</colgroup>
+				<tbody style="font-size:11px;">
+					<tr style="border-bottom:2px solid #0a0a0a;">
+						<td colspan='16' style="text-align:center; padding:4px;">
+						<span style="font-size:20px; font-weight:600;">거 래 명 세 표</span>
+						<span style="font-size:12x; letter-spacing:1.5px;"><?php echo $gubunName;?></span></td>
+						
+					</tr>
+					<tr>
+						<td rowspan='4' class="table_th_left" style="padding:10px;">공급받는자</td>
+						<td colspan='3' style="text-align:center; padding:4px; line-height:1.2em;">상 &nbsp;&nbsp;호</br>(법인명)</td>
+						<td colspan='4' style="text-align:center; padding:4px;"><?php echo $companyName;?></td>
+						<td rowspan='4' class="table_th_left" style="padding:4px;">공급자</td>
+						<td style="text-align:center; padding:4px;">등록번호</td>
+						<td colspan='6' style="text-align:center; padding:4px; font-size:15px; font-weight:600;">123-06-52024</td>
+					</tr>
+					<tr>
+						<td colspan='3' style="text-align:center; padding:4px; line-height:1.2em;">사업장</br>주 &nbsp;&nbsp;&nbsp;소</td>
+						<td colspan='4' class="table_th_left" style="padding:4px;"><?php echo $dealViewRow->get('addr');?></td>
+						<td style="text-align:center; padding:4px; line-height:1.2em;">상 &nbsp;&nbsp;호</br>(법인명)</td>
+						<td colspan='3' style="text-align:center; padding:4px;">C.M.W</td>
+						<td style="text-align:center; padding:4px;">성 명</td>
+						<td colspan='2' style="text-align:center; padding:4px;">조 순 철</td>
+					</tr>
+					<tr>
+						<td colspan='3' style="text-align:center; padding:4px;">전화번호</td>
+						<td colspan='4' class="table_th_left" style="padding:4px;"><?php echo $dealViewRow->get('tel');?></td>
+						<td style="text-align:center; padding:4px; line-height:1.2em;">사업장</br>주 &nbsp;&nbsp;&nbsp;소</td>
+						<td colspan='6' class="table_th_left" style="padding:4px;">경기도 시흥시 금화로 445번길 112(금이동)</td>
+					</tr>
+					<tr>
+						<td colspan='3' style="text-align:center; padding:4px;">합계금액</td>
+						<td id="PriceSum<?php echo $k;?>" colspan='4' class="table_th_right" style="padding:4px; font-size:15px; font-weight:600;"></td>
+						<td style="text-align:center; padding:4px;">전 &nbsp;&nbsp;&nbsp;화</td>
+						<td colspan='3' style="text-align:center; padding:4px;">031-314-3765</td>
+						<td style="text-align:center; padding:4px;">팩 &nbsp;&nbsp;&nbsp;스</td>
+						<td colspan='2' class="table_th_left" style="padding:4px;"></td>
+					</tr>
+					<tr  style="border-top:2px solid #0a0a0a;">
+						<td style="padding:4px; text-align:center;">년</td>
+						<td style="padding:4px; text-align:center;">월</td>
+						<td style="padding:4px; text-align:center;">일</td>
+						<td colspan='4'  style="padding:4px; text-align:center;">품 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;목</td>
+						<td colspan='2'  style="padding:4px; text-align:center;">규 격</td>
+						<td style="padding:4px; text-align:center;">수 량</td>
+						<td colspan='2'  style="padding:4px; text-align:center;">단가(원)</td>
+						<td colspan='3'  style="padding:4px; text-align:center;">공 급 가 액</td>
+						<td style="padding:4px;"></td>
+					</tr>
+					<?php
+						$line = 0;
+						$goodsSum = 0;
+						$deal = explode("|", $dealViewRow->get('deal'));
+						$dealNum = explode("|", $dealViewRow->get('dealNum'));
+						for($i=0; $i<sizeof($M_UnitPage->goodsNum_Arr); $i++){
+							if($dealNum[$i] != 0 && $dealNum[$i] != "0"){
+								$goodsSum += (int)$deal[$i];
+								$unit = (int)$deal[$i] / (int)$dealNum[$i];
+								$goodsName = $M_UnitPage->goodsNum_Arr[$i]['name'];
+								if($M_UnitPage->goodsNum_Arr[$i]['roll'] == 16){
+									$goodsName = $M_UnitPage->goodsNum_Arr[$i]['name'];
+								}
+
+								if($line == 0){
+									$year = substr(date('Y', strtotime($dealViewRow->get('date'))), 2,2);
+									$month = date('n', strtotime($dealViewRow->get('date')));
+									$day = date('d', strtotime($dealViewRow->get('date')));
+								} else {
+									$year = "";
+									$month = "";
+									$day = "";
+								}
+								$dealName = str_replace("충무 ", "", $goodsName);
+								//$dealName = str_replace("고급", "꽃지", $dealName);
+					?>
+					<tr>
+						<td style="text-align:center;"><?php echo $year;?></td>
+						<td style="text-align:center;"><?php echo $month;?></td>
+						<td style="text-align:center;"><?php echo $day;?></td>
+						<td colspan='4' style="padding-left:10px;"><?php echo $dealName;?></td>
+						<td colspan='2' style="text-align:center;"><?php echo $M_UnitPage->goodsNum_Arr[$i]['roll'];?></td>
+						<td class="table_th_right" style="padding-right:10px;"><?php echo $dealNum[$i];?></td>
+						<td colspan='2' class="table_th_right" style="padding-right:10px;"><?php echo number_format($unit);?></td>
+						<td colspan='3' class="table_th_right" style="padding-right:10px;"><?php echo number_format($deal[$i]);?></td>
+						<td class="table_th_left"></td>
+					</tr>
+					<?php
+								$line++;
+							}
+						}
+
+						$lineNum = 13 - $line;
+						for($i=0; $i<$lineNum; $i++){
+							if($i<$lineNum-1 !=0){
+					?>
+					<tr>
+						<td height='17.78px'></td>
+						<td></td>
+						<td></td>
+						<td colspan='4'></td>
+						<td colspan='2'></td>
+						<td></td>
+						<td colspan='2'></td>
+						<td colspan='3'></td>
+						<td></td>
+					</tr>
+					<?php
+							} else {
+					?>
+					<tr>
+						<td colspan='3' style="text-align:center;">비고</td>
+						<td colspan='13' style="padding:4px 0 4px 15px;">
+							기업은행 318-038272-01-029 예금주 : C.M.W(조순철),&nbsp;&nbsp;&nbsp;국민은행 218-21-0815-989 예금주 : 조순철
+						</td>
+					</tr>
+					<?php
+							}
+						}
+					?>
+					<tr style="border-top:2px solid #0a0a0a;">
+						<td colspan='5' style="padding:8px; text-align:center; letter-spacing:10px;">인수자</td>
+						<td class="table_th_right" style="padding:8px;">인</td>
+						<td colspan='2' style="padding:8px; text-align:center; letter-spacing:4px;">미수금</td>
+						<td colspan='3' class="table_th_right" style="padding-right:20px;">
+					<?php
+						if($RPrice > 0){
+					?>
+						<!--입출금내역-->
+						<a href="javascript:calculateCash('<?php echo $dealViewRow->get('idx')?>', '<?php echo $companyIdx; ?>', '<?php echo $RPrice; ?>', '<?php echo $dealViewRow->get('date'); ?>', '<?php echo $accountIdx; ?>');" class="btn btn-xs btn-default" role="button" style="line-height:1;" id="won_YN<?php echo $k;?>"><i class="fa fa-won fa-fw"></i></a>
+					<?php
+						}
+					?>
+						<?php echo number_format($RPrice); ?>
+						</td>
+						<td colspan='2' style="padding:8px; text-align:center; letter-spacing:2px;">총 &nbsp;미수금</td>
+						<td id="totalPrice<?php echo $k;?>" colspan='3' class="table_th_right" style="padding-right:10px;"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div><!--/* panel -->
+	<?php
+		}
+		
+		echo $M_HTML->input_Hidden('goodsSum', $goodsSum);
+		echo $M_HTML->input_Hidden('receivable', $RPrice);
+	?>
+	</div><!--/* contents-wrapper -->
+	<h3>&nbsp;</h3>
+	<!--/* 회원등록 끝 -->
+
+</div><!-- container -->

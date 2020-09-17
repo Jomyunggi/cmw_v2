@@ -1,0 +1,34 @@
+<!-- CMW 공지사항 -->
+		<div class="panel panel-default">
+			<table class="table table-bordered table-hover">
+				<colgroup>
+					<col width="15%">
+					<col width="*%">
+				</colgroup>
+				<thead>
+					<tr>
+						<th colspan='3' style="padding:10px 0 10px 0; font-size:20px; font-weight:500; background:#2F4050; color:white">공지사항</th>
+					</tr>
+					<tr style="font-size:16px;">
+						<th>번호</th>
+						<th>제목</th>
+					</tr>
+				</thead>
+				<tbody>
+				<?php
+					$number = $noticeRow->size();
+					for($i=0; $i<$noticeRow->size(); $i++){
+						$noticeRow->next();
+				?>
+					<tr style="text-align:center; font-size:16px;" >
+						<td style="padding:3px;"><?php echo $number; ?></td>
+						<td align="left" style="padding:3px 20px;"><?php echo $noticeRow->get('subject'); ?></td>
+					</tr>
+				<?php
+						$number--;
+					}
+				?>
+				</tbody>
+			</table>
+		</div>
+		<!--/* C.M.W 공지사항 끝  -->

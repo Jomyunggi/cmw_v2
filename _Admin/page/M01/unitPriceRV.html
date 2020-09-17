@@ -1,0 +1,193 @@
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js" type="text/javascript"></script>
+<script>
+$(document).ready(function(){
+	 // 상품추가 버튼 클릭시
+	$("#addGoodsBtn").click(function(){
+		// 상품 의 최대번호 구하기
+		var lastItemNo = $("#goodsT tr:last").attr("class").replace("goods", "");
+
+		var newitem = $("#goodsT tr:eq(1)").clone();
+		newitem.removeClass();
+		newitem.find("td:eq(0)").attr("rowspan", "1");
+		newitem.addClass("goods"+(parseInt(lastItemNo)+1));
+
+		$("#goodsT").append(newitem);
+	});	 
+	 
+	// 삭제버튼 클릭시
+	$(".delGoodsBtn").live("click", function(){
+		var clickedRow = $(this).parent().parent();
+		var cls = clickedRow.attr("class");
+		 
+		// 각 항목의 첫번째 row를 삭제한 경우 다음 row에 td 하나를 추가해 준다.
+		if( clickedRow.find("td:eq(0)").attr("rowspan") ){
+			if( clickedRow.next().hasClass(cls) ){
+				clickedRow.next().prepend(clickedRow.find("td:eq(0)"));
+			}
+		}
+
+		clickedRow.remove();
+
+		// rowspan 조정
+		resizeRowspan(cls);
+	});
+
+	// cls : rowspan 을 조정할 class ex) item1, item2, ...
+	function resizeRowspan(cls){
+		var rowspan = $("."+cls).length;
+		$("."+cls+":first td:eq(0)").attr("rowspan", rowspan);
+	}
+});
+
+function doMemberJoin() {
+	var frm = document.frm_join;
+	
+	var send_array = Array();
+	var send_cnt = 0;
+	var chkbox = $(".checkSelect");
+
+	for(i=0;i<chkbox.length;i++) {
+		if (chkbox[i].value != 0){
+			send_array[send_cnt] = chkbox[i].value;
+			send_cnt++;
+		} else {
+			alert("상품을 선택해주세요");
+			return false;
+		}
+	}
+
+	var question = '작성한 상품단가를 등록하시겠습니까?';
+
+	if(confirm(question)){
+		frm.submit();
+	} 
+}
+
+function valueCheck(key, msg) {
+	if($("#"+key).val() == "" || $("#"+key).val() == 0) {
+		alert(msg+"을 입력해 주세요");
+		$("#"+key).focus();
+		return false;
+	}
+	return true;
+}
+
+function goBack(){
+	window.location.href="/?M0103L&PAGE=<?php echo $PAGE; ?>";
+}
+</script>
+<?php
+	$companyRow = $this->getCompanyByIdx($companyIdx);
+	$companyRow->next();
+
+	$companyName = $companyRow->get('companyName');
+
+	$goodsRow = $this->getGoodsData();
+	
+
+	$goodsArr = array(0 => '상품 선택');
+	for($i=0; $i<$goodsRow->size(); $i++){
+		$goodsRow->next();
+			
+		$goodsArr[$goodsRow->get('idx')] = $goodsRow->get('gName');
+	}
+?>
+
+<div class="container">
+	<div class="contents-wrapper">
+		<h2 class="page-header">&nbsp; 상품 단가등록</h2>
+	</div>
+
+	<!-- 게시판 등록  -->
+	<div class="contents-wrapper">
+		<form name="frm_join" method="post" action="<?php echo $action;	?>" onsubmit="" enctype="multipart/form-data">
+			<fieldset>
+				<div class="panel panel-default">
+					<table id="goodsT" class="table table-bordered">
+						<colgroup>
+							<col width="20%">
+							<col width="25%">
+							<col width="20%">
+							<col width="25%">
+							<col width="10%">
+						</colgroup>
+						<tbody>
+							<tr class="goods1">
+								<th style="height:42px;">상호명 *</th>
+								<td colspan='2'>
+									<div class="col-xs-11">
+										<div class="col-xs-2" style="padding:0 5px 0 0px;"><?php echo $companyName;	?></div>
+										<?php echo $M_HTML->input_Hidden("companyIdx", $companyIdx);	?>
+										<?php echo $M_HTML->input_Hidden("companyName", $companyName);	?>
+									</div>
+								</td>
+								<td align="center" style="font-size:13px; font-weight:bold;">
+									상품 추가시 옆에 +버튼클릭
+								</td>
+								<td align="center" style="font-size:35px;">
+									<a href="javascript:addTD();" id="addGoodsBtn"><i class="fa fa-plus-square fa-fw"></i></a>
+								</td>
+							</tr>
+						<?php
+							if($row->size() > 0){
+								$num = 2;
+								for($i=0; $i < $row->size(); $i++){
+									$row->next();
+						?>
+							<tr class="goods<?php echo $num; ?>">
+								<th style="height:42px;">상품 *</th>
+								<td>
+									<div class="col-xs-12" >
+										<?php	echo $M_HTML->_Select2("goodsIdx[]", $goodsArr, $row->get('goodsIdx'), "form-control checkSelect");	?>
+									</div>
+								</td>
+								<th style="height:42px;">판매가 *</th>
+								<td>
+									<div class="col-xs-12" >
+										<?php echo $M_HTML->input_Text2("price[]", number_format($row->get('price')), "form-control", "height:40px;");	?>
+									</div>
+								</td>
+								<td align="center" style="font-size:35px;">
+									<a href="javascript:addTD();" class="delGoodsBtn"><i class="fa fa-minus-square fa-fw"></i></a>
+								</td>
+							</tr>
+						<?php
+									$num++;
+								}
+							} else {
+						?>
+							<tr class="goods2">
+								<th style="height:42px;">상품 *</th>
+								<td>
+									<div class="col-xs-12" >
+										<?php	echo $M_HTML->_Select2("goodsIdx[]", $goodsArr, '', "form-control checkSelect");	?>
+									</div>
+								</td>
+								<th style="height:42px;">판매가 *</th>
+								<td>
+									<div class="col-xs-12" >
+										<?php echo $M_HTML->input_Text2("price[]", '', "form-control", "height:40px;");	?>
+									</div>
+								</td>
+								<td align="center" style="font-size:35px;">
+									<a href="javascript:addTD();" class="delGoodsBtn"><i class="fa fa-minus-square fa-fw"></i></a>
+								</td>
+							</tr>
+						<?php
+							}
+						?>
+						</tbody>
+					</table>
+				</div><!--/* panel -->
+
+				<div>
+					<button type="submit" class="col-xs-2 btn btn-sm btn-success" onclick="javascript:doMemberJoin(); return false;" style="float:right;">등록 & 수정</button>
+					<button type="submit" class="col-xs-2 btn btn-sm btn-default" onclick="javascript:goBack(); return false;" style="float:none;">취소</button>			
+				</div>
+			</fieldset>
+		</form>
+	</div><!--/* contents-wrapper -->
+	<h3>&nbsp;</h3>
+	<!--/* 회원등록 끝 -->
+
+</div><!-- container -->

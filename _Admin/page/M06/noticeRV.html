@@ -1,0 +1,83 @@
+<script>
+function doMemberJoin() {
+	var frm = document.frm_join;
+	
+	if(valueCheck("subject", "제목") == false) {
+		return false;
+	}
+
+	if(valueCheck("content", "내용") == false) {
+		return false;
+	}
+
+	frm.submit();
+}
+
+function valueCheck(key, msg) {
+	if($("#"+key).val() == "") {
+		alert(msg+"을 입력해 주세요");
+		$("#"+key).focus();
+		return false;
+	}
+	return true;
+}
+
+function deleteData(m_id){
+	if(confirm("삭제하시겠습니까?")){
+		location.href = "?M0601D&m_id="+m_id;
+	}
+}
+
+function goBack(){
+	window.location.href="/?M0603L";
+}
+</script>
+
+<div class="container">
+	<div class="contents-wrapper">
+		<h2 class="page-header">공지사항 등록</h2>
+	</div>
+
+	<!-- 회원등록  -->
+	<div class="contents-wrapper">
+		<form name="frm_join" method="post" action="<?php echo $action;	?>" onsubmit="" enctype="multipart/form-data">
+			<fieldset>
+				<?php echo $M_HTML->input_Hidden($MENU_ID.$P_ACTION, "");	?>
+				<div class="panel panel-default">
+					<table class="table table-bordered">
+						<colgroup>
+							<col width="20%">
+							<col width="80%">
+						</colgroup>
+						<tbody>
+							<tr>
+								<th style="height:42px;">제목 *</th>
+								<td>
+									<div class="col-xs-12">
+									<?php echo $M_HTML->input_Text2("subject", "", "form-control");	?>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th style="height:315px;">내용 *</th>
+								<td>
+									<div class="col-xs-12">
+									<?php echo $M_HTML->textarea("content", "", "form-control", "width:100%; height:500px;");	?>
+									</div>									
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div><!--/* panel -->
+
+				<div class="text-center">
+					<button type="submit" class="btn btn-sm btn-success" onclick="javascript:doMemberJoin(); return false;">저장</button>
+					<button class="btn btn-sm btn-default" onclick="javascript:goBack(); return false;">목록</button>
+				</div>
+			</fieldset>
+		</form>
+	</div><!--/* contents-wrapper -->
+	<h3>&nbsp;</h3>
+	<!--/* 회원등록 끝 -->
+
+</div><!-- container -->

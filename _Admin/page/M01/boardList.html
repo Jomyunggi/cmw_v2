@@ -1,0 +1,148 @@
+<script type="text/javascript" src="<?php	echo JS_DIR;	?>/adm_common.js"></script>
+
+<script>
+$(document).ready(function(){
+	
+});
+
+function searchSubmit(){
+	var frm = document.search_frm;
+	frm.submit();
+}
+
+function boardRV(){
+	location.href = "/?M0101R";
+}
+</script>
+<?php
+	//category별로 배열에 담기
+	$rowArr = array();
+	if($row->size() > 0){
+		for($i=0; $i<$row->size(); $i++){
+			$row->next();
+
+			if($row->get('status') < 3){
+				$key = 0;
+			} else {
+				$key = 1;
+			}
+			
+			$rowArr[$key][$i]['idx']			= $row->get('idx');
+			$rowArr[$key][$i]['category']		= $row->get('category');
+			$rowArr[$key][$i]['subject']		= $row->get('subject');
+			$rowArr[$key][$i]['accountName']	= $row->get('accountName');
+			$rowArr[$key][$i]['status']			= $row->get('status');
+			$rowArr[$key][$i]['regUnixtime']	= $row->get('regUnixtime');
+		}
+	}
+?>
+<div class="container" style="width:100%;">
+	<div class="contents-wrapper">
+		<h2 class="page-header">
+			게시판 <button class="btn btn-sm btn-default" type="bytton" onclick="boardRV();"><i class="fa fa-envelope" aria-hidden="true"></i> 등록</button>
+		</h2>
+	</div>
+
+	<?php
+		if(count($rowArr) > 0){
+			foreach($rowArr as $key => $arr){
+				$NO = 1;
+				if($key==0){
+					$subject = '진행중인 작업게시판';
+					$div_location = " float:left;";
+				} else {
+					$subject = '완료/중지/삭제된 작업게시판';
+					$div_location = "float:right;";
+				}
+	?>
+
+	<div class="contents-wrapper" style="<?php echo $div_location; ?> width:50%;">	
+		<div class="panel panel-default">
+			<table class="table table-bordered table-hover">
+				<colgroup>
+					<col width="5%">
+					<col width="10%">
+					<col width="50%">
+					<col width="10%">
+					<col width="10%">
+					<col width="15%">
+				</colgroup>
+				<thead>
+					<tr><th colspan='6' style="padding:10px 0 10px 0; font-size:20px; font-weight:500; background:#2F4050; color:white">
+					<?php echo $subject;?></th></tr>
+					<tr>
+						<th>#</th>
+						<th>카테고리</th>
+						<th>제목</th>
+						<th>작성자</th>
+						<th>상태</th>
+						<th>등록일</th>
+					</tr>
+				</thead>
+				<?php 
+					if(count($rowArr[$key]) > 0){
+						foreach($arr as $key => $valArr){
+				?>
+					<tr align='center' data-href="/?M0101V&m_id=<?php echo $valArr['idx']; ?>">
+						<td><?php echo $NO++;	?></td>
+						<td><?php echo $this->bCategory[$valArr['category']];	?></td>
+						<td><?php echo $valArr['subject'];	?></td>
+						<td><?php echo $valArr['accountName'];	?></td>
+						<td><?php echo $this->Status[$valArr['status']];	?></td>
+						<td><?php echo date('Y.m.d', $valArr['regUnixtime']); ?></td>
+					</tr>
+				<?php
+						}
+					} else {	?>
+					<tr align='center'>
+						<td colspan='6'>해당 데이터가 없습니다.</td>
+					</tr>
+				<?php
+					}
+				?>
+				</tbody>
+			</table>
+		</div>
+	</div><!--/* contents-wrapper -->
+	<?php
+		}
+	} else {
+	?>
+	<div class="contents-wrapper">	
+		<div class="panel panel-default">
+			<table class="table table-bordered table-hover">
+				<colgroup>
+					<col width="5%">
+					<col width="10%">
+					<col width="50%">
+					<col width="10%">
+					<col width="10%">
+					<col width="15%">
+				</colgroup>
+				<thead>
+					<tr><th colspan='6' style="padding:10px 0 10px 0; font-size:20px; font-weight:500; background:#2F4050; color:white">
+					게시판</th></tr>
+					<tr>
+						<th>#</th>
+						<th>카테고리</th>
+						<th>제목</th>
+						<th>작성자</th>
+						<th>상태</th>
+						<th>등록일</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr align='center'>
+						<td colspan='6'>해당 데이터가 없습니다.</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>	
+	<?php
+	}	
+	?>
+	<div class="clear"></div>
+
+	
+</div><!-- container -->	
