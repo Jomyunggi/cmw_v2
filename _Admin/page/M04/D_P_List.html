@@ -1,0 +1,78 @@
+<script type="text/javascript" src="<?php	echo JS_DIR;	?>/adm_common.js"></script>
+
+<script>
+$(document).ready(function(){
+	
+});
+
+function searchSubmit(){
+	var frm = document.search_frm;
+	frm.submit();
+}
+
+function D_P_RV(){
+	location.href = "/?M0401R";
+}
+</script>
+
+<div class="container" style="width:100%;">
+	<div class="contents-wrapper">
+		<h2 class="page-header">
+			상품별 택배비 <button class="btn btn-sm btn-default" type="bytton" onclick="D_P_RV();"><i class="fa fa-envelope" aria-hidden="true"></i> 등록</button>
+		</h2>
+	</div>
+
+	<div class="contents-wrapper" style="width:60%;">	
+		<div class="panel panel-default">
+			<table class="table table-bordered table-hover">
+				<colgroup>
+					<col width="10%">
+					<col width="22%">
+					<col width="22%">
+					<col width="22%">
+					<col width="22%">
+				</colgroup>
+				<thead>
+					<tr><th colspan='6' style="padding:10px 0 10px 0; font-size:20px; font-weight:500; background:#2F4050; color:white">
+					등록된 택배비</th></tr>
+					<tr>
+						<th>#</th>
+						<th>상품명</th>
+						<th>롤타입</th>
+						<th>수량</th>
+						<th>택배타입</th>
+					</tr>
+				</thead>
+				<tbody>
+				<?php
+					if($row->size() > 0){
+						$NO = 1;
+						for($i=0; $i<$row->size(); $i++){
+							$row->next();
+				?>
+					<tr align='center' data-href="/?M0401V&m_id=<?php echo $row->get('idx'); ?>">
+						<td><?php echo $NO++;	?></td>
+						<td><?php echo $row->get('gName');	?></td>
+						<td><?php echo $row->get('rollType');	?>롤</td>
+						<td><?php echo $row->get('count');	?>개</td>
+						<td><?php echo $this->D_size[$row->get('size')];	?></td>
+					</tr>
+				<?php
+						}
+					} else {
+				?>
+					<tr align='center'>
+						<td colspan='6'>등록된 택배비가 없습니다.</td>
+					</tr>
+				<?php
+					}
+				?>
+				</tbody>
+			</table>
+		</div>
+	</div><!--/* contents-wrapper -->
+
+	<div class="clear"></div>
+
+	
+</div><!-- container -->	

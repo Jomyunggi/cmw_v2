@@ -1,0 +1,124 @@
+<script>
+$(document).ready(function(){
+
+});
+
+function doMemberJoin() {
+	var question = "";
+	var p_action = "<?php echo $P_ACTION;?>";
+	var frm = document.frm_join;
+
+	if(valueCheck("goodsIdx", "상품명") == false)	return false;
+	if(valueCheck("count", "갯수") == false)		return false;
+	if(valueCheck("size", "사이즈") == false)		return false;
+	
+	if(p_action == 'R'){
+		question = '작성한 게시물 등록하시겠습니까?';
+	} else {
+		question = '작성한 게시물 수정하시겠습니까?';
+	}
+	if(confirm(question)){
+		frm.submit();
+	} 
+}
+
+function valueCheck(key, msg) {
+	if($("#"+key).val() == "" || $("#"+key).val() == 0) {
+		alert(msg+"을 입력해 주세요");
+		$("#"+key).focus();
+		return false;
+	}
+	return true;
+}
+
+function deleteData(m_id){
+	if(confirm("삭제하시겠습니까?")){
+		location.href = "?M0401P&mode=delete&m_id="+m_id;
+	}
+}
+
+function goBack(){
+	window.location.href="/?M0401L";
+}
+</script>
+
+<div class="container">
+	<div class="contents-wrapper">
+		<h2 class="page-header">&nbsp; 상품별 택배비 <?php	echo	$P_ACTION == "V" ? "정보" : "등록"; ?></h2>
+	</div>
+
+	<!-- 게시판 등록  -->
+	<div class="contents-wrapper" style="width:50%;">
+		<form name="frm_join" method="post" action="<?php echo $action;	?>" onsubmit="" enctype="multipart/form-data">
+			<fieldset>
+				<?php echo $M_HTML->input_Hidden($MENU_ID.$P_ACTION, "");	?>
+				<input type="hidden" id="m_id" name="m_id" value="<?php echo $m_id;	?>">
+				<div class="panel panel-default">
+					<table class="table table-bordered">
+						<colgroup>
+							<col width="40%">
+							<col width="60%">
+						</colgroup>
+						<tbody>
+							<tr>
+								<th style="height:42px;">상품명 *</th>
+								<td>
+									<div class="col-xs-11" style="padding:10px 15px 10px 15px;">
+									<?php if($P_ACTION == 'R'){	?>
+										<div class="col-xs-11" style="padding:0 5px 0 0px;"><?php echo $M_HTML->_Select2("goodsIdx", $goodsArr, '', "form-control", '', 'style="width:100%;"');	?></div>
+									<?php } else {	
+											echo $M_HTML->input_Hidden('goodsIdx', $row->get('goodsIdx'));
+									?>
+										<div class="col-xs-11" style="padding:0 5px 0 0px;"><?php echo $row->get('gName')." ".$row->get('rollType');	?></div>
+									<?php }	?>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th style="height:42px;">개수 *</th>
+								<td>
+								<?php if($P_ACTION == 'R'){	?>
+									<div class="col-xs-10" style="padding:10px 15px 10px 15px;">
+										<?php echo $M_HTML->input_Text2("count", $row->get('count'), "form-control", "height:40px; text-align:right;", "placeholder='갯수를 입력하시오'");	?>
+									</div>
+								<?php } else {	?>
+									<div class="col-xs-5" style="padding:10px 15px 10px 15px;">
+										<?php echo $M_HTML->input_Text2("count", $row->get('count'), "form-control", "height:40px; text-align:right;", "placeholder='갯수를 입력하시오'");	?>
+									</div>
+								<?php }	?>
+								</td>
+							</tr>
+							<tr>
+								<th style="height:42px;">사이즈 *</th>
+								<td>
+									<div class="col-xs-11" style="padding:15px 15px 8px 20px;">
+									<?php	echo $M_HTML->input_Radio2('size', $this->D_size, $size, 'style="vertical-align:baseline;"');	?>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div><!--/* panel -->
+
+				<div>
+					<?php 
+						if($mode == "view"){ 
+							if($row->get('status') != 9){
+					?>
+					<button type="submit" class="col-xs-2 btn btn-sm btn-danger" onclick="javascript:deleteData(<?php echo $m_id;?>); return false;" >삭제</button>&nbsp;&nbsp;
+					<?php
+							}
+					?>
+					<button type="submit" class="col-xs-2 btn btn-sm btn-primary" onclick="javascript:doMemberJoin(); return false;" style="float:right;">수정</button>
+					<?php } else { ?>
+						<button type="submit" class="col-xs-2 btn btn-sm btn-success" onclick="javascript:doMemberJoin(); return false;" style="float:right;">등록</button>
+					<?php } ?>
+					<button type="submit" class="col-xs-2 btn btn-sm btn-default" onclick="javascript:goBack(); return false;" style="float:none;">취소</button>			
+				</div>
+			</fieldset>
+		</form>
+	</div><!--/* contents-wrapper -->
+	<h3>&nbsp;</h3>
+	<!--/* 회원등록 끝 -->
+
+</div><!-- container -->

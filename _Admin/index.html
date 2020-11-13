@@ -25,87 +25,33 @@
 					case 'V' : $M_ManagerPage->managerRV('view'); break;
 					case 'R' : $M_ManagerPage->managerRV('regist'); break;
 					case 'P' : $M_ManagerPage->managerProc(); break;
+					case 'C' : $M_ManagerPage->coupangTest(); break;
 					default : $M_ManagerPage->managerList(); break;
 				}
 				break;
 
-			case 2 : //거래처
-				include_once ADMIN_CLASS_PATH . '/class.unitPage.php';
-				$M_UnitPage = new M_UnitPage;
-				
-				switch($MENU_2DEPTH){
-					case 1: 
-						switch($P_ACTION){
-							case 'L' : $M_UnitPage->unitList(); break;
-							case 'R' : $M_UnitPage->unitRV('regist'); break;
-							case 'V' : $M_UnitPage->unitRV('view'); break;
-							case 'P' : $M_UnitPage->unitInsertProc(); break;
-							case 'U' : $M_UnitPage->unitUpdateProc(); break;
-							default : $M_UnitPage->unitList(); break;
-						}
-						break;
-					default : // 경로이탈(예외처리)
-						break;
-				}
-				break;
-			
-			case 3 : // 거래현황
-				include_once ADMIN_CLASS_PATH . "/class.dealPage.php";
-				$M_DealPage = new M_DealPage;
-				include_once ADMIN_CLASS_PATH . '/class.unitPage.php';
-				$M_UnitPage = new M_UnitPage;
-				
-				switch($MENU_2DEPTH) {
-					case 1 :	//오프라인 매출
-						switch($P_ACTION) {
-							case 'S' : $M_DealPage->dealSumList(); break;
-							case 'L' : $M_DealPage->dealList(); break;
-							case 'V' : $M_DealPage->dealRV("view"); break;
-							case 'R' : $M_DealPage->dealRV(); break;
-							case 'A' : $M_DealPage->dealDayList(); break;
-							case 'C' : $M_DealPage->dealPrint(); break;
-							case 'T' : $M_DealPage->dealTakeOver(); break;
-							case 'P' : $M_DealPage->dealInsertProc(); break;
-							case 'U' : $M_DealPage->dealUpdateProc(); break;
-							default : $M_DealPage->dealSumList(); break;
-						}
-						break;
-
-					default : // 경로이탈(예외처리)
-						break;
-				}
-				break;
-
-			case 4 : // 온라인
-				include_once ADMIN_CLASS_PATH . "/class.dealPage.php";
-				$M_DealPage = new M_DealPage;
-				include_once ADMIN_CLASS_PATH . '/class.unitPage.php';
-				$M_UnitPage = new M_UnitPage;
+			case 4 : // 가격책정
+				include_once ADMIN_CLASS_PATH . "/class.pricingPage.php";
+				$M_PricingPage = new M_PricingPage;
 
 				switch($MENU_2DEPTH) {
-					case 1 :	//온라인 매출
+					case 1 :	//상품별 택배비
 						switch($P_ACTION) {
-							case 'S' : $M_DealPage->dealSumList(); break;
-							case 'L' : $M_DealPage->dealList(); break;
-							case 'V' : $M_DealPage->ondealRV("view"); break;
-							case 'Y' : $M_DealPage->Delivery(); break;
-							case 'I' : $M_DealPage->deliverySetting(); break;
-							case 'M' : $M_DealPage->deliveryUpdate(); break;
-							case 'R' : $M_DealPage->ondealRV(); break;
-							case 'P' : $M_DealPage->ondealInsertProc(); break;
-							case 'U' : $M_DealPage->ondealUpdateProc(); break;
-							case 'E' : $M_DealPage->uploadExcel(); break;
-							case 'X' : $M_DealPage->readExcel(); break;
-							default : $M_DealPage->dealSumList(); break;
+							case 'L' : $M_PricingPage->D_P_List(); break;
+							case 'R' : $M_PricingPage->D_P_RV('regist'); break;
+							case 'V' : $M_PricingPage->D_P_RV('view'); break;
+							case 'P' : $M_PricingPage->DeliveryProc($mode); break;
+							default : $M_PricingPage->D_P_List(); break;
 						}
 						break;
 
-					case 2 : // 오프라인 인수 & 정산
+					case 2 : //사이트별 수수료
 						switch($P_ACTION) {
-							case 'L' : $M_DealPage->afterTheTransaction(); break;
-							case 'P' : $M_DealPage->costProc(); break;
-							case 'U' : $M_DealPage->costProc(); break;
-							default	 : $M_DealPage->afterTheTransaction(); break;
+							case 'L' : $M_PricingPage->FeesList(); break;
+							case 'R' : $M_PricingPage->FeesRV('regist'); break;
+							case 'V' : $M_PricingPage->FeesRV('view'); break;
+							case 'P' : $M_PricingPage->FeesProc($mode); break;
+							default : $M_PricingPage->FeesList(); break;
 						}
 						break;
 					case 3 : // 온라인 배송현황
@@ -119,36 +65,6 @@
 						switch($P_ACTION) {
 							case 'L' : $M_DealPage->deliveryResult(); break;
 							default : $M_DealPage->deliveryResult(); break;
-						}
-						break;
-					
-					case 5 :	//결제일별 통계
-						switch($P_ACTION) {
-							case 'L' : $M_DealPage->dealSumList2(); break;
-							default : $M_DealPage->dealSumList2(); break;
-						}
-						break;
-
-					case 6 :	//송장 대량등록 처리시스템
-						switch($P_ACTION) {
-							case 'U' : $M_DealPage->Upload(); break;
-							case 'D' : $M_DealPage->ReadDelivery(); break;
-							case 'C' : $M_DealPage->ReadDelivery(); break;
-							default : $M_DealPage->Upload(); break;
-						}
-						break;
-
-					case 7 :	//TEST
-						switch($P_ACTION) {
-							case 'L' : $M_DealPage->TEST(); break;
-							default : $M_DealPage->TEST(); break;
-						}
-						break;
-					
-					case 8 : // 교환/반품/환불/취소
-						switch($P_ACTION) {
-							case 'L' : $M_DealPage->dealUpdateByStatus(); break;
-							default : $M_DealPage->dealUpdateByStatus(); break;
 						}
 						break;
 				}

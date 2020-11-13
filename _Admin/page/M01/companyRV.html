@@ -77,19 +77,25 @@ function goBack(){
 						<tbody>
 							<tr>
 								<th style="height:42px;">구분 *</th>
-								<td colspan='3'>
+								<td>
 									<div class="col-xs-11" style="padding:10px 15px 10px 15px;">
 									<?php if($P_ACTION == 'R'){	?>
-										<div class="col-xs-3" style="padding:0 5px 0 0px;"><?php echo $M_HTML->_Select2("level", $this->cLevel, $row->get('level'), "form-control");	?></div>
+										<div class="col-xs-9" style="padding:0 5px 0 0px;"><?php echo $M_HTML->_Select2("level", $this->cLevel, $row->get('level'), "form-control");	?></div>
 									<?php } else {	?>
-										<div class="col-xs-2" style="padding:0 5px 0 0px;"><?php echo $this->cLevel[$row->get('level')];	?></div>
+										<div class="col-xs-9" style="padding:0 5px 0 0px;"><?php echo $this->cLevel[$row->get('level')];	?></div>
 										<?php echo $M_HTML->input_Hidden('level', $row->get('level'));	?>
 									<?php }	?>
 									</div>
 								</td>
+								<th style="height:42px;">수수료 </th>
+								<td>
+									<div class="col-xs-11" style="padding:10px 15px 10px 15px;">
+										<div class="col-xs-4" style="padding:0 5px 0 0px;"><?php echo $M_HTML->input_Text2("fees", $row->get('fees'), "form-control", "height:40px; text-align:right;");	?></div>
+									</div>
+								</td>
 							</tr>
 							<tr>
-								<th style="height:42px;">사업자번호 *</th>
+								<th style="height:42px;">사업자번호 </th>
 								<td>
 									<div class="col-xs-33" style="padding:10px 15px 10px 15px;">
 										<?php echo $M_HTML->input_Text2("license1", $license[0], "form-control", "height:40px; text-align:right;");	?>
@@ -106,18 +112,18 @@ function goBack(){
 								<th style="height:42px;">상호 *</th>
 								<td>
 									<div class="col-xs-11" style="padding:10px 15px 10px 15px;">
-										<?php echo $M_HTML->input_Text2("companyName", $row->get('companyName'), "form-control", "height:40px; text-align:right;", "placeholder='상호명을 입력하시오'");	?>
+										<?php echo $M_HTML->input_Text2("companyName", $row->get('companyName'), "form-control", "height:40px; text-align:left; font-weight:bold;", "placeholder='상호명을 입력하시오'");	?>
 									</div>
 								</td>
 							</tr>
 							<tr>
-								<th style="height:42px;">대표자명 *</th>
+								<th style="height:42px;">대표자명 </th>
 								<td>
 									<div class="col-xs-11" style="padding:10px 15px 10px 15px;">
 										<?php echo $M_HTML->input_Text2("senior", $row->get('senior'), "form-control", "height:40px; text-align:right;", "placeholder='대표자명을 입력하시오'");	?>
 									</div>
 								</td>
-								<th style="height:42px;">사업장 주소 *</th>
+								<th style="height:42px;">사업장 주소 </th>
 								<td>
 									<div class="col-xs-11" style="padding:10px 15px 10px 15px;">
 										<?php echo $M_HTML->input_Text2("addr", $row->get('addr'), "form-control", "height:40px;");	?>
@@ -125,7 +131,7 @@ function goBack(){
 								</td>
 							</tr>
 							<tr>
-								<th style="height:42px;">전화번호 *</th>
+								<th style="height:42px;">전화번호 </th>
 								<td>
 									<div class="col-xs-3" style="padding:10px 15px 10px 15px;">
 										<?php echo $M_HTML->input_Text2("tel1", $tel[0], "form-control", "height:40px; text-align:right;");	?>
@@ -139,7 +145,7 @@ function goBack(){
 										<?php echo $M_HTML->input_Text2("tel3", $tel[2], "form-control", "height:40px; text-align:right;");	?>
 									</div>
 								</td>
-								<th style="height:42px;">팩스번호 *</th>
+								<th style="height:42px;">팩스번호 </th>
 								<td>
 									<div class="col-xs-3" style="padding:10px 15px 10px 15px;">
 										<?php echo $M_HTML->input_Text2("fax1", $fax[0], "form-control", "height:40px; text-align:right;");	?>
@@ -155,7 +161,7 @@ function goBack(){
 								</td>
 							</tr>
 							<tr>
-								<th style="height:42px;">이메일 *</th>
+								<th style="height:42px;">이메일 </th>
 								<td>
 									<div class="col-xs-11" style="padding:10px 15px 10px 15px;">
 										<?php echo $M_HTML->input_Text2("email", $row->get('email'), "form-control", "height:40px; text-align:right;");	?>

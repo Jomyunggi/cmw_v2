@@ -206,6 +206,7 @@ class M_MANAGER {
 		$fax3			= $M_FUNC->M_Filter(POST, "fax3");
 		$email			= $M_FUNC->M_Filter(POST, "email");
 		$taxYN			= $M_FUNC->M_Filter(POST, "taxYN");
+		$fees			= $M_FUNC->M_Filter(POST, "fees");
 
 		if($license1 == "")	$license = "";
 		else	$license = $license1."-".$license2."-".$license3;
@@ -218,6 +219,9 @@ class M_MANAGER {
 
 		if($taxYN == "") $taxYN = 0;
 		else	$taxYN = $taxYN;
+
+		if($fees == "") $fees = 0;
+		else	$fees = $fees;
 		
 		$data = array(
 			'companyName'	=> $companyName,
@@ -228,7 +232,8 @@ class M_MANAGER {
 			'senior'		=> $senior,
 			'email'			=> $email,
 			'level'			=> $level,
-			'taxYN'			=> $taxYN
+			'taxYN'			=> $taxYN,
+			'fees'			=> $fees
 		);
 
 		if($mode == 'insert'){

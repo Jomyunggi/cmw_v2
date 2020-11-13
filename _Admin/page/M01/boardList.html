@@ -13,6 +13,31 @@ function searchSubmit(){
 function boardRV(){
 	location.href = "/?M0101R";
 }
+
+function test(){
+	alert('1');
+	var ajax_url = "/page/M01/coupangTest4.php";
+	var ajax_data = {
+		
+	};
+	$.ajax({
+		url : ajax_url,
+		data : ajax_data,
+		type : 'GET',
+		dataType : 'html',
+		contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+		success: function (response) {
+				if(response){
+					console.log(response);
+				} else {
+					
+				}
+		},
+		failure: function(msg) {
+			alert(msg);
+		}
+	});
+}
 </script>
 <?php
 	//category별로 배열에 담기
@@ -40,6 +65,7 @@ function boardRV(){
 	<div class="contents-wrapper">
 		<h2 class="page-header">
 			게시판 <button class="btn btn-sm btn-default" type="bytton" onclick="boardRV();"><i class="fa fa-envelope" aria-hidden="true"></i> 등록</button>
+			<button class="btn btn-sm btn-default" type="bytton" onclick="test();"><i class="fa fa-envelope" aria-hidden="true"></i> 쿠팡</button>
 		</h2>
 	</div>
 
