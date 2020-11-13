@@ -133,7 +133,13 @@ function searchSubmit(){
 
 							<td>
 								<!--거래처별 견적-->
+								<?php
+									if($row->get('level') != 4){
+								?>
 								<a href="/?M0104V&PAGE=<?php echo $PAGE;?>&companyIdx=<?php echo $row->get("idx"); ?>" class="btn btn-xs btn-default" role="button" style="line-height:1;"><i class="fa fa-glass fa-fw"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<?php
+									}
+								?>
 								<!--송장쓰기-->
 								<a href="/?M0301R&companyIdx=<?php echo $row->get("idx"); ?>" class="btn btn-xs btn-default" role="button" style="line-height:1;"><i class="fa fa-file fa-fw" style=""></i></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 								<!--정산시스템-->
