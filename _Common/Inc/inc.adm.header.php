@@ -12,7 +12,7 @@
     <link href="<?php echo CSS_DIR; ?>/aux_common.css?afte11" rel="stylesheet">
     <link href="<?php echo CSS_DIR; ?>/aux_plugin.css" rel="stylesheet">
     <link href="<?php echo CSS_DIR; ?>/aux_admin.css?info" rel="stylesheet">
-	<link href="<?php echo CSS_DIR; ?>/popup.css?after" rel="stylesheet">
+	<link href="<?php echo CSS_DIR; ?>/popup.css?after12" rel="stylesheet">
     <link href="<?php echo CSS_DIR; ?>/jquery-ui1.11.4.min.css" rel="stylesheet">
 	
 	<script src="<?php echo JS_DIR; ?>/jquery-1.12.3.min.js"></script>

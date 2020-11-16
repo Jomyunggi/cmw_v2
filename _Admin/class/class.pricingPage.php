@@ -15,6 +15,15 @@ class M_PricingPage extends M_PRICING {
 			2 => '중',
 			3 => '대'
 		);
+
+		$this->Category = array(
+			0	=>	'전체선택',
+			1	=>	'화장지',
+			2	=>	'점보롤',
+			4	=>	'네프킨',
+			8	=>	'핸드타월',
+			16	=>	'기타'
+		);
 	}
 
 	// Destructor
@@ -83,6 +92,26 @@ class M_PricingPage extends M_PRICING {
 		$this->ChangeDeliveryData($mode);
 		
 		$M_JS->Go_URL('/?'. $MENU_ID . $p_action, $answer);	
+	}
+
+	function SalesList(){
+		global $PAGE_PATH, $MENU_ID;
+		global $M_HTML, $M_FUNC;
+
+		$cIdx		= $_GET['cIdx'];
+		$categorys	= $_GET['categorys'];
+		$searchTxt = $M_FUNC->M_Filter(GET, "searchTxt");
+
+		//Company에서 온라인거래처만 가져온다.
+		$onlineArr = $this->getCompanyByOn();
+
+		if(count($cIdx) && count($categorys) && $searchTxt != ""){
+
+		}
+
+		
+
+		include_once $PAGE_PATH . '/finalSales.html';
 	}
 }
 

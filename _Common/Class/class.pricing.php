@@ -88,5 +88,43 @@ class M_PRICING {
 			$db->update("Delivery_Info", $delData, " WHERE idx = ".$m_id);
 		}
 	}
+
+	function getCompanyByOn(){
+		global $db;
+
+		$query = " SELECT idx, companyName "
+				." FROM Company_Info "
+				." WHERE status = 1 AND level = 4 "
+				;
+		$row = $db->getListSet($query);
+
+		$arr[0] = '전체선택';
+		for($i=0; $i<$row->size(); $i++){
+			$row->next();
+
+			$arr[$row->get('idx')] = $row->get('companyName');
+		}
+
+		return $arr;
+	}
+
+	function getGoods(){
+		global $db;
+
+		$query = " SELECT * "
+				." FROM Goods_Info "
+				." WHERE status = 1 "
+				;
+		$row = $db->getListSet($query);
+
+		$arr[0] = '전체선택';
+		for($i=0; $i<$row->size(); $i++){
+			$row->next();
+
+			$arr[$row->get('idx')] = $row->get('gName');
+		}
+
+		return $arr;
+	}
 }
 ?>

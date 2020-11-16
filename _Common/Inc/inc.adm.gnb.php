@@ -63,12 +63,12 @@
                             </ul>
                         </li>
 						<li>
-                            <a href="?M0403" class="<?php echo $className4; ?>"><i class="fa fa-check fa-fw"></i> 
+                            <a href="?M0402" class="<?php echo $className4; ?>"><i class="fa fa-check fa-fw"></i> 
 							가격책정<span class="fa arrow"></span></a>
 
 							<ul class="nav nav-second-level" id="menu4" style="background-color:#FCFCFC;">
 								<li><a href="?M0401"><i class="fa fa-caret-right" aria-hidden="true"></i> 상품별 택배비</a></li>
-								<li><a href="?M0403"><i class="fa fa-caret-right" aria-hidden="true"></i> 마진별 가격</a></li>
+								<li><a href="?M0402"><i class="fa fa-caret-right" aria-hidden="true"></i> 마진별 가격</a></li>
                             </ul>
                         </li>
                     </ul>

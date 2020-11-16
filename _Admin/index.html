@@ -45,26 +45,11 @@
 						}
 						break;
 
-					case 2 : //사이트별 수수료
+					case 2 : //마진별 가격
 						switch($P_ACTION) {
-							case 'L' : $M_PricingPage->FeesList(); break;
-							case 'R' : $M_PricingPage->FeesRV('regist'); break;
-							case 'V' : $M_PricingPage->FeesRV('view'); break;
-							case 'P' : $M_PricingPage->FeesProc($mode); break;
-							default : $M_PricingPage->FeesList(); break;
-						}
-						break;
-					case 3 : // 온라인 배송현황
-						switch($P_ACTION) {
-							case 'L' : $M_DealPage->Delivery(); break;
-							default : $M_DealPage->Delivery(); break;
-						}
-						break;
-					
-					case 4 : // 택배사 집하실적현황
-						switch($P_ACTION) {
-							case 'L' : $M_DealPage->deliveryResult(); break;
-							default : $M_DealPage->deliveryResult(); break;
+							case 'L' : $M_PricingPage->SalesList(); break;
+							case 'P' : $M_PricingPage->SalesProc($mode); break;
+							default : $M_PricingPage->SalesList(); break;
 						}
 						break;
 				}

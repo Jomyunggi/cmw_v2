@@ -1,0 +1,222 @@
+<script>
+$(document).ready(function(){	
+	$("#cIdx").click(function(){
+		if(this.value == 0){
+			if($("#cIdx").prop("checked")){
+				$("input[id=cIdx]").prop("checked",true);
+			} else {
+				$("input[id=cIdx]").prop("checked",false);
+			}
+		}
+	});
+
+	$("#categorys").click(function(){
+		if(this.value == 0){
+			if($("#categorys").prop("checked")){
+				$("input[id=categorys]").prop("checked",true);
+			} else {
+				$("input[id=categorys]").prop("checked",false);
+			}
+		}
+	});
+});
+
+function delHangle(evt){	//한글을 지우는 부분, keyup부분에 넣어준다.
+	var objTarget = evt.srcElement || evt.target;
+	var _value = event.srcElement.value;
+	if(/[ㄱ-하-ㅡ가-핳]/g.test(_value)){
+		// objTarget.value = objTarget.value.replace(/[ㄱ-하-ㅡ가-핳]/g, ''
+		objTarget.value = null;
+		//return fales;
+	}
+}
+
+function isNumberkey(evt){	// 숫자를 제외한 값을 입력하지 못하게 한다.
+	var charCode = (evt.which) ? evt.which : event.keyCode;
+	var _value = event.srcElement.value;
+
+	if(event.keyCode < 48 || event.keyCode > 57){
+		if(event.keyCode != 46){ //숫자와 .만 입력가능하도록함
+			return fales;
+		}
+	}
+
+	//소수점(.)이 두번이상 나오지 못하게
+	var _pattern0 = /^\*[.]\d*$/;	//현재 value값에 소수점(.)이 있으면 . 입력
+	if(_pattern0.test(_value)){
+		if(charCode == 46){
+			return fales;
+		}
+	}
+
+	//두자리 이하의 숫자만 입력가능
+	var _pattern1 = /^\d{2}$/;	//현재 value값이 2자리 숫자이면 .만 입력가능
+	//{숫자}의 값을 변경하면 자리수를 조정할 수 있다.
+	if(_pattern1.test(_value)){
+		if(charCode != 46){
+			return fales;
+		}
+	}
+
+	//소수점 둘째자리까지만 입력가능
+	var _pattern2 = /^\d*[.]\d{2}$/;	//현재 value값이 소수점 둘째자리 숫자이면
+	//{숫자}의 값을 변경하면 자리수를 조정할 수 있다.
+	if(_pattern2.test(_value)){
+		alert('소수점 둘째자리까지만 입력가능합니다.');
+		return false;
+	}
+	return true;
+}
+
+function searchSubmit(){
+	var frm = document.search_frm;
+	frm.submit();
+}
+
+</script>
+
+<div class="container">
+	<div class="contents-wrapper">
+		<div class="page-header" style="font-size:22px; font-weight:bold; margin:20px 0 10px;">마진별 판매금액</div>
+	</div>
+
+	<!--/* 회원리스트  -->
+	<div class="contents-wrapper" style="padding-top:6px;">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<?php 
+					echo $M_HTML->b_Form("search_frm", "", "get", 0);
+					echo $M_HTML->input_Hidden($MENU_ID, "");
+				?>
+				
+				<div class="form-inline">
+					<div style="text-align:left; flex:1;">
+						
+						<a href="#layer1" class="btn btn-sm btn-default"><i class="fa fa-users fa-lg"></i> 사이트지정</a>
+						<?php
+							echo $M_HTML->input_Checkbox("cIdx", $onlineArr, '', $cIdx);
+						?><br/>
+
+						<a href="#layer2"class="btn btn-sm btn-default"><i class="fa fa-tags fa-lg"></i> &nbsp;상품 지정&nbsp;</a>
+						<?php
+							echo $M_HTML->input_Checkbox("categorys", $this->Category, '', $categorys);
+						?><br/>
+					</div>
+
+					<div style="text-align:right; flex:2;">
+						<div class="form-group">마진율 : &nbsp;</div>
+						<div class="form-group input-group">
+							<input type="text" name="searchTxt" id="searchTxt" class="form-control" onkeypress='return inNumberkey(event)' onkeyup='return delHangle(event)' value="<?php echo $searchTxt;?>">
+							<span class="input-group-btn">
+								<button class="btn btn-default" type="button" onclick="searchSubmit();"><i class="fa fa-search"></i> 검색</button>
+							</span>
+						</div>
+					</div>
+
+				</div>
+				
+				<?php
+					echo $M_HTML->e_Form();
+				?>
+			</div>
+			<table class="table table-bordered table-hover">
+				<colgroup>
+					<col width="8%">
+					<col width="15%">
+					<col width="5%">
+					<col width="10%">
+					<col width="10%">
+					<col width="10%">
+					<col width="10%">
+					<col width="10%">
+					
+				</colgroup>
+				<thead>
+					<tr>
+						<th style="padding:10px;">카테고리</th>
+						<th style="padding:10px;">상품명</th>
+						<th style="padding:10px;">수량</th>						
+						<th style="padding:10px;">원가</th>
+						<th style="padding:10px;">판매금액</th>
+						<th style="padding:10px;">정산금액</th>						
+						<th style="padding:10px;">순수익</th>
+						<th style="padding:10px;">마진율</th>
+					</tr>
+				</thead>
+				<tbody>
+			<?php	
+				if($accountRow->size() > 0){
+					for($i=0; $i<$accountRow->size(); $i++){
+						$accountRow->next();
+
+						switch($accountRow->get('status')){
+							case 1 : $status = "사용"; break;
+							case 4 : $status = "중지"; break;
+							case 9 : $status = "삭제"; break;
+						}
+						
+						$email = "";
+						if(strpos($accountRow->get('email'), ",") !== false){
+							$temp = explode(",", $accountRow->get('email'));
+							$email = $temp[0]."<br>".$temp[1];
+						} else {
+							$email = $accountRow->get('email');
+						}
+			?>
+					<tr class="text-center_memberList" style="text-align:center; font-size:12px;" >
+
+						<td data-href="/?M0101V&m_id=<?php echo $accountRow->get("idx"); ?>"><?php echo $this->gubun[$accountRow->get('level')]; ?></td>
+
+						<td>
+							<!--거래처별 견적-->
+							<a href="/?M0201V&companyIdx=<?php echo $accountRow->get("companyIdx"); ?>" class="btn btn-xs btn-default" role="button" style="line-height:1;"><i class="fa fa-glass fa-fw"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<!--송장쓰기-->
+							<a href="/?M0301R&companyIdx=<?php echo $accountRow->get("companyIdx"); ?>" class="btn btn-xs btn-default" role="button" style="line-height:1;"><i class="fa fa-file fa-fw" style=""></i></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<!--정산시스템-->
+							<a href="/?M0101C&accountIdx=<?php echo $accountRow->get("idx"); ?>&onoff=<?php echo $accountRow->get('onoff'); ?>" class="btn btn-xs btn-default" role="button" style="line-height:1;"><i class="fa fa-won fa-fw"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<!--입출금내역-->
+							<a href="/?M0102&searchCompany=<?php echo $accountRow->get("companyIdx"); ?>" class="btn btn-xs btn-default" role="button" style="line-height:1;"><i class="fa fa-list fa-fw" style=""></i></a>
+						</td>
+
+						<td data-href="/?M0101V&m_id=<?php echo $accountRow->get("idx"); ?>" align="left" style="padding:3px 0 3px 15px; font-size:13px; font-weight:bold;"><?php echo $accountRow->get('accountName');	?></td>
+
+						<td data-href="/?M0101V&m_id=<?php echo $accountRow->get("idx"); ?>"><?php echo $accountRow->get('license'); ?></td>
+						<td data-href="/?M0101V&m_id=<?php echo $accountRow->get("idx"); ?>"><?php echo $accountRow->get('tel'); ?></td>
+						<!--td data-href="/?M0101V&m_id=<?php echo $accountRow->get("idx"); ?>"><?php echo $accountRow->get('fax'); ?></td-->
+						<td data-href="/?M0101V&m_id=<?php echo $accountRow->get("idx"); ?>"><?php echo $email; ?></td> 
+						<td data-href="/?M0101V&m_id=<?php echo $accountRow->get("idx"); ?>"><?php echo date('Y.m.d', $accountRow->get('regUnixtime')); ?></td>
+
+						<!--td data-href="/?M0101V&m_id=<?php echo $accountRow->get("idx"); ?>"><?php echo $accountRow->get('accountID'); ?></td>
+						<td data-href="/?M0101V&m_id=<?php echo $accountRow->get("idx"); ?>"><?php echo $status; ?></td>
+						<td data-href="/?M0101V&m_id=<?php echo $accountRow->get("idx"); ?>"><?php echo date('Y-m-d H:i:s', $accountRow->get('regUnixtime')); ?></td-->
+					</tr>
+			<?php	
+						$NO--;
+					}
+				} else {
+			?>
+					<tr style="text-align:center;">
+						<td colspan="5">등록된 계정이 없습니다.</td>
+					</tr>
+			<?php	}	?>
+				</tbody>
+			</table>
+		</div><!--/* panel -->
+
+		<div id="paging" style="margin-top:0px;">
+		<?php	
+			$page = $PAGE;
+			$totalPage = $total_page;
+			$pageURL = '';
+			$URLParam = $URLParam;
+			echo $M_FUNC->pagingJumper3($page, $totalPage, $pageURL, $URLParam);
+			echo $M_HTML->input_Hidden("page", '');
+		?>
+		</div>
+
+
+	</div><!--/* contents-wrapper -->
+	<!--/* 회원리스트 끝  -->
+
+
+</div><!-- container -->
