@@ -89,10 +89,10 @@ class M_PRICING {
 		}
 	}
 
-	function getCompanyByOn(){
+	function getCompanyByOn($key, $value){
 		global $db;
 
-		$query = " SELECT idx, companyName "
+		$query = " SELECT idx, companyName, fees, license "
 				." FROM Company_Info "
 				." WHERE status = 1 AND level = 4 "
 				;
@@ -102,7 +102,7 @@ class M_PRICING {
 		for($i=0; $i<$row->size(); $i++){
 			$row->next();
 
-			$arr[$row->get('idx')] = $row->get('companyName');
+			$arr[$row->get($key)] = $row->get($value);
 		}
 
 		return $arr;
@@ -125,6 +125,21 @@ class M_PRICING {
 		}
 
 		return $arr;
+	}
+
+	function getFinalSales($addWhere){
+		global $db;
+
+		$query = " SELECT d.count, d.size, g.category, g.rollType, g.gName, g.count as gCount, g.cost, g.price "
+				." FROM Delivery_Info d "
+				."	LEFT JOIN Goods_Info g ON d.goodsIdx = g.idx "
+				." WHERE d.status = 1 "
+				.$addWhere
+				." ORDER BY g.category asc, g.rollType asc, g.cost asc "
+				;
+		$row = $db->getListSet($query);
+
+		return $row;
 	}
 }
 ?>

@@ -44,26 +44,26 @@
 						</li>                      
 						
 						<li>
-                            <a href="?M0201" class="<?php echo $className3; ?>"><i class="fa fa-film fa-fw"></i> 
+                            <a href="?M0201" class="<?php echo $className2; ?>"><i class="fa fa-film fa-fw"></i> 
 							오프라인<span class="fa arrow"></span></a>
 
-							<ul class="nav nav-second-level" id="menu3" style="background-color:#FCFCFC;">
+							<ul class="nav nav-second-level" id="menu2" style="background-color:#FCFCFC;">
                                 <li><a href="?M0201"><i class="fa fa-caret-right" aria-hidden="true"></i> 매입</a></li>
 								<li><a href="?M0202"><i class="fa fa-caret-right" aria-hidden="true"></i> 매출</a></li>
                             </ul>
                         </li>
 
 						<li>
-                            <a href="?M0301" class="<?php echo $className4; ?>"><i class="fa fa-check fa-fw"></i> 
+                            <a href="?M0301" class="<?php echo $className3; ?>"><i class="fa fa-check fa-fw"></i> 
 							온라인<span class="fa arrow"></span></a>
 
-							<ul class="nav nav-second-level" id="menu4" style="background-color:#FCFCFC;">
+							<ul class="nav nav-second-level" id="menu3" style="background-color:#FCFCFC;">
 								<li><a href="?M0301"><i class="fa fa-caret-right" aria-hidden="true"></i> 매출</a></li>
 								<li><a href="?M0302"><i class="fa fa-caret-right" aria-hidden="true"></i> 택배</a></li>
                             </ul>
                         </li>
 						<li>
-                            <a href="?M0402" class="<?php echo $className4; ?>"><i class="fa fa-check fa-fw"></i> 
+                            <a href="?M0401" class="<?php echo $className4; ?>"><i class="fa fa-check fa-fw"></i> 
 							가격책정<span class="fa arrow"></span></a>
 
 							<ul class="nav nav-second-level" id="menu4" style="background-color:#FCFCFC;">

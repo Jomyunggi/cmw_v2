@@ -24,6 +24,14 @@ class M_PricingPage extends M_PRICING {
 			8	=>	'핸드타월',
 			16	=>	'기타'
 		);
+
+		$this->smallTax = 0.4;
+
+		$this->deliveryP = array(
+			1	=> 2300,
+			2	=> 2700,
+			3	=> 3200
+		);
 	}
 
 	// Destructor
@@ -103,13 +111,19 @@ class M_PricingPage extends M_PRICING {
 		$searchTxt = $M_FUNC->M_Filter(GET, "searchTxt");
 
 		//Company에서 온라인거래처만 가져온다.
-		$onlineArr = $this->getCompanyByOn();
+		$onlineArr = $this->getCompanyByOn('idx', 'companyName');
+		$feesArr = $this->getCompanyByOn('companyName', 'fees');
+		$feesS_Arr = $this->getCompanyByOn('companyName', 'license');
+		unset($onlineArr[0]);
+		unset($feesArr[0]);
+		unset($feesS_Arr[0]);
 
 		if(count($cIdx) && count($categorys) && $searchTxt != ""){
-
+			$addWhere = " AND g.category in (".implode(',', $categorys).") ";
+			$row = $this->getFinalSales($addWhere);
+		} else {
+			$row = new L_ListSet();
 		}
-
-		
 
 		include_once $PAGE_PATH . '/finalSales.html';
 	}

@@ -125,6 +125,12 @@ function searchSubmit(){
 					if($row->size() > 0){
 						for($i=0; $i<$row->size(); $i++){
 							$row->next();
+							
+							if($row->get('level') == 4){
+								$companyName = $row->get('companyName')." &nbsp;&nbsp;||&nbsp;&nbsp; 판매수수료 : ".$row->get('fees')."</span>";
+							} else {
+								$companyName = $row->get('companyName');
+							}
 				?>
 						<tr class="text-center_memberList" style="text-align:center; font-size:12px;" >
 							<td><input type="checkbox" value="<?php echo $row->get("idx");?>" id="idx2" name="accountIdx" /></td>
@@ -148,7 +154,7 @@ function searchSubmit(){
 								<a href="/?M0102&searchCompany=<?php echo $row->get("idx"); ?>" class="btn btn-xs btn-default" role="button" style="line-height:1;"><i class="fa fa-list fa-fw" style=""></i></a>
 							</td>
 
-							<td data-href="/?M0103V&m_id=<?php echo $row->get("idx"); ?>" align="left" style="padding:3px 0 3px 15px; font-size:13px; font-weight:bold;"><?php echo $row->get('companyName');	?></td>
+							<td data-href="/?M0103V&m_id=<?php echo $row->get("idx"); ?>" align="left" style="padding:3px 0 3px 15px; font-size:13px; font-weight:bold;"><?php echo $companyName;	?></td>
 
 							<td data-href="/?M0103V&PAGE=<?php echo $PAGE;?>&m_id=<?php echo $row->get("idx"); ?>"><?php echo $row->get('license'); ?></td>
 							<td data-href="/?M0103V&PAGE=<?php echo $PAGE;?>&m_id=<?php echo $row->get("idx"); ?>"><?php echo $row->get('tel'); ?></td>
