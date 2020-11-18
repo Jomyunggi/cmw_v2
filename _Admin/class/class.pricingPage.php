@@ -116,7 +116,6 @@ class M_PricingPage extends M_PRICING {
 		$feesS_Arr = $this->getCompanyByOn('companyName', 'license');
 		unset($onlineArr[0]);
 		unset($feesArr[0]);
-		unset($feesS_Arr[0]);
 
 		if(count($cIdx) && count($categorys) && $searchTxt != ""){
 			$addWhere = " AND g.category in (".implode(',', $categorys).") ";

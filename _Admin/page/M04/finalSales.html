@@ -181,7 +181,7 @@ function valueCheck(key, msg) {
 								$siteName = $onlineArr[$value]." | ".$feesS_Arr[$onlineArr[$value]]." | ".$feesArr[$onlineArr[$value]];
 
 								//최종판매액 구하기		((10-종소세)*(원가+택배비)/(-11*최종마진율+(10-종소세)*(1-사이트판매수수료)))
-								$cost = $row->get('cost') + 200 + $this->deliveryP[$row->get('size')];		//기존원가를 높여준다(정확한 원가가 아니므로 손해를 생각해서 올려줌)
+								$cost = $row->get('cost') + 300 + $this->deliveryP[$row->get('size')];		//기존원가를 높여준다(정확한 원가가 아니므로 손해를 생각해서 올려줌)
 								$finalSales = round(((10-$this->smallTax)*$cost/(-11*($searchTxt/100)+(10-$this->smallTax)*(1-$feesArr[$onlineArr[$value]]/100))), -1);
 								//판매사이트 수수료금액 alSales * $feesArr[$onlineArr[$value]]/100;
 								$siteFees = $finalSales * $feesArr[$onlineArr[$value]]/100;

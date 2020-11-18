@@ -95,6 +95,7 @@ class M_PRICING {
 		$query = " SELECT idx, companyName, fees, license "
 				." FROM Company_Info "
 				." WHERE status = 1 AND level = 4 "
+				." ORDER BY fees asc "
 				;
 		$row = $db->getListSet($query);
 
