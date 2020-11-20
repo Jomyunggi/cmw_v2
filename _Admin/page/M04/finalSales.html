@@ -137,16 +137,17 @@ function valueCheck(key, msg) {
 			</div>
 			<table class="table table-bordered table-hover">
 				<colgroup>
-					<col width="18%">
+					<col width="15%">
 					<col width="8%">
 					<col width="15%">
 					<col width="5%">
-					<col width="9%">
-					<col width="9%">
-					<col width="9%">
-					<col width="9%">
-					<col width="9%">
-					<col width="9%">
+					<col width="8%">
+					<col width="8%">
+					<col width="8%">
+					<col width="8%">
+					<col width="10%">
+					<col width="8%">
+					<col width="8%">
 					
 				</colgroup>
 				<thead>
@@ -158,7 +159,8 @@ function valueCheck(key, msg) {
 						<th style="padding:10px;">원가</th>
 						<th style="padding:10px;">판매금액</th>
 						<th style="padding:10px;">정산금액</th>
-						<th style="padding:10px;">1차 순수익</th>
+						<th style="padding:10px;">1차 공장수익</th>
+						<th style="padding:10px;">희망 순수익</th>
 						<th style="padding:10px;">최종 순수익</th>
 						<th style="padding:10px;">마진율</th>
 					</tr>
@@ -180,25 +182,31 @@ function valueCheck(key, msg) {
 								//사이트명
 								$siteName = $onlineArr[$value]." | ".$feesS_Arr[$onlineArr[$value]]." | ".$feesArr[$onlineArr[$value]];
 
+								//원가 + 알파값
+								$firstCost = $row->get('cost') + 300;
 								//최종판매액 구하기		((10-종소세)*(원가+택배비)/(-11*최종마진율+(10-종소세)*(1-사이트판매수수료)))
-								$cost = $row->get('cost') + 300 + $this->deliveryP[$row->get('size')];		//기존원가를 높여준다(정확한 원가가 아니므로 손해를 생각해서 올려줌)
-								$finalSales = round(((10-$this->smallTax)*$cost/(-11*($searchTxt/100)+(10-$this->smallTax)*(1-$feesArr[$onlineArr[$value]]/100))), -1);
+								$cost = $firstCost + $this->deliveryP[$row->get('size')];		//기존원가를 높여준다(정확한 원가가 아니므로 손해를 생각해서 올려줌)
+								$finalSales = round(((10-$this->smallTax)*$cost/(-11*($searchTxt/100)+(10-$this->smallTax)*(1-$feesArr[$onlineArr[$value]]/100))), -1);// + ($row->get('price') * $this->adPrice);
 								//판매사이트 수수료금액 alSales * $feesArr[$onlineArr[$value]]/100;
-								$siteFees = $finalSales * $feesArr[$onlineArr[$value]]/100;
-								//부가세&종소세
-								$smallTax = ($finalSales - $cost - $siteFees)/11;
+								$siteFees = $finalSales * $feesS_Arr[$onlineArr[$value]]/100;
+								//부가세
+								$vat = ($finalSales - $cost - $siteFees)/11;
+								//종소세
+								$smallTax = $vat * $this->smallTax;
 								//정산금액
 								$settlementAmount = $finalSales - $siteFees;
 								//1차순수익
-								$firstRevenue = $row->get('price') - ($row->get('cost')+300);
+								$firstRevenue = $row->get('price') - $firstCost;
+								//1차 공장 20% 마진율 순수익
+								$revenue_hope = $row->get('price') * 0.2 + ($finalSales * $this->adPrice);
 								//최종 순수익
-								$revenue = $finalSales - $cost - $siteFees;
+								$revenue = $finalSales - $cost - $siteFees - $vat - $smallTax;
 								//마진율
 								$marginRate = $revenue/$finalSales;
 
 								if($tmp){
 				?>
-					<tr style="height:8px; background-color:black;"><td colspan='10'></td></tr>
+					<tr style="height:8px; background-color:black;"><td colspan='11'></td></tr>
 				<?php			}	?>
 					<tr>
 						<td align="center" style="padding:5px;"><?php echo $siteName;	?></td>
@@ -209,6 +217,7 @@ function valueCheck(key, msg) {
 						<td align="right" style="padding:5px; background-color:black; color:white; font-weight:bold;"><?php echo number_format($finalSales);	?></td>
 						<td align="right" style="padding:5px;"><?php echo number_format($settlementAmount);	?></td>
 						<td align="right" style="padding:5px;"><?php echo number_format($firstRevenue);	?></td>
+						<td align="right" style="padding:5px;"><?php echo number_format($revenue_hope);	?></td>
 						<td align="right" style="padding:5px;"><?php echo number_format($revenue);	?></td>
 						<td align="right" style="padding:5px;"><?php echo number_format($marginRate*100, 2);	?>%</td>
 					</tr>

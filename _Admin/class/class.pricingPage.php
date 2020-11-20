@@ -25,13 +25,15 @@ class M_PricingPage extends M_PRICING {
 			16	=>	'기타'
 		);
 
-		$this->smallTax = 0.4;
+		$this->smallTax = 0.45;
 
 		$this->deliveryP = array(
 			1	=> 2300,
 			2	=> 2700,
 			3	=> 3200
 		);
+
+		$this->adPrice = 0.045;
 	}
 
 	// Destructor
