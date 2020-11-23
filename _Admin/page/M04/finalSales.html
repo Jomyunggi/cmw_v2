@@ -161,7 +161,7 @@ function valueCheck(key, msg) {
 						<th style="padding:10px;">정산금액</th>
 						<th style="padding:10px;">1차 공장수익</th>
 						<th style="padding:10px;">희망 순수익</th>
-						<th style="padding:10px;">최종 순수익</th>
+						<th style="padding:10px;">최종 순수익<br/>(-부.종소세)</th>
 						<th style="padding:10px;">마진율</th>
 					</tr>
 				</thead>
@@ -200,7 +200,7 @@ function valueCheck(key, msg) {
 								//1차 공장 20% 마진율 순수익
 								$revenue_hope = $row->get('price') * 0.2 + ($finalSales * $this->adPrice);
 								//최종 순수익
-								$revenue = $finalSales - $cost - $siteFees - $vat - $smallTax;
+								$revenue = $finalSales - $cost - $siteFees;
 								//마진율
 								$marginRate = $revenue/$finalSales;
 
@@ -218,7 +218,7 @@ function valueCheck(key, msg) {
 						<td align="right" style="padding:5px;"><?php echo number_format($settlementAmount);	?></td>
 						<td align="right" style="padding:5px;"><?php echo number_format($firstRevenue);	?></td>
 						<td align="right" style="padding:5px;"><?php echo number_format($revenue_hope);	?></td>
-						<td align="right" style="padding:5px;"><?php echo number_format($revenue);	?></td>
+						<td align="right" style="padding:5px;"><?php echo number_format($revenue)."(-".round(($vat+$smallTax), 0).")";	?></td>
 						<td align="right" style="padding:5px;"><?php echo number_format($marginRate*100, 2);	?>%</td>
 					</tr>
 				<?php
