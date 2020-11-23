@@ -139,14 +139,14 @@ function valueCheck(key, msg) {
 				<colgroup>
 					<col width="15%">
 					<col width="8%">
-					<col width="15%">
-					<col width="5%">
+					<col width="12%">
+					<col width="4%">
 					<col width="8%">
 					<col width="8%">
 					<col width="8%">
 					<col width="8%">
 					<col width="10%">
-					<col width="8%">
+					<col width="12%">
 					<col width="8%">
 					
 				</colgroup>
@@ -211,14 +211,14 @@ function valueCheck(key, msg) {
 					<tr>
 						<td align="center" style="padding:5px;"><?php echo $siteName;	?></td>
 						<td align="center" style="padding:5px;"><?php echo $this->Category[$row->get('category')];	?></td>
-						<td align="center" style="padding:5px;"><?php echo $row->get('gName')." ".$row->get('rollType');	?>롤</td>
+						<td align="left" style="padding:5px 5px 5px 10px;"><?php echo $row->get('gName')." ".$row->get('rollType');	?>롤</td>
 						<td align="right" style="padding:5px;"><?php echo $row->get('count');	?></td>
 						<td align="right" style="padding:5px;"><?php echo number_format($row->get('cost'));	?></td>
 						<td align="right" style="padding:5px; background-color:black; color:white; font-weight:bold;"><?php echo number_format($finalSales);	?></td>
 						<td align="right" style="padding:5px;"><?php echo number_format($settlementAmount);	?></td>
 						<td align="right" style="padding:5px;"><?php echo number_format($firstRevenue);	?></td>
 						<td align="right" style="padding:5px;"><?php echo number_format($revenue_hope);	?></td>
-						<td align="right" style="padding:5px;"><?php echo number_format($revenue)."(-".round(($vat+$smallTax), 0).")";	?></td>
+						<td align="right" style="padding:5px;"><?php echo number_format($revenue)." - ".round(($vat+$smallTax), 0)." = ".number_format($revenue-$vat-$smallTax);	?></td>
 						<td align="right" style="padding:5px;"><?php echo number_format($marginRate*100, 2);	?>%</td>
 					</tr>
 				<?php

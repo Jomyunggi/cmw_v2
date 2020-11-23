@@ -33,7 +33,7 @@ class M_PricingPage extends M_PRICING {
 			3	=> 3200
 		);
 
-		$this->adPrice = 0.045;
+		$this->adPrice = 0.05;
 	}
 
 	// Destructor
