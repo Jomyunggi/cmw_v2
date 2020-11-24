@@ -25,15 +25,20 @@ class M_PricingPage extends M_PRICING {
 			16	=>	'기타'
 		);
 
-		$this->smallTax = 0.45;
+		$this->smallTax = 0.4;
 
 		$this->deliveryP = array(
 			1	=> 2300,
 			2	=> 2700,
 			3	=> 3200
 		);
+		
+		$this->adPriceYN = array(
+			0	=> '노포함',
+			1	=> '포함'
+		);
 
-		$this->adPrice = 0.05;
+		$this->adPrice = 0.045;
 	}
 
 	// Destructor
@@ -111,6 +116,14 @@ class M_PricingPage extends M_PRICING {
 		$cIdx		= $_GET['cIdx'];
 		$categorys	= $_GET['categorys'];
 		$searchTxt = $M_FUNC->M_Filter(GET, "searchTxt");
+		$adPriceYN = $M_FUNC->M_Filter(GET, "adPriceYN");
+		$adPrice = $M_FUNC->M_Filter(GET, "adPrice");
+		$plusCost = $M_FUNC->M_Filter(GET, "plusCost");
+
+		if($adPriceYN) {
+			if($adPrice == '') $adPrice = 5;
+		}
+		if($plusCost == '') $plusCost = 0;
 
 		//Company에서 온라인거래처만 가져온다.
 		$onlineArr = $this->getCompanyByOn('idx', 'companyName');
@@ -119,7 +132,7 @@ class M_PricingPage extends M_PRICING {
 		unset($onlineArr[0]);
 		unset($feesArr[0]);
 
-		if(count($cIdx) && count($categorys) && $searchTxt != ""){
+		if(count($cIdx) && count($categorys)){
 			$addWhere = " AND g.category in (".implode(',', $categorys).") ";
 			$row = $this->getFinalSales($addWhere);
 		} else {

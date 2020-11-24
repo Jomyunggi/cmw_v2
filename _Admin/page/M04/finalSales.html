@@ -19,6 +19,17 @@ $(document).ready(function(){
 			}
 		}
 	});
+
+	if($('input:radio[name="adPriceYN"]:checked').val() == 0){
+		$('#adPrice').hide();
+	}
+	$('input:radio[name="adPriceYN"]').click(function(){
+		if(this.value == 0){
+			$('#adPrice').hide();
+		} else {
+			$('#adPrice').show();
+		}
+	});
 });
 
 function delHangle(evt){	//한글을 지우는 부분, keyup부분에 넣어준다.
@@ -75,8 +86,8 @@ function isNumberkey(evt){	// 숫자를 제외한 값을 입력하지 못하게 
 
 function searchSubmit(){
 	var frm = document.search_frm;
-
-	if(valueCheck("searchTxt", "마진율") == false)	return false;
+	
+	//if(valueCheck("searchTxt", "마진율") == false)	return false;
 
 	frm.submit();
 }
@@ -89,6 +100,36 @@ function valueCheck(key, msg) {
 	}
 	return true;
 }
+
+function changeRevenue(dIdx){
+	var ajax_url = "/page/ajax/M04/ajax.updateDelivery.php";
+	//var hRevenue = $('#hRevenue').val();
+	var dIdx = $('#dIdx').val();
+	alert(dIdx);
+	var ajax_data = {
+			'dIdx'		: dIdx,
+			'hRevenue'	: hRevenue
+	};
+		
+	$.ajax({
+		url : ajax_url,
+		data : ajax_data,
+		type : 'POST',
+		dataType : 'html',
+		contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+		success: function (response) {
+			if(response == 'success') {
+				alert('변경 되었습니다.');
+			} else {
+				alert('다시한번 확인해주세요.');
+			}
+			location.reload();
+		},
+		failure: function(msg) {
+		}
+	});
+}
+
 </script>
 
 <div class="container">
@@ -107,20 +148,50 @@ function valueCheck(key, msg) {
 				
 				<div class="form-inline">
 					<div style="text-align:left; flex:1;">
+						<div style="float:left; width:14%;">
+							<a href="#layer1" class="btn btn-sm btn-default" style="width:75%;"><i class="fa fa-users fa-lg"></i> 사이트지정</a>
+						</div>
+						<div style="padding:4px; margin-bottom:5px;">
+							<?php
+								echo $M_HTML->input_Checkbox("cIdx", $onlineArr, '', $cIdx);
+							?>
+						</div>
 						
-						<a href="#layer1" class="btn btn-sm btn-default"><i class="fa fa-users fa-lg"></i> 사이트지정</a>
-						<?php
-							echo $M_HTML->input_Checkbox("cIdx", $onlineArr, '', $cIdx);
-						?><br/>
+						<div style="clear:both;"></div>
 
-						<a href="#layer2"class="btn btn-sm btn-default"><i class="fa fa-tags fa-lg"></i> &nbsp;상품 지정&nbsp;</a>
-						<?php
-							echo $M_HTML->input_Checkbox("categorys", $this->Category, '', $categorys, '', 80);
-						?><br/>
+						<div style="float:left; width:14%;">
+							<a href="#layer2"class="btn btn-sm btn-default" style="width:75%;"><i class="fa fa-tags fa-lg"></i> &nbsp;상품 지정&nbsp;</a>
+						</div>
+						<div style="padding:4px; margin-bottom:5px;">
+							<?php
+								echo $M_HTML->input_Checkbox("categorys", $this->Category, '', $categorys);
+							?>
+						</div>
+
+						<div style="clear:both;"></div>
+
+						<div style="float:left; width:14%;">
+							<a href="#layer3"class="btn btn-sm btn-default" style="width:75%;"><i class="fa fa-apple fa-lg"></i> &nbsp;광고비 포함여부&nbsp;</a>
+						</div>
+						<div style="padding:4px;">
+							<?php
+								echo $M_HTML->input_Radio2("adPriceYN", $this->adPriceYN, $adPriceYN);
+							?>&nbsp;&nbsp;
+							<input type="text" name="adPrice" id="adPrice" class="form-control" onkeypress='return isNumberkey(event)' onkeyup='return delHangle(event)' value="<?php echo $adPrice;?>" style="width:50px; height:25px; text-align:right;" placeholder='%'>
+						</div>
+
+						<div style="clear:both;"></div>
+
+						<div style="float:left; width:14%;">
+							<a href="#layer4"class="btn btn-sm btn-default" style="width:75%;"><i class="fa fa-dollar fa-lg"></i> &nbsp;+ 원가&nbsp;</a>
+						</div>
+						<div style="padding:0px;">
+							<input type="text" name="plusCost" id="plusCost" class="form-control" onkeypress='return isNumberkey(event)' onkeyup='return delHangle(event)' value="<?php echo $plusCost;?>" style="width:80px; height:30px; text-align:right;"> 원
+						</div>
 					</div>
 
 					<div style="text-align:right; flex:2;">
-						<div class="form-group">마진율 : &nbsp;</div>
+						<div class="form-group">희망 마진율 : &nbsp;</div>
 						<div class="form-group input-group">
 							<input type="text" name="searchTxt" id="searchTxt" class="form-control" onkeypress='return isNumberkey(event)' onkeyup='return delHangle(event)' value="<?php echo $searchTxt;?>">
 							<span class="input-group-btn">
@@ -137,17 +208,18 @@ function valueCheck(key, msg) {
 			</div>
 			<table class="table table-bordered table-hover">
 				<colgroup>
-					<col width="15%">
+					<col width="13%">
 					<col width="8%">
 					<col width="12%">
 					<col width="4%">
-					<col width="8%">
-					<col width="8%">
-					<col width="8%">
+					<col width="9%">
+					<col width="5%">
+					<col width="7%">
+					<col width="7%">
 					<col width="8%">
 					<col width="10%">
-					<col width="12%">
-					<col width="8%">
+					<col width="10%">
+					<col width="7%">
 					
 				</colgroup>
 				<thead>
@@ -155,7 +227,8 @@ function valueCheck(key, msg) {
 						<th style="padding:10px;">사이트명 | 판·수 | 확·수 </th>
 						<th style="padding:10px;">카테고리</th>
 						<th style="padding:10px;">상품명</th>
-						<th style="padding:10px;">수량</th>						
+						<th style="padding:10px;">수량</th>	
+						<th style="padding:10px;">희망마진율</th>
 						<th style="padding:10px;">원가</th>
 						<th style="padding:10px;">판매금액</th>
 						<th style="padding:10px;">정산금액</th>
@@ -183,10 +256,10 @@ function valueCheck(key, msg) {
 								$siteName = $onlineArr[$value]." | ".$feesS_Arr[$onlineArr[$value]]." | ".$feesArr[$onlineArr[$value]];
 
 								//원가 + 알파값
-								$firstCost = $row->get('cost') + 300;
+								$firstCost = $row->get('cost') + $plusCost;
 								//최종판매액 구하기		((10-종소세)*(원가+택배비)/(-11*최종마진율+(10-종소세)*(1-사이트판매수수료)))
 								$cost = $firstCost + $this->deliveryP[$row->get('size')];		//기존원가를 높여준다(정확한 원가가 아니므로 손해를 생각해서 올려줌)
-								$finalSales = round(((10-$this->smallTax)*$cost/(-11*($searchTxt/100)+(10-$this->smallTax)*(1-$feesArr[$onlineArr[$value]]/100))), -1);// + ($row->get('price') * $this->adPrice);
+								$finalSales = round(((10-$this->smallTax)*$cost/(-11*($row->get('revenue_hope')/100)+(10-$this->smallTax)*(1-$feesArr[$onlineArr[$value]]/100))), -1);// + ($row->get('price') * $this->adPrice);
 								//판매사이트 수수료금액 alSales * $feesArr[$onlineArr[$value]]/100;
 								$siteFees = $finalSales * $feesS_Arr[$onlineArr[$value]]/100;
 								//부가세
@@ -198,22 +271,26 @@ function valueCheck(key, msg) {
 								//1차순수익
 								$firstRevenue = $row->get('price') - $firstCost;
 								//1차 공장 20% 마진율 순수익
-								$revenue_hope = $row->get('price') * 0.2 + ($finalSales * $this->adPrice);
+								$revenue_hope = $row->get('price') * 0.2 + ($finalSales * ($adPrice/100));
 								//최종 순수익
 								$revenue = $finalSales - $cost - $siteFees;
 								//마진율
-								$marginRate = $revenue/$finalSales;
+								$marginRate = ($revenue - $vat - $smallTax)/$finalSales;
 
 								if($tmp){
 				?>
-					<tr style="height:8px; background-color:black;"><td colspan='11'></td></tr>
+					<tr style="height:8px; background-color:black;"><td colspan='12'></td></tr>
 				<?php			}	?>
 					<tr>
 						<td align="center" style="padding:5px;"><?php echo $siteName;	?></td>
 						<td align="center" style="padding:5px;"><?php echo $this->Category[$row->get('category')];	?></td>
 						<td align="left" style="padding:5px 5px 5px 10px;"><?php echo $row->get('gName')." ".$row->get('rollType');	?>롤</td>
 						<td align="right" style="padding:5px;"><?php echo $row->get('count');	?></td>
-						<td align="right" style="padding:5px;"><?php echo number_format($row->get('cost'));	?></td>
+						<td align="center" style="padding:0px;">
+							<input type="text" name="hRevenue" id="hRevenue<?php echo $row->get('dIdx');?>" class="form-control" onkeypress='return isNumberkey(event)' onkeyup='return delHangle(event)' value="<?php echo $row->get('revenue_hope');?>" style="float:left; width:50px; height:34px; padding:4px; font-size:12px;">
+							<button class="btn btn-default" type="button" onclick="changeRevenue(<?php echo $row->get('dIdx');?>);"> 변경</button>
+						</td>
+						<td align="right" style="padding:5px;"><?php echo number_format($firstCost);	?></td>
 						<td align="right" style="padding:5px; background-color:black; color:white; font-weight:bold;"><?php echo number_format($finalSales);	?></td>
 						<td align="right" style="padding:5px;"><?php echo number_format($settlementAmount);	?></td>
 						<td align="right" style="padding:5px;"><?php echo number_format($firstRevenue);	?></td>
@@ -229,7 +306,7 @@ function valueCheck(key, msg) {
 					} else {
 				?>
 					<tr style="text-align:center;">
-						<td colspan='10'>해당 데이터가 없습니다</td>
+						<td colspan='12'>해당 데이터가 없습니다</td>
 					</tr>
 				<?php
 					}

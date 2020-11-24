@@ -11,7 +11,7 @@ class M_PRICING {
 	function getD_P_Date(){
 		global $db;
 
-		$query = " SELECT g.idx as goodsIdx, d.idx, d.count, d.size, g.gName, g.rollType "
+		$query = " SELECT g.idx as goodsIdx, d.idx, d.count, d.size, g.gName, g.rollType, d.revenue_hope "
 				." FROM Delivery_Info d "
 				." LEFT JOIN Goods_Info g on d.goodsIdx = g.idx "
 				." WHERE d.status = 1 "
@@ -45,7 +45,7 @@ class M_PRICING {
 	function getDeliberyByIdx($m_id){
 		global $db;
 
-		$query = " SELECT g.idx as goodsIdx, d.idx, d.count, d.size, g.gName, g.rollType "
+		$query = " SELECT g.idx as goodsIdx, d.idx, d.count, d.size, g.gName, g.rollType, d.revenue_hope "
 				." FROM Delivery_Info d "
 				." LEFT JOIN Goods_Info g on d.goodsIdx = g.idx "
 				." WHERE d.status = 1 "
@@ -60,14 +60,16 @@ class M_PRICING {
 		global $db;
 		global $M_FUNC;
 
-		$goodsIdx	= $M_FUNC->M_Filter(POST, "goodsIdx");
-		$count		= $M_FUNC->M_Filter(POST, 'count');
-		$size		= $M_FUNC->M_Filter(POST, "size");
+		$goodsIdx		= $M_FUNC->M_Filter(POST, "goodsIdx");
+		$count			= $M_FUNC->M_Filter(POST, 'count');
+		$size			= $M_FUNC->M_Filter(POST, "size");
+		$revenue_hope	= $M_FUNC->M_Filter(POST, "revenue_hope");
 
 		$data = array(
-			'goodsIdx'	=> $goodsIdx,
-			'count'		=> $count,
-			'size'		=> $size
+			'goodsIdx'		=> $goodsIdx,
+			'count'			=> $count,
+			'size'			=> $size,
+			'revenue_hope'	=> $revenue_hope
 		);
 
 		if($mode == 'insert'){
@@ -131,12 +133,12 @@ class M_PRICING {
 	function getFinalSales($addWhere){
 		global $db;
 
-		$query = " SELECT d.count, d.size, g.category, g.rollType, g.gName, g.count as gCount, g.cost, g.price "
+		$query = " SELECT d.count, d.size, g.category, g.rollType, g.gName, g.count as gCount, g.cost, g.price, d.revenue_hope, d.idx as dIdx "
 				." FROM Delivery_Info d "
 				."	LEFT JOIN Goods_Info g ON d.goodsIdx = g.idx "
 				." WHERE d.status = 1 "
 				.$addWhere
-				." ORDER BY g.category asc, g.rollType asc, g.cost asc "
+				." ORDER BY g.category asc, g.rollType asc, g.cost asc, d.count "
 				;
 		$row = $db->getListSet($query);
 

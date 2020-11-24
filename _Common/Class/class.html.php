@@ -324,7 +324,7 @@ class M_HTML {
 					array ($key1, $key2, $key3, ...)
 	*	Return	:	HTML tag string
 	***************************************************/
-	function input_Checkbox($name, $value_arr='', $split_char='', $default_value='', $add_event = '', $padding = 0) {
+	function input_Checkbox($name, $value_arr='', $split_char='', $default_value='', $add_event = '', $padding = 0, $class = '') {
 		if (!$split_char) {
 			$split_char = "&nbsp;&nbsp;";
 		}
@@ -355,7 +355,7 @@ class M_HTML {
 				if($padding > 0) {
 					$HTML .= '<label style="display:inline-block; width:'.$padding.'px;">';
 				}
-				$HTML .= "<input type=\"checkbox\" id=\"". $name ."\" name=\"". $name ."[]\" class=\"". $name ."\" value=\"". $key ."\" ". $checked ." ". $add_event ." /> ". $value;
+				$HTML .= "<input type=\"checkbox\" id=\"". $name ."\" name=\"". $name ."[]\" class=\"". $class ."\" value=\"". $key ."\" ". $checked ." ". $add_event ." /> ". $value;
 				if ($k < sizeof($value_arr)-1) {
 					$HTML .= $split_char;
 				}

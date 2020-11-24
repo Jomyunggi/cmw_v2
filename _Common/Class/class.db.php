@@ -119,7 +119,7 @@ class M_DB {
 			$sets = $data;
 		}
 
-		$sql				= "update $table set $sets $where";
+		echo $sql				= "update $table set $sets $where";
 
 		if($this->execute($sql)) { return true; } else { return false; }
 	}
