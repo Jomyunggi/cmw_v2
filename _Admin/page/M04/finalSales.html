@@ -87,7 +87,19 @@ function isNumberkey(evt){	// 숫자를 제외한 값을 입력하지 못하게 
 function searchSubmit(){
 	var frm = document.search_frm;
 	
-	//if(valueCheck("searchTxt", "마진율") == false)	return false;
+	var issiteChk = false;
+	var arr_Site = document.getElementsByName("cIdx[]");
+	for(var i=0;i<arr_Site.length;i++){
+		if(arr_Site[i].checked == true) {
+			issiteChk = true;
+			break;
+		}
+	}
+
+	if(!issiteChk){
+		alert('사이트 하나이상 선택해주세요.');
+		frm.cIdx.focus();
+	}
 
 	frm.submit();
 }
@@ -103,9 +115,8 @@ function valueCheck(key, msg) {
 
 function changeRevenue(dIdx){
 	var ajax_url = "/page/ajax/M04/ajax.updateDelivery.php";
-	//var hRevenue = $('#hRevenue').val();
-	var dIdx = $('#dIdx').val();
-	alert(dIdx);
+	var hRevenue = $('#hRevenue'+dIdx).val();
+
 	var ajax_data = {
 			'dIdx'		: dIdx,
 			'hRevenue'	: hRevenue
@@ -185,20 +196,20 @@ function changeRevenue(dIdx){
 						<div style="float:left; width:14%;">
 							<a href="#layer4"class="btn btn-sm btn-default" style="width:75%;"><i class="fa fa-dollar fa-lg"></i> &nbsp;+ 원가&nbsp;</a>
 						</div>
-						<div style="padding:0px;">
+						<div style="float:left; padding:0px;">
 							<input type="text" name="plusCost" id="plusCost" class="form-control" onkeypress='return isNumberkey(event)' onkeyup='return delHangle(event)' value="<?php echo $plusCost;?>" style="width:80px; height:30px; text-align:right;"> 원
 						</div>
-					</div>
+						<div style="text-align:right; margin-bottom:10px;">
+							<button class="btn btn-primary" type="button" onclick="searchSubmit();" style="padding:8px 20px;"><i class="fa fa-search"></i> 검색</button>
+						</div>
 
-					<div style="text-align:right; flex:2;">
-						<div class="form-group">희망 마진율 : &nbsp;</div>
+					<!--div style="text-align:right; flex:2;">
 						<div class="form-group input-group">
-							<input type="text" name="searchTxt" id="searchTxt" class="form-control" onkeypress='return isNumberkey(event)' onkeyup='return delHangle(event)' value="<?php echo $searchTxt;?>">
 							<span class="input-group-btn">
-								<button class="btn btn-default" type="button" onclick="searchSubmit();"><i class="fa fa-search"></i> 검색</button>
+								<button class="btn btn-primary" type="button" onclick="searchSubmit();" style="padding:10px 20px;"><i class="fa fa-search"></i> 검색</button>
 							</span>
 						</div>
-					</div>
+					</div-->
 
 				</div>
 				
@@ -224,18 +235,18 @@ function changeRevenue(dIdx){
 				</colgroup>
 				<thead>
 					<tr>
-						<th style="padding:10px;">사이트명 | 판·수 | 확·수 </th>
-						<th style="padding:10px;">카테고리</th>
-						<th style="padding:10px;">상품명</th>
-						<th style="padding:10px;">수량</th>	
-						<th style="padding:10px;">희망마진율</th>
-						<th style="padding:10px;">원가</th>
-						<th style="padding:10px;">판매금액</th>
-						<th style="padding:10px;">정산금액</th>
-						<th style="padding:10px;">1차 공장수익</th>
-						<th style="padding:10px;">희망 순수익</th>
-						<th style="padding:10px;">최종 순수익<br/>(-부.종소세)</th>
-						<th style="padding:10px;">마진율</th>
+						<th style="padding:10px; vertical-align:middle;">사이트명 | 판·수 | 확·수 </th>
+						<th style="padding:10px; vertical-align:middle;">카테고리</th>
+						<th style="padding:10px; vertical-align:middle;">상품명</th>
+						<th style="padding:10px; vertical-align:middle;">수량</th>	
+						<th style="padding:10px; vertical-align:middle;">희망마진율</th>
+						<th style="padding:10px; vertical-align:middle;">원가</th>
+						<th style="padding:10px; vertical-align:middle;">판매금액</th>
+						<th style="padding:10px; vertical-align:middle;">정산금액</th>
+						<th style="padding:10px; vertical-align:middle;">공장 순수익</th>
+						<th style="padding:10px; vertical-align:middle;">희망 순수익</th>
+						<th style="padding:10px; vertical-align:middle;">최종 순수익<br/>(-부.종소세)</th>
+						<th style="padding:10px; vertical-align:middle;">마진율</th>
 					</tr>
 				</thead>
 				<tbody style="font-size:11.5px;">
@@ -287,11 +298,11 @@ function changeRevenue(dIdx){
 						<td align="left" style="padding:5px 5px 5px 10px;"><?php echo $row->get('gName')." ".$row->get('rollType');	?>롤</td>
 						<td align="right" style="padding:5px;"><?php echo $row->get('count');	?></td>
 						<td align="center" style="padding:0px;">
-							<input type="text" name="hRevenue" id="hRevenue<?php echo $row->get('dIdx');?>" class="form-control" onkeypress='return isNumberkey(event)' onkeyup='return delHangle(event)' value="<?php echo $row->get('revenue_hope');?>" style="float:left; width:50px; height:34px; padding:4px; font-size:12px;">
-							<button class="btn btn-default" type="button" onclick="changeRevenue(<?php echo $row->get('dIdx');?>);"> 변경</button>
+							<input type="text" name="hRevenue" id="hRevenue<?php echo $row->get('dIdx');?>" class="form-control" onkeypress='return isNumberkey(event)' onkeyup='return delHangle(event)' value="<?php echo $row->get('revenue_hope');?>" style="float:left; width:50%; height:30px; margin-left:4px; font-size:12px;">
+							<button class="btn btn-info" type="button" onclick="changeRevenue(<?php echo $row->get('dIdx');?>);" style="float:right; padding:4px 8px; margin-right:4px;"> 변경</button>
 						</td>
 						<td align="right" style="padding:5px;"><?php echo number_format($firstCost);	?></td>
-						<td align="right" style="padding:5px; background-color:black; color:white; font-weight:bold;"><?php echo number_format($finalSales);	?></td>
+						<td align="right" style="padding:5px; background-color:black; color:white; font-size:15px;"><?php echo number_format($finalSales);	?></td>
 						<td align="right" style="padding:5px;"><?php echo number_format($settlementAmount);	?></td>
 						<td align="right" style="padding:5px;"><?php echo number_format($firstRevenue);	?></td>
 						<td align="right" style="padding:5px;"><?php echo number_format($revenue_hope);	?></td>

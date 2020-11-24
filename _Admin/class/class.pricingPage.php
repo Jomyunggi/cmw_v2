@@ -122,8 +122,11 @@ class M_PricingPage extends M_PRICING {
 
 		if($adPriceYN) {
 			if($adPrice == '') $adPrice = 5;
+		} else{
+			$adPriceYN = 1;
+			$adPrice = 5;
 		}
-		if($plusCost == '') $plusCost = 0;
+		if($plusCost == '') $plusCost = 300;
 
 		//Company에서 온라인거래처만 가져온다.
 		$onlineArr = $this->getCompanyByOn('idx', 'companyName');
