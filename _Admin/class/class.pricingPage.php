@@ -115,16 +115,15 @@ class M_PricingPage extends M_PRICING {
 
 		$cIdx		= $_GET['cIdx'];
 		$categorys	= $_GET['categorys'];
-		$searchTxt = $M_FUNC->M_Filter(GET, "searchTxt");
-		$adPriceYN = $M_FUNC->M_Filter(GET, "adPriceYN");
-		$adPrice = $M_FUNC->M_Filter(GET, "adPrice");
-		$plusCost = $M_FUNC->M_Filter(GET, "plusCost");
+		$searchTxt	= $M_FUNC->M_Filter(GET, "searchTxt");
+		$adPriceYN	= $M_FUNC->M_Filter(GET, "adPriceYN");
+		$adPrice	= $M_FUNC->M_Filter(GET, "adPrice");
+		$plusCost	= $M_FUNC->M_Filter(GET, "plusCost");
 
 		if($adPriceYN) {
 			if($adPrice == '') $adPrice = 5;
 		} else{
-			$adPriceYN = 1;
-			$adPrice = 5;
+			$adPrice = 0;
 		}
 		if($plusCost == '') $plusCost = 300;
 
