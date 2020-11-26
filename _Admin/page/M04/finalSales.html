@@ -1,15 +1,5 @@
 <script>
 $(document).ready(function(){	
-	$("#cIdx").click(function(){
-		if(this.value == 0){
-			if($("#cIdx").prop("checked")){
-				$("input[id=cIdx]").prop("checked",true);
-			} else {
-				$("input[id=cIdx]").prop("checked",false);
-			}
-		}
-	});
-
 	$("#categorys").click(function(){
 		if(this.value == 0){
 			if($("#categorys").prop("checked")){
@@ -17,18 +7,6 @@ $(document).ready(function(){
 			} else {
 				$("input[id=categorys]").prop("checked",false);
 			}
-		}
-	});
-
-	if($('input:radio[name="adPriceYN"]:checked').val() == 0){
-		$('#adPrice').hide();
-	}
-	$('input:radio[name="adPriceYN"]').click(function(){
-		if(this.value == 0){
-			$('#adPrice').hide();
-		} else {
-			$('#adPrice').show();
-			document.getElementById('adPrice').value = 5;
 		}
 	});
 });
@@ -89,7 +67,7 @@ function searchSubmit(){
 	var frm = document.search_frm;
 	
 	var issiteChk = false;
-	var arr_Site = document.getElementsByName("cIdx[]");
+	var arr_Site = document.getElementsByName("cIdx");
 	for(var i=0;i<arr_Site.length;i++){
 		if(arr_Site[i].checked == true) {
 			issiteChk = true;
@@ -165,7 +143,7 @@ function changeRevenue(dIdx){
 						</div>
 						<div style="padding:4px; margin-bottom:5px;">
 							<?php
-								echo $M_HTML->input_Checkbox("cIdx", $onlineArr, '', $cIdx);
+								echo $M_HTML->input_Radio2("cIdx", $onlineArr, $cIdx);
 							?>
 						</div>
 						
@@ -183,18 +161,6 @@ function changeRevenue(dIdx){
 						<div style="clear:both;"></div>
 
 						<div style="float:left; width:14%;">
-							<a href="#layer3"class="btn btn-sm btn-default" style="width:75%;"><i class="fa fa-apple fa-lg"></i> &nbsp;광고비 포함여부&nbsp;</a>
-						</div>
-						<div style="padding:4px;">
-							<?php
-								echo $M_HTML->input_Radio2("adPriceYN", $this->adPriceYN, $adPriceYN);
-							?>&nbsp;&nbsp;
-							<input type="text" name="adPrice" id="adPrice" class="form-control" onkeypress='return isNumberkey(event)' onkeyup='return delHangle(event)' value="<?php echo $adPrice;?>" style="width:50px; height:25px; text-align:right;" placeholder='%'>
-						</div>
-
-						<div style="clear:both;"></div>
-
-						<div style="float:left; width:14%;">
 							<a href="#layer4"class="btn btn-sm btn-default" style="width:75%;"><i class="fa fa-dollar fa-lg"></i> &nbsp;+ 원가&nbsp;</a>
 						</div>
 						<div style="float:left; padding:0px;">
@@ -203,135 +169,131 @@ function changeRevenue(dIdx){
 						<div style="text-align:right; margin-bottom:10px;">
 							<button class="btn btn-primary" type="button" onclick="searchSubmit();" style="padding:8px 20px;"><i class="fa fa-search"></i> 검색</button>
 						</div>
-
-					<!--div style="text-align:right; flex:2;">
-						<div class="form-group input-group">
-							<span class="input-group-btn">
-								<button class="btn btn-primary" type="button" onclick="searchSubmit();" style="padding:10px 20px;"><i class="fa fa-search"></i> 검색</button>
-							</span>
-						</div>
-					</div-->
-
 				</div>
 				
 				<?php
 					echo $M_HTML->e_Form();
 				?>
 			</div>
-			<table class="table table-bordered table-hover">
-				<colgroup>
-					<col width="13%">
-					<col width="8%">
-					<col width="12%">
-					<col width="4%">
-					<col width="9%">
-					<col width="5%">
-					<col width="7%">
-					<col width="7%">
-					<col width="8%">
-					<col width="10%">
-					<col width="10%">
-					<col width="7%">
-					
-				</colgroup>
-				<thead>
-					<tr>
-						<th rowspan='2' style="padding:10px; vertical-align:middle;">사이트명 | 판·수 | 확·수 </th>
-						<th rowspan='2' style="padding:10px; vertical-align:middle;">카테고리</th>
-						<th rowspan='2' style="padding:10px; vertical-align:middle;">상품명</th>
-						<th rowspan='2' style="padding:10px; vertical-align:middle;">수량</th>	
-						<th rowspan='2' style="padding:10px; vertical-align:middle;">희망마진율</th>
-						<th rowspan='2' style="padding:10px; vertical-align:middle;">원가</th>
-						<th rowspan='2' style="padding:10px; vertical-align:middle;">판매금액</th>
-						<th rowspan='2' style="padding:10px; vertical-align:middle;">정산금액</th>
-						<th style="padding:10px; vertical-align:middle;">공장 순수익</th>
-						<th style="padding:10px; vertical-align:middle;">희망 순수익</th>
-						<th style="padding:10px; vertical-align:middle;">최종 순수익<br/>(-부.종소세)</th>
-						<th rowspan='2' style="padding:10px; vertical-align:middle;">마진율</th>
-					</tr>
-					<tr>
-						<th style="padding:10px; vertical-align:middle;">사이트명 | 판·수 | 확·수 </th>
-						<th style="padding:10px; vertical-align:middle;">카테고리</th>
-						<th style="padding:10px; vertical-align:middle;">상품명</th>
-					</tr>
-				</thead>
-				<tbody style="font-size:11.5px;">
-				<?php
-					if($row->size() > 0){
-						$tmpValue = '';
-						$tmp = 0;
-						foreach($cIdx as $key => $value){
-							for($i=0; $i<$row->size(); $i++){
-								$row->next();
-								
-								if($tmpValue != $value){
-									$tmpValue = $value;
-									$tmp = 1;
-								} else $tmp = false;
-
-								//사이트명
-								$siteName = $onlineArr[$value]." | ".$feesS_Arr[$onlineArr[$value]]." | ".$feesArr[$onlineArr[$value]];
-
-								//원가 + 알파값
-								$firstCost = $row->get('cost') + $plusCost;
-								//최종판매액 구하기		((10-종소세)*(원가+택배비)/(-11*최종마진율+(10-종소세)*(1-사이트판매수수료)))
-								$cost = $firstCost + $this->deliveryP[$row->get('size')];		//기존원가를 높여준다(정확한 원가가 아니므로 손해를 생각해서 올려줌)
-								$finalSales = round(((10-$this->smallTax)*$cost/(-11*($row->get('revenue_hope')/100)+(10-$this->smallTax)*(1-$feesArr[$onlineArr[$value]]/100))), -1);// + ($row->get('price') * $this->adPrice);
-								//판매사이트 수수료금액 alSales * $feesArr[$onlineArr[$value]]/100;
-								$siteFees = $finalSales * $feesS_Arr[$onlineArr[$value]]/100;
-								//부가세
-								$vat = ($finalSales - $cost - $siteFees)/11;
-								//종소세
-								$smallTax = $vat * $this->smallTax;
-								//정산금액
-								$settlementAmount = $finalSales - $siteFees;
-								//1차순수익
-								$firstRevenue = $row->get('price') - $firstCost;
-								//1차 공장 20% 마진율 순수익
-								$revenue_hope = $row->get('price') * 0.2 + ($finalSales * ($adPrice/100));
-								//최종 순수익
-								$revenue = $finalSales - $cost - $siteFees;
-								//마진율
-								$marginRate = ($revenue - $vat - $smallTax)/$finalSales;
-
-								if($tmp){
-				?>
-					<tr style="height:8px; background-color:black;"><td colspan='12'></td></tr>
-				<?php			}	?>
-					<tr>
-						<td align="center" style="padding:5px;"><?php echo $siteName;	?></td>
-						<td align="center" style="padding:5px;"><?php echo $this->Category[$row->get('category')];	?></td>
-						<td align="left" style="padding:5px 5px 5px 10px;"><?php echo $row->get('gName')." ".$row->get('rollType');	?>롤</td>
-						<td align="right" style="padding:5px;"><?php echo $row->get('count');	?></td>
-						<td align="center" style="padding:0px;">
-							<input type="text" name="hRevenue" id="hRevenue<?php echo $row->get('dIdx');?>" class="form-control" onkeypress='return isNumberkey(event)' onkeyup='return delHangle(event)' value="<?php echo $row->get('revenue_hope');?>" style="float:left; width:50%; height:30px; padding:4px; margin-left:4px; font-size:12px;">
-							<button class="btn btn-info" type="button" onclick="changeRevenue(<?php echo $row->get('dIdx');?>);" style="float:right; padding:4px 8px; margin-right:4px;"> 변경</button>
-						</td>
-						<td align="right" style="padding:5px;"><?php echo number_format($firstCost);	?></td>
-						<td align="right" style="padding:5px; background-color:black; color:white; font-size:15px;"><?php echo number_format($finalSales);	?></td>
-						<td align="right" style="padding:5px;"><?php echo number_format($settlementAmount);	?></td>
-						<td align="right" style="padding:5px;"><?php echo number_format($firstRevenue);	?></td>
-						<td align="right" style="padding:5px;"><?php echo number_format($revenue_hope);	?></td>
-						<td align="right" style="padding:5px;"><?php echo number_format($revenue)." - ".round(($vat+$smallTax), 0)." = ".number_format($revenue-$vat-$smallTax);	?></td>
-						<td align="right" style="padding:5px;"><?php echo number_format($marginRate*100, 2);	?>%</td>
-					</tr>
-				<?php
-							}
-							//foreach문 안에서 돌기땜에 row가 초기화되어야되는데 못해서 다시 쿼리 날림.
-							$row = $this->getFinalSales($addWhere);
-						}
-					} else {
-				?>
-					<tr style="text-align:center;">
-						<td colspan='12'>해당 데이터가 없습니다</td>
-					</tr>
-				<?php
-					}
-				?>
-				</tbody>
-			</table>
+			
 		</div><!--/* panel -->
+		
 
+		<table class="table table-bordered table-hover">
+			<colgroup>
+				<col width="14%">
+				<col width="11%">
+				<col width="4%">
+				<col width="11%">
+				<col width="6%">
+				<col width="7%">
+				<col width="6%">
+
+				<col width="4%">
+				<col width="5%">
+				<col width="5%">
+				<col width="5%">
+				<col width="4%">
+				<col width="4%">
+				<col width="4%">
+				<col width="6%">
+				
+			</colgroup>
+			<thead>
+				<tr>
+					<th rowspan='2' style="padding:10px; vertical-align:middle;">사이트명 | 판매 | 확정 </th>
+					<th rowspan='2' style="padding:10px; vertical-align:middle;">상품명</th>
+					<th rowspan='2' style="padding:10px; vertical-align:middle;">수량</th>	
+					<th rowspan='2' style="padding:10px; vertical-align:middle;">희망마진율</th>
+					<th rowspan='2' style="padding:10px; vertical-align:middle;">원가</th>
+					<th rowspan='2' style="padding:10px; vertical-align:middle;">판매금액</th>
+					<th rowspan='2' style="padding:10px; vertical-align:middle;">공장<br/>순수익</th>
+					<th colspan='7' style="padding:10px; vertical-align:middle;">총 수익</th>
+					<th rowspan='2' style="padding:10px; vertical-align:middle;">마진율</th>
+				</tr>
+				<tr style="font-size:12px;">
+					<th style="padding:10px; vertical-align:middle;">수익 </th>
+					<th style="padding:10px; vertical-align:middle;">부가세</th>
+					<th style="padding:10px; vertical-align:middle;">종소세</th>
+					<th style="padding:10px; vertical-align:middle;">순수익</th>
+					<th style="padding:10px; vertical-align:middle;">20%</th>
+					<th style="padding:10px; vertical-align:middle;">AD</th>
+					<th style="padding:10px; vertical-align:middle;">차액</th>
+				</tr>
+			</thead>
+			<tbody style="font-size:11.5px;">
+			<?php
+				if($row->size() > 0){
+					for($i=0; $i<$row->size(); $i++){
+						$row->next();
+
+						//사이트명
+						$siteName = $onlineArr[$cIdx]." | ".$feesS_Arr[$onlineArr[$cIdx]]." | ".$feesArr[$onlineArr[$cIdx]];
+
+						//원가 + 알파값
+						$firstCost = $row->get('cost') + $plusCost;
+						//최종판매액 구하기		((10-종소세)*(원가+택배비)/(-11*최종마진율+(10-종소세)*(1-사이트판매수수료)))
+						$cost = $firstCost + $this->deliveryP[$row->get('size')];		//기존원가를 높여준다(정확한 원가가 아니므로 손해를 생각해서 올려줌)
+						$finalSales = round(((10-$this->smallTax)*$cost/(-11*($row->get('revenue_hope')/100)+(10-$this->smallTax)*(1-$feesArr[$onlineArr[$cIdx]]/100))), -1);
+						//판매사이트 수수료금액 
+						$siteFees = $finalSales * $feesS_Arr[$onlineArr[$cIdx]]/100;
+						//부가세
+						$vat = ($finalSales - $cost - $siteFees)/11;
+						//종소세
+						$smallTax = $vat * $this->smallTax;
+						//공장순수익
+						$firstRevenue = $row->get('price') - $firstCost;
+						//수익
+						$profit = $finalSales - $cost - $siteFees;
+						//순수익
+						$netProfit = $profit-$vat-$smallTax;
+						//공장판매가의 20% 마진
+						$revenue20 = $row->get('price') * 0.2; 
+						//예상 광고비
+						$adP = $finalSales * ($row->get('adPercent') / 100);
+						//순수익 - 20%마진 - 광고비
+						$difference = $netProfit-$revenue20-$adP;
+						//마진율
+						$marginRate = ($netProfit)/$finalSales;
+						
+						$checkYN = "background-color:blue; color:white;";
+						if($difference < 0){
+							$checkYN = "background-color:red; color:white;";
+						}
+			?>
+				<tr>
+					<td align="center" style="padding:5px;"><?php echo $siteName;	?></td>
+					<td align="left" style="padding:5px 5px 5px 10px;"><?php echo $row->get('gName')." ".$row->get('rollType');	?>롤</td>
+					<td align="right" style="padding:5px;"><?php echo $row->get('count');	?></td>
+					<td align="center" style="padding:0px;">
+						<input type="text" name="hRevenue" id="hRevenue<?php echo $row->get('dIdx');?>" class="form-control" onkeypress='return isNumberkey(event)' onkeyup='return delHangle(event)' value="<?php echo number_format($row->get('revenue_hope'), 2);?>" style="float:left; width:50%; height:30px; padding:4px; margin-left:8px; font-size:12px;">
+						<button class="btn btn-info" type="button" onclick="changeRevenue(<?php echo $row->get('dIdx');?>);" style="padding:4px 8px;"> 변경</button>
+					</td>
+					<td align="right" style="padding:5px;"><?php echo number_format($firstCost);	?></td> 
+					<td align="right" style="padding:5px; background-color:black; color:white; font-size:15px; font-weight:bold;"><?php echo number_format($finalSales);	?></td>
+					<td align="right" style="padding:5px;"><?php echo number_format($firstRevenue);	?></td>
+
+					<td align="right" style="padding:5px;"><?php echo number_format($profit);	?></td>
+					<td align="right" style="padding:5px;">-<?php echo number_format($vat);	?></td>
+					<td align="right" style="padding:5px;">-<?php echo number_format($smallTax);	?></td>
+					<td align="right" style="padding:5px; background-color:black; color:white;"><?php echo number_format($netProfit);	?></td>
+					<td align="right" style="padding:5px;"><?php echo number_format($revenue20);	?></td>
+					<td align="right" style="padding:5px;"><?php echo number_format($adP);	?></td>
+					<td align="right" style="padding:5px;<?php echo $checkYN;?>"><?php echo number_format($difference);	?></td>
+					<td align="right" style="padding:5px;"><?php echo number_format($marginRate*100, 2);	?>%</td>
+				</tr>
+			<?php
+					}
+				} else {
+			?>
+				<tr style="text-align:center;">
+					<td colspan='12'>해당 데이터가 없습니다</td>
+				</tr>
+			<?php
+				}
+			?>
+			</tbody>
+		</table>
 
 	</div><!--/* contents-wrapper -->
 	<!--/* 회원리스트 끝  -->

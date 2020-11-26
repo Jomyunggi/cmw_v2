@@ -52,6 +52,15 @@
 							default : $M_PricingPage->SalesList(); break;
 						}
 						break;
+
+					case 3 :	//사이트별 마진율
+						switch($P_ACTION) {
+							case 'L' : $M_PricingPage->S_revenueList(); break;
+							case 'C' : $M_PricingPage->S_revenueRV(); break;
+							case 'P' : $M_PricingPage->RevenueProc(); break;
+							default : $M_PricingPage->S_revenueList(); break;
+						}
+						break;
 				}
 				break;
 			

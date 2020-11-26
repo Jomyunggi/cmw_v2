@@ -1,0 +1,58 @@
+<script type="text/javascript" src="<?php	echo JS_DIR;	?>/adm_common.js"></script>
+
+<script>
+$(document).ready(function(){
+	
+});
+
+function S_revenueRV(idx){
+	location.href = "/?M0403C&idx="+idx;
+}
+</script>
+
+<div class="container" style="width:100%;">
+	<div class="contents-wrapper">
+		<h2 class="page-header">
+			사이트별 마진율 
+		</h2>
+	</div>
+
+	<div class="contents-wrapper" style="width:30%;">	
+		<div class="panel panel-default">
+			<table class="table table-bordered table-hover">
+				<colgroup>
+					<col width="20%">
+					<col width="40%">
+					<col width="40%">
+				</colgroup>
+				<thead>
+					<tr><th colspan='<?php echo count($companyArr)+2; ?>' style="padding:10px 0 10px 0; font-size:20px; font-weight:500; background:#2F4050; color:white">
+					등록된 사이트 마진율</th></tr>
+					<tr>
+						<th>#</th>
+						<th>사이트명</th>
+						<th>비고</th>
+					</tr>
+				</thead>
+				<tbody>
+				<?php
+					$NO = 1;
+					foreach($companyArr as $key => $value){
+				?>
+					<tr align='center'>
+						<td><?php echo $NO++;	?></td>
+						<td><?php echo $value;	?></td>
+						<td><button class="btn btn-sm btn-default" type="bytton" onclick="S_revenueRV('<?php echo $key;?>');"><i class="fa fa-envelope" aria-hidden="true"></i> 등록 & 수정</button></td>
+					</tr>
+				<?php
+						}
+				?>
+				</tbody>
+			</table>
+		</div>
+	</div><!--/* contents-wrapper -->
+
+	<div class="clear"></div>
+
+	
+</div><!-- container -->	

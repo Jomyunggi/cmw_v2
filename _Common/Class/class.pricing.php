@@ -11,7 +11,7 @@ class M_PRICING {
 	function getD_P_Date(){
 		global $db;
 
-		$query = " SELECT g.idx as goodsIdx, d.idx, d.count, d.size, g.gName, g.rollType, d.revenue_hope "
+		$query = " SELECT g.idx as goodsIdx, d.idx, d.count, d.size, g.gName, g.rollType, d.revenue_hope, d.adPercent "
 				." FROM Delivery_Info d "
 				." LEFT JOIN Goods_Info g on d.goodsIdx = g.idx "
 				." WHERE d.status = 1 "
@@ -45,7 +45,7 @@ class M_PRICING {
 	function getDeliberyByIdx($m_id){
 		global $db;
 
-		$query = " SELECT g.idx as goodsIdx, d.idx, d.count, d.size, g.gName, g.rollType, d.revenue_hope "
+		$query = " SELECT g.idx as goodsIdx, d.idx, d.count, d.size, g.gName, g.rollType, d.revenue_hope, d.adPercent "
 				." FROM Delivery_Info d "
 				." LEFT JOIN Goods_Info g on d.goodsIdx = g.idx "
 				." WHERE d.status = 1 "
@@ -64,12 +64,14 @@ class M_PRICING {
 		$count			= $M_FUNC->M_Filter(POST, 'count');
 		$size			= $M_FUNC->M_Filter(POST, "size");
 		$revenue_hope	= $M_FUNC->M_Filter(POST, "revenue_hope");
+		$adPercent		= $M_FUNC->M_Filter(POST, "adPercent");
 
 		$data = array(
 			'goodsIdx'		=> $goodsIdx,
 			'count'			=> $count,
 			'size'			=> $size,
-			'revenue_hope'	=> $revenue_hope
+			'revenue_hope'	=> $revenue_hope,
+			'adPercent'		=> $adPercent
 		);
 
 		if($mode == 'insert'){
@@ -133,16 +135,66 @@ class M_PRICING {
 	function getFinalSales($addWhere){
 		global $db;
 
-		$query = " SELECT d.count, d.size, g.category, g.rollType, g.gName, g.count as gCount, g.cost, g.price, d.revenue_hope, d.idx as dIdx "
+		$query = " SELECT d.count, d.size, g.category, g.rollType, g.gName, g.count as gCount, g.cost, g.price, d.revenue_hope, d.idx as dIdx, d.adPercent "
 				." FROM Delivery_Info d "
 				."	LEFT JOIN Goods_Info g ON d.goodsIdx = g.idx "
 				." WHERE d.status = 1 "
 				.$addWhere
-				." ORDER BY g.category asc, g.rollType asc, g.cost asc, d.count "
+				." ORDER BY g.category asc, g.rollType asc, g.gName, g.cost asc, d.count "
 				;
 		$row = $db->getListSet($query);
 
 		return $row;
+	}
+
+	function getGoodsByRevenue($addWhere){
+		global $db;
+
+		$query = " SELECT d.count, d.size, g.category, g.rollType, g.gName, g.count as gCount, g.cost, g.price, d.revenue_hope, d.idx as dIdx, d.adPercent "
+				." FROM Delivery_Info d "
+				."	LEFT JOIN Goods_Info g ON d.goodsIdx = g.idx "
+				."	LEFT JOIN Revenue_Info r on r.dIdx = d.idx "
+				." WHERE d.status = 1 "
+				.$addWhere
+				." ORDER BY g.category asc, g.rollType asc, g.gName, g.cost asc, d.count "
+				;
+		$row = $db->getListSet($query);
+
+		return $row;
+	}
+
+	function ChangeRevenueData($cIdx){
+		global $db;
+		global $MENU_ID, $P_ACTION;
+
+		$arr = $_POST;
+		unset($arr['cIdx']);
+		
+		foreach($arr as $key => $value){
+			$ar = explode("|", $key);
+			$dIdx = $ar[2];
+			$revenue = $value;
+
+			if($revenue == "") continue;
+			
+			if($ar[1] == 'I'){
+				$data = array(
+					'cIdx'			=> $cIdx,
+					'dIdx'			=> $dIdx,
+					'revenue'		=> $revenue,
+					'status'		=> 1,
+					'regUnixtime'	=> time()
+				);
+
+				$db->insert("Revenue_Info", $data);
+			} else {
+				$data = array(
+					'revenue'		=> $revenue
+				);
+
+				$db->update("Revenue_Info", $data, " WHERE cIdx = ".$cIdx." AND dIdx = ".$dIdx);
+			}
+		}	
 	}
 }
 ?>

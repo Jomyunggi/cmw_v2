@@ -113,18 +113,11 @@ class M_PricingPage extends M_PRICING {
 		global $PAGE_PATH, $MENU_ID;
 		global $M_HTML, $M_FUNC;
 
-		$cIdx		= $_GET['cIdx'];
+		$cIdx		= $M_FUNC->M_Filter(GET, 'cIdx');
 		$categorys	= $_GET['categorys'];
 		$searchTxt	= $M_FUNC->M_Filter(GET, "searchTxt");
-		$adPriceYN	= $M_FUNC->M_Filter(GET, "adPriceYN");
-		$adPrice	= $M_FUNC->M_Filter(GET, "adPrice");
 		$plusCost	= $M_FUNC->M_Filter(GET, "plusCost");
 
-		if($adPriceYN) {
-			if($adPrice == '') $adPrice = 5;
-		} else{
-			$adPrice = 0;
-		}
 		if($plusCost == '') $plusCost = 300;
 
 		//Company에서 온라인거래처만 가져온다.
@@ -134,7 +127,7 @@ class M_PricingPage extends M_PRICING {
 		unset($onlineArr[0]);
 		unset($feesArr[0]);
 
-		if(count($cIdx) && count($categorys)){
+		if(count($categorys)){
 			$addWhere = " AND g.category in (".implode(',', $categorys).") ";
 			$row = $this->getFinalSales($addWhere);
 		} else {
@@ -142,6 +135,50 @@ class M_PricingPage extends M_PRICING {
 		}
 
 		include_once $PAGE_PATH . '/finalSales.html';
+	}
+
+	function S_revenueList(){
+		global $PAGE_PATH;
+		
+		//온라인 판매처 가져오기
+		$companyArr = $this->getCompanybyOn('idx', 'companyName');
+		unset($companyArr[0]);
+
+		include_once $PAGE_PATH . '/S_revenueList.html';
+	}
+
+	function S_revenueRV(){
+		global $PAGE_PATH, $MENU_ID, $P_ACTION;
+		global $M_FUNC, $M_HTML;
+
+		$idx		= $M_FUNC->M_Filter(GET, 'idx');
+
+		//온라인 판매처 가져오기
+		$companyArr = $this->getCompanybyOn('idx', 'companyName');
+
+		$row = $this->getGoodsByRevenue(" AND r.cIdx = ".$idx);
+		if($row->size() == 0){
+			$rowSub = $this->getFinalSales();
+		}
+
+		$action = '/?'.$MENU_ID.'P';
+		
+		include_once $PAGE_PATH . '/S_revenueRV.html';
+	}
+
+	function RevenueProc(){
+		global $M_FUNC, $M_JS;
+		global $MENU_ID;
+
+		$cIdx = $M_FUNC->M_Filter(POST, "cIdx");
+
+		$answer = "등록되었습니다";
+		$p_action = "C&idx=".$cIdx;
+
+		
+		$this->ChangeRevenueData($cIdx);
+		
+		$M_JS->Go_URL('/?'. $MENU_ID . $p_action, $answer);	
 	}
 }
 

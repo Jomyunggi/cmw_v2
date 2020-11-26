@@ -134,6 +134,7 @@ CREATE TABLE IF NOT EXISTS `delivery_info` (
   `count` int(4) NOT NULL DEFAULT '0' COMMENT '수량',
   `size` int(4) NOT NULL DEFAULT '1' COMMENT '1:소, 2:중, 3:대',
   `revenue_hope` float NOT NULL DEFAULT '0',
+  `adPercent` float NOT NULL DEFAULT '0' COMMENT '광고비퍼센트',
   `regUnixtime` int(11) NOT NULL DEFAULT '0',
   `status` int(4) NOT NULL DEFAULT '1' COMMENT '상태값',
   PRIMARY KEY (`idx`) USING BTREE,
@@ -142,26 +143,26 @@ CREATE TABLE IF NOT EXISTS `delivery_info` (
 
 -- 테이블 데이터 cmw_v2.delivery_info:~19 rows (대략적) 내보내기
 /*!40000 ALTER TABLE `delivery_info` DISABLE KEYS */;
-INSERT IGNORE INTO `delivery_info` (`idx`, `goodsIdx`, `count`, `size`, `revenue_hope`, `regUnixtime`, `status`) VALUES
-	(1, 3, 10, 3, 16.2, 1605239395, 1),
-	(2, 4, 4, 3, 17.33, 1605244327, 1),
-	(3, 5, 3, 2, 17.79, 1605244335, 1),
-	(4, 6, 10, 3, 16.21, 1605244342, 1),
-	(5, 7, 3, 2, 16.5, 1605244361, 1),
-	(6, 8, 3, 3, 17.79, 1605244367, 1),
-	(7, 9, 3, 3, 17.79, 1605244373, 1),
-	(8, 11, 3, 3, 17.33, 1605244380, 1),
-	(9, 12, 3, 3, 17.4, 1605244387, 1),
-	(10, 13, 1, 2, 18.09, 1605244394, 1),
-	(11, 14, 1, 2, 18.09, 1605244399, 1),
-	(12, 15, 1, 2, 18.09, 1605244406, 1),
-	(13, 16, 1, 2, 18.09, 1605244412, 1),
-	(14, 17, 1, 2, 17.6, 1605244419, 1),
-	(15, 18, 1, 2, 17.6, 1605244425, 1),
-	(16, 19, 1, 2, 17.6, 1605244429, 1),
-	(17, 20, 1, 2, 17.6, 1605244435, 1),
-	(18, 21, 1, 2, 15.5, 1605244445, 1),
-	(19, 22, 1, 2, 14.87, 1605244451, 1);
+INSERT IGNORE INTO `delivery_info` (`idx`, `goodsIdx`, `count`, `size`, `revenue_hope`, `adPercent`, `regUnixtime`, `status`) VALUES
+	(1, 3, 10, 3, 15.9, 3, 1605239395, 1),
+	(2, 4, 4, 3, 17, 3, 1605244327, 1),
+	(3, 5, 3, 2, 17.43, 5, 1605244335, 1),
+	(4, 6, 10, 3, 16.21, 3, 1605244342, 1),
+	(5, 7, 3, 2, 15.83, 3, 1605244361, 1),
+	(6, 8, 3, 3, 17.36, 4, 1605244367, 1),
+	(7, 9, 3, 3, 17.36, 4, 1605244373, 1),
+	(8, 11, 3, 3, 16.68, 3.5, 1605244380, 1),
+	(9, 12, 3, 3, 17.09, 3.3, 1605244387, 1),
+	(10, 13, 1, 2, 18.4, 6, 1605244394, 1),
+	(11, 14, 1, 2, 18.58, 3.5, 1605244399, 1),
+	(12, 15, 1, 2, 17.05, 3, 1605244406, 1),
+	(13, 16, 1, 2, 16.4, 2.5, 1605244412, 1),
+	(14, 17, 1, 2, 17.6, 4, 1605244419, 1),
+	(15, 18, 1, 2, 18.58, 3.5, 1605244425, 1),
+	(16, 19, 1, 2, 17.05, 3, 1605244429, 1),
+	(17, 20, 1, 2, 16.2, 2.5, 1605244435, 1),
+	(18, 21, 1, 2, 15.5, 2, 1605244445, 1),
+	(19, 22, 1, 2, 14.87, 2, 1605244451, 1);
 /*!40000 ALTER TABLE `delivery_info` ENABLE KEYS */;
 
 -- 테이블 cmw_v2.goods_info 구조 내보내기
@@ -183,16 +184,16 @@ CREATE TABLE IF NOT EXISTS `goods_info` (
 /*!40000 ALTER TABLE `goods_info` DISABLE KEYS */;
 INSERT IGNORE INTO `goods_info` (`idx`, `category`, `rollType`, `length`, `gName`, `count`, `cost`, `price`, `status`, `regUnixtime`) VALUES
 	(3, 1, 10, 26, '새피아', 10, 19680, 23000, 1, 1600232833),
-	(4, 1, 24, 24, '새피아', 4, 15435, 20000, 1, 1600232939),
-	(5, 1, 30, 17, '순수', 3, 10918, 14500, 1, 1600233018),
-	(6, 1, 10, 26, '땡큐', 10, 20180, 23500, 1, 1600233054),
-	(7, 1, 30, 16, '땡큐', 3, 10500, 14500, 1, 1600233112),
-	(8, 1, 30, 22, '자연', 3, 13120, 17500, 1, 1600233153),
-	(9, 1, 30, 22, '꿈집', 3, 13120, 17500, 1, 1600233166),
+	(4, 1, 24, 24, '새피아', 4, 16235, 20500, 1, 1600232939),
+	(5, 1, 30, 17, '순수', 3, 11000, 14500, 1, 1600233018),
+	(6, 1, 10, 26, '땡큐', 10, 19980, 23500, 1, 1600233054),
+	(7, 1, 30, 16, '땡큐', 3, 10650, 14000, 1, 1600233112),
+	(8, 1, 30, 22, '자연', 3, 13320, 17500, 1, 1600233153),
+	(9, 1, 30, 22, '꿈집', 3, 13320, 17500, 1, 1600233166),
 	(10, 1, 30, 24, '꽃지꿈집', 3, 15074, 19300, 1, 1600233198),
-	(11, 1, 30, 24, '황토', 3, 15432, 20000, 1, 1600233231),
-	(12, 1, 30, 26, '데코꿈집', 3, 16111, 20600, 1, 1600233264),
-	(13, 2, 16, 150, '고급점보롤150', 1, 11127, 15000, 1, 1600233339),
+	(11, 1, 30, 24, '황토', 3, 15632, 20000, 1, 1600233231),
+	(12, 1, 30, 26, '데코꿈집', 3, 16211, 20600, 1, 1600233264),
+	(13, 2, 16, 150, '고급점보롤150', 1, 11187, 15000, 1, 1600233339),
 	(14, 2, 16, 180, '고급점보롤180', 1, 12795, 17500, 1, 1600233363),
 	(15, 2, 16, 200, '고급점보롤200', 1, 14963, 18700, 1, 1600233465),
 	(16, 2, 16, 300, '고급점보롤300', 1, 21207, 27000, 1, 1600233486),
@@ -203,6 +204,25 @@ INSERT IGNORE INTO `goods_info` (`idx`, `category`, `rollType`, `length`, `gName
 	(21, 4, 100, 100, '네프킨', 1, 9000, 11500, 1, 1600233702),
 	(22, 8, 50, 100, '핸드타월', 1, 14500, 20300, 1, 1600233771);
 /*!40000 ALTER TABLE `goods_info` ENABLE KEYS */;
+
+-- 테이블 cmw_v2.revenue_info 구조 내보내기
+CREATE TABLE IF NOT EXISTS `revenue_info` (
+  `idx` int(11) NOT NULL AUTO_INCREMENT,
+  `cIdx` int(11) NOT NULL DEFAULT '0' COMMENT '회사번호',
+  `dIdx` int(11) NOT NULL DEFAULT '0' COMMENT '배달 번호',
+  `revenue` float NOT NULL DEFAULT '0' COMMENT '상품마진율',
+  `regUnixtime` int(11) NOT NULL DEFAULT '0',
+  `status` int(4) NOT NULL DEFAULT '1' COMMENT '상태값',
+  PRIMARY KEY (`idx`) USING BTREE,
+  KEY `dIdx` (`dIdx`) USING BTREE,
+  KEY `companyIdx` (`cIdx`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+-- 테이블 데이터 cmw_v2.revenue_info:~0 rows (대략적) 내보내기
+/*!40000 ALTER TABLE `revenue_info` DISABLE KEYS */;
+INSERT IGNORE INTO `revenue_info` (`idx`, `cIdx`, `dIdx`, `revenue`, `regUnixtime`, `status`) VALUES
+	(1, 35, 4, 16.21, 1606377180, 1);
+/*!40000 ALTER TABLE `revenue_info` ENABLE KEYS */;
 
 -- 테이블 cmw_v2.unitprice_info 구조 내보내기
 CREATE TABLE IF NOT EXISTS `unitprice_info` (

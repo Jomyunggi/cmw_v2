@@ -1,0 +1,92 @@
+<script>
+$(document).ready(function(){
+
+});
+
+function doMemberJoin() {
+	var question = "";
+	var p_action = "<?php echo $P_ACTION;?>";
+	var frm = document.frm_join;	
+
+	question = '작성한 게시물 등록하시겠습니까?';
+
+	if(confirm(question)){
+		frm.submit();
+	} 
+}
+
+function goBack(){
+	window.location.href="/?M0403L";
+}
+</script>
+
+<div class="container">
+	<div class="contents-wrapper">
+		<h2 class="page-header">&nbsp; 사이트별 상품 마진율</h2>
+	</div>
+
+	<!-- 게시판 등록  -->
+	<div class="contents-wrapper" style="width:35%;">
+		<form name="frm_join" method="post" action="<?php echo $action;	?>" onsubmit="" enctype="multipart/form-data">
+			<fieldset>
+				<input type="hidden" id="cIdx" name="cIdx" value="<?php echo $idx;	?>">
+				<div class="panel panel-default">
+					<table class="table table-bordered">
+						<colgroup>
+							<col width="60%">
+							<col width="40%">
+						</colgroup>
+						<tbody>
+							<tr>
+								<th>사이트명 *</th>
+								<td align='center'>
+									<div class="col-xs-11" style="padding:10px 15px 10px 15px;">
+										<div class="col-xs-11" style="padding:0 5px 0 0px;"><?php echo $companyArr[$idx];	?></div>
+									</div>
+								</td>
+							</tr>
+							<?php
+								if($row->size > 0){
+									for($i=0; $i<$row->size(); $i++){
+										$row->next();
+
+										$goodName = $row->get('gName')." ".$row->get('rollType')."롤 ".$row->get('count')."개";
+										if($row->size == 0){
+											$revenue = "";
+											$db_action = 'I';
+										} else {
+											$revenue = $row->get('revenue');
+											$db_action = 'U';
+										}
+							?>
+							<tr>
+								<th><?php echo $goodName; ?> </th>
+								<td align='center'>
+									<div class="col-xs-10" style="padding:5px; float:unset;">
+										<?php echo $M_HTML->input_Text2("revenue|".$db_action."|".$row->get('dIdx'), $revenue, "form-control", "height:25px; text-align:right;", "placeholder='%'");	?>
+									</div>
+								</td>
+							</tr>
+							<?php
+									}
+								} else {
+									//$row = $rowSub;
+								}
+							?>
+							
+							
+						</tbody>
+					</table>
+				</div><!--/* panel -->
+
+				<div> 
+					<button type="submit" class="col-xs-2 btn btn-sm btn-success" onclick="javascript:doMemberJoin(); return false;" style="float:right;">등록</button>
+					<button type="submit" class="col-xs-2 btn btn-sm btn-default" onclick="javascript:goBack(); return false;" style="float:none;">취소</button>			
+				</div>
+			</fieldset>
+		</form>
+	</div><!--/* contents-wrapper -->
+	<h3>&nbsp;</h3>
+	<!--/* 회원등록 끝 -->
+
+</div><!-- container -->

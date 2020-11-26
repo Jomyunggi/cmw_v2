@@ -1,0 +1,97 @@
+<script>
+$(document).ready(function(){	
+	$("#cIdx").click(function(){
+		if(this.value == 0){
+			if($("#cIdx").prop("checked")){
+				$("input[id=cIdx]").prop("checked",true);
+			} else {
+				$("input[id=cIdx]").prop("checked",false);
+			}
+		}
+	});
+
+	$("#categorys").click(function(){
+		if(this.value == 0){
+			if($("#categorys").prop("checked")){
+				$("input[id=categorys]").prop("checked",true);
+			} else {
+				$("input[id=categorys]").prop("checked",false);
+			}
+		}
+	});
+});
+
+function delHangle(evt){	//한글을 지우는 부분, keyup부분에 넣어준다.
+	var objTarget = evt.srcElement || evt.target;
+	var _value = event.srcElement.value;
+	if(/[ㄱ-하-ㅡ가-핳]/g.test(_value)){
+		// objTarget.value = objTarget.value.replace(/[ㄱ-하-ㅡ가-핳]/g, ''
+		objTarget.value = null;
+		//return fales;
+	} else{
+		if(/[a-zA-Z]/.test(_value)){
+			//objTarget.value = objTarget.value.replace(/[a-zA-Z]/g, ''
+			objTarget.value = null;
+		}
+	}
+}
+
+function isNumberkey(evt){	// 숫자를 제외한 값을 입력하지 못하게 한다.
+	var charCode = (evt.which) ? evt.which : event.keyCode;
+	var _value = event.srcElement.value;
+	
+	if(event.keyCode < 48 || event.keyCode > 57){
+		if(event.keyCode != 46){ //숫자와 .만 입력가능하도록함
+			return fales;
+		}
+	}
+
+	//소수점(.)이 두번이상 나오지 못하게
+	var _pattern0 = /^\*[.]\d*$/;	//현재 value값에 소수점(.)이 있으면 . 입력
+	if(_pattern0.test(_value)){
+		if(charCode == 46){
+			return fales;
+		}
+	}
+
+	//두자리 이하의 숫자만 입력가능
+	var _pattern1 = /^\d{2}$/;	//현재 value값이 2자리 숫자이면 .만 입력가능
+	//{숫자}의 값을 변경하면 자리수를 조정할 수 있다.
+	if(_pattern1.test(_value)){
+		if(charCode != 46){
+			return fales;
+		}
+	}
+
+	//소수점 둘째자리까지만 입력가능
+	var _pattern2 = /^\d*[.]\d{2}$/;	//현재 value값이 소수점 둘째자리 숫자이면   /^\d*[.]\d{2}$/	/^\d*.?\d{0,2}$/
+	//{숫자}의 값을 변경하면 자리수를 조정할 수 있다.
+	if(_pattern2.test(_value)){
+		alert('소수점 둘째자리까지만 입력가능합니다.');
+		return false;
+	}
+	return true;
+}
+
+function searchSubmit(){
+	var frm = document.search_frm;
+	
+	var issiteChk = false;
+	var arr_Site = document.getElementsByName("cIdx[]");
+	for(var i=0;i<arr_Site.length;i++){
+		if(arr_Site[i].checked == true) {
+			issiteChk = true;
+			break;
+		}
+	}
+
+	alert(frm.cIdx.value);
+
+	if(!issiteChk){
+		alert('사이트 하나이상 선택해주세요.');
+		frm.cIdx.focus();
+	}
+
+	frm.submit();
+}
+</script>
