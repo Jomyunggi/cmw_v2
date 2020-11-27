@@ -46,32 +46,28 @@ function goBack(){
 								</td>
 							</tr>
 							<?php
-								if($row->size > 0){
-									for($i=0; $i<$row->size(); $i++){
-										$row->next();
-
-										$goodName = $row->get('gName')." ".$row->get('rollType')."롤 ".$row->get('count')."개";
-										if($row->size == 0){
-											$revenue = "";
-											$db_action = 'I';
-										} else {
-											$revenue = $row->get('revenue');
-											$db_action = 'U';
-										}
+								foreach($D_G_th as $key => $value){
+									$goodName = $value;
+									
+									if($D_G_td[$key] == ""){
+										$db_action = 'I';
+										$revenue = '';
+									} else {
+										$db_action = 'U';
+										$revenue = $D_G_td[$key];
+									}									
 							?>
 							<tr>
 								<th><?php echo $goodName; ?> </th>
 								<td align='center'>
 									<div class="col-xs-10" style="padding:5px; float:unset;">
-										<?php echo $M_HTML->input_Text2("revenue|".$db_action."|".$row->get('dIdx'), $revenue, "form-control", "height:25px; text-align:right;", "placeholder='%'");	?>
+										<?php echo $M_HTML->input_Text2("revenue|".$db_action."|".$key, $revenue, "form-control", "height:25px; text-align:right;", "placeholder='%'");	?>
 									</div>
 								</td>
 							</tr>
 							<?php
-									}
-								} else {
-									//$row = $rowSub;
 								}
+								
 							?>
 							
 							

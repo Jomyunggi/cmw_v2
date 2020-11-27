@@ -115,7 +115,6 @@ class M_PricingPage extends M_PRICING {
 
 		$cIdx		= $M_FUNC->M_Filter(GET, 'cIdx');
 		$categorys	= $_GET['categorys'];
-		$searchTxt	= $M_FUNC->M_Filter(GET, "searchTxt");
 		$plusCost	= $M_FUNC->M_Filter(GET, "plusCost");
 
 		if($plusCost == '') $plusCost = 300;
@@ -128,7 +127,8 @@ class M_PricingPage extends M_PRICING {
 		unset($feesArr[0]);
 
 		if(count($categorys)){
-			$addWhere = " AND g.category in (".implode(',', $categorys).") ";
+			$addWhere = " AND r.cIdx = ".$cIdx;
+			$addWhere .= " AND g.category in (".implode(',', $categorys).") ";
 			$row = $this->getFinalSales($addWhere);
 		} else {
 			$row = new L_ListSet();
@@ -155,11 +155,9 @@ class M_PricingPage extends M_PRICING {
 
 		//온라인 판매처 가져오기
 		$companyArr = $this->getCompanybyOn('idx', 'companyName');
-
-		$row = $this->getGoodsByRevenue(" AND r.cIdx = ".$idx);
-		if($row->size() == 0){
-			$rowSub = $this->getFinalSales();
-		}
+		//택배상품 배열로 가져오기
+		$D_G_th= $this->getD_GoodsByArr('', 'th');
+		$D_G_td= $this->getD_GoodsByArr(' AND r.cIdx ='.$idx, 'td');
 
 		$action = '/?'.$MENU_ID.'P';
 		

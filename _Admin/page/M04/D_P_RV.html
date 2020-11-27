@@ -97,20 +97,6 @@ function goBack(){
 								</td>
 							</tr>
 							<tr>
-								<th style="height:42px;">희망 마진율 *</th>
-								<td>
-								<?php if($P_ACTION == 'R'){	?>
-									<div class="col-xs-10" style="padding:10px 15px 10px 15px;">
-										<?php echo $M_HTML->input_Text2("revenue_hope", '', "form-control", "height:40px; text-align:right;", "placeholder='%'");	?>
-									</div>
-								<?php } else {	?>
-									<div class="col-xs-5" style="padding:10px 15px 10px 15px;">
-										<?php echo $M_HTML->input_Text2("revenue_hope", $row->get('revenue_hope'), "form-control", "height:40px; text-align:right;", "placeholder='%'");	?>
-									</div>
-								<?php }	?>
-								</td>
-							</tr>
-							<tr>
 								<th style="height:42px;">광고 측정퍼센트</th>
 								<td>
 								<?php if($P_ACTION == 'R'){	?>

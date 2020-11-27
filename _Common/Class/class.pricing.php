@@ -11,7 +11,7 @@ class M_PRICING {
 	function getD_P_Date(){
 		global $db;
 
-		$query = " SELECT g.idx as goodsIdx, d.idx, d.count, d.size, g.gName, g.rollType, d.revenue_hope, d.adPercent "
+		$query = " SELECT g.idx as goodsIdx, d.idx, d.count, d.size, g.gName, g.rollType, d.adPercent "
 				." FROM Delivery_Info d "
 				." LEFT JOIN Goods_Info g on d.goodsIdx = g.idx "
 				." WHERE d.status = 1 "
@@ -45,7 +45,7 @@ class M_PRICING {
 	function getDeliberyByIdx($m_id){
 		global $db;
 
-		$query = " SELECT g.idx as goodsIdx, d.idx, d.count, d.size, g.gName, g.rollType, d.revenue_hope, d.adPercent "
+		$query = " SELECT g.idx as goodsIdx, d.idx, d.count, d.size, g.gName, g.rollType, d.adPercent "
 				." FROM Delivery_Info d "
 				." LEFT JOIN Goods_Info g on d.goodsIdx = g.idx "
 				." WHERE d.status = 1 "
@@ -63,14 +63,12 @@ class M_PRICING {
 		$goodsIdx		= $M_FUNC->M_Filter(POST, "goodsIdx");
 		$count			= $M_FUNC->M_Filter(POST, 'count');
 		$size			= $M_FUNC->M_Filter(POST, "size");
-		$revenue_hope	= $M_FUNC->M_Filter(POST, "revenue_hope");
 		$adPercent		= $M_FUNC->M_Filter(POST, "adPercent");
 
 		$data = array(
 			'goodsIdx'		=> $goodsIdx,
 			'count'			=> $count,
 			'size'			=> $size,
-			'revenue_hope'	=> $revenue_hope,
 			'adPercent'		=> $adPercent
 		);
 
@@ -135,22 +133,7 @@ class M_PRICING {
 	function getFinalSales($addWhere){
 		global $db;
 
-		$query = " SELECT d.count, d.size, g.category, g.rollType, g.gName, g.count as gCount, g.cost, g.price, d.revenue_hope, d.idx as dIdx, d.adPercent "
-				." FROM Delivery_Info d "
-				."	LEFT JOIN Goods_Info g ON d.goodsIdx = g.idx "
-				." WHERE d.status = 1 "
-				.$addWhere
-				." ORDER BY g.category asc, g.rollType asc, g.gName, g.cost asc, d.count "
-				;
-		$row = $db->getListSet($query);
-
-		return $row;
-	}
-
-	function getGoodsByRevenue($addWhere){
-		global $db;
-
-		$query = " SELECT d.count, d.size, g.category, g.rollType, g.gName, g.count as gCount, g.cost, g.price, d.revenue_hope, d.idx as dIdx, d.adPercent "
+		$query = " SELECT d.count, d.size, g.category, g.rollType, g.gName, g.count as gCount, g.cost, g.price, d.idx as dIdx, d.adPercent, r.revenue "
 				." FROM Delivery_Info d "
 				."	LEFT JOIN Goods_Info g ON d.goodsIdx = g.idx "
 				."	LEFT JOIN Revenue_Info r on r.dIdx = d.idx "
@@ -163,10 +146,38 @@ class M_PRICING {
 		return $row;
 	}
 
+	function getD_GoodsByArr($addWhere, $key){
+		global $db;
+
+		$query = " SELECT d.count, d.size, g.category, g.rollType, g.gName, g.count as gCount, g.cost, g.price, d.idx as dIdx, d.adPercent, r.revenue "
+				." FROM Delivery_Info d "
+				."	LEFT JOIN Goods_Info g ON d.goodsIdx = g.idx "
+				."	LEFT JOIN Revenue_Info r on r.dIdx = d.idx "
+				." WHERE d.status = 1 "
+				.$addWhere
+				." ORDER BY g.category asc, g.rollType asc, g.gName, g.cost asc, d.count "
+				;
+		$row = $db->getListSet($query);
+
+		$arr = array();
+		
+		for($i=0; $i<$row->size(); $i++){
+			$row->next();
+			
+			if($key == 'th'){
+				$arr[$row->get('dIdx')] = $row->get('gName')." ".$row->get('rollType')."롤 ".$row->get('count')."개";
+			} else {
+				$arr[$row->get('dIdx')] = $row->get('revenue');
+			}
+		}
+		
+		return $arr;
+	}
+
 	function ChangeRevenueData($cIdx){
 		global $db;
 		global $MENU_ID, $P_ACTION;
-
+		
 		$arr = $_POST;
 		unset($arr['cIdx']);
 		

@@ -92,13 +92,14 @@ function valueCheck(key, msg) {
 	return true;
 }
 
-function changeRevenue(dIdx){
+function changeRevenue(cIdx, dIdx){
 	var ajax_url = "/page/ajax/M04/ajax.updateDelivery.php";
 	var hRevenue = $('#hRevenue'+dIdx).val();
 
 	var ajax_data = {
-			'dIdx'		: dIdx,
-			'hRevenue'	: hRevenue
+		'cIdx'		: cIdx,
+		'dIdx'		: dIdx,
+		'hRevenue'	: hRevenue
 	};
 		
 	$.ajax({
@@ -234,7 +235,7 @@ function changeRevenue(dIdx){
 						$firstCost = $row->get('cost') + $plusCost;
 						//최종판매액 구하기		((10-종소세)*(원가+택배비)/(-11*최종마진율+(10-종소세)*(1-사이트판매수수료)))
 						$cost = $firstCost + $this->deliveryP[$row->get('size')];		//기존원가를 높여준다(정확한 원가가 아니므로 손해를 생각해서 올려줌)
-						$finalSales = round(((10-$this->smallTax)*$cost/(-11*($row->get('revenue_hope')/100)+(10-$this->smallTax)*(1-$feesArr[$onlineArr[$cIdx]]/100))), -1);
+						$finalSales = round(((10-$this->smallTax)*$cost/(-11*($row->get('revenue')/100)+(10-$this->smallTax)*(1-$feesArr[$onlineArr[$cIdx]]/100))), -1);
 						//판매사이트 수수료금액 
 						$siteFees = $finalSales * $feesS_Arr[$onlineArr[$cIdx]]/100;
 						//부가세
@@ -266,8 +267,8 @@ function changeRevenue(dIdx){
 					<td align="left" style="padding:5px 5px 5px 10px;"><?php echo $row->get('gName')." ".$row->get('rollType');	?>롤</td>
 					<td align="right" style="padding:5px;"><?php echo $row->get('count');	?></td>
 					<td align="center" style="padding:0px;">
-						<input type="text" name="hRevenue" id="hRevenue<?php echo $row->get('dIdx');?>" class="form-control" onkeypress='return isNumberkey(event)' onkeyup='return delHangle(event)' value="<?php echo number_format($row->get('revenue_hope'), 2);?>" style="float:left; width:50%; height:30px; padding:4px; margin-left:8px; font-size:12px;">
-						<button class="btn btn-info" type="button" onclick="changeRevenue(<?php echo $row->get('dIdx');?>);" style="padding:4px 8px;"> 변경</button>
+						<input type="text" name="hRevenue" id="hRevenue<?php echo $row->get('dIdx');?>" class="form-control" onkeypress='return isNumberkey(event)' onkeyup='return delHangle(event)' value="<?php echo number_format($row->get('revenue'), 2);?>" style="float:left; width:50%; height:30px; padding:4px; margin-left:8px; font-size:12px;">
+						<button class="btn btn-info" type="button" onclick="changeRevenue('<?php echo $cIdx;?>', '<?php echo $row->get('dIdx');?>');" style="padding:4px 8px;"> 변경</button>
 					</td>
 					<td align="right" style="padding:5px;"><?php echo number_format($firstCost);	?></td> 
 					<td align="right" style="padding:5px; background-color:black; color:white; font-size:15px; font-weight:bold;"><?php echo number_format($finalSales);	?></td>
