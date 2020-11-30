@@ -186,6 +186,7 @@ function changeRevenue(cIdx, dIdx){
 				<col width="11%">
 				<col width="4%">
 				<col width="11%">
+				<col width="5%">
 				<col width="6%">
 				<col width="7%">
 				<col width="6%">
@@ -207,6 +208,7 @@ function changeRevenue(cIdx, dIdx){
 					<th rowspan='2' style="padding:10px; vertical-align:middle;">수량</th>	
 					<th rowspan='2' style="padding:10px; vertical-align:middle;">희망마진율</th>
 					<th rowspan='2' style="padding:10px; vertical-align:middle;">원가</th>
+					<th rowspan='2' style="padding:10px; vertical-align:middle;">판매원가</th>
 					<th rowspan='2' style="padding:10px; vertical-align:middle;">판매금액</th>
 					<th rowspan='2' style="padding:10px; vertical-align:middle;">공장<br/>순수익</th>
 					<th colspan='7' style="padding:10px; vertical-align:middle;">총 수익</th>
@@ -230,30 +232,44 @@ function changeRevenue(cIdx, dIdx){
 
 						//사이트명
 						$siteName = $onlineArr[$cIdx]." | ".$feesS_Arr[$onlineArr[$cIdx]]." | ".$feesArr[$onlineArr[$cIdx]];
-
+						
 						//원가 + 알파값
 						$firstCost = $row->get('cost') + $plusCost;
+
 						//최종판매액 구하기		((10-종소세)*(원가+택배비)/(-11*최종마진율+(10-종소세)*(1-사이트판매수수료)))
 						$cost = $firstCost + $this->deliveryP[$row->get('size')];		//기존원가를 높여준다(정확한 원가가 아니므로 손해를 생각해서 올려줌)
 						$finalSales = round(((10-$this->smallTax)*$cost/(-11*($row->get('revenue')/100)+(10-$this->smallTax)*(1-$feesArr[$onlineArr[$cIdx]]/100))), -1);
+
+						//판매원가 희망마진율 30프로로
+						$salesCost =  round(((10-$this->smallTax)*$cost/(-11*0.23+(10-$this->smallTax)*(1-$feesArr[$onlineArr[$cIdx]]/100))), -1);
+						
 						//판매사이트 수수료금액 
 						$siteFees = $finalSales * $feesS_Arr[$onlineArr[$cIdx]]/100;
+						
 						//부가세
 						$vat = ($finalSales - $cost - $siteFees)/11;
+						
 						//종소세
 						$smallTax = $vat * $this->smallTax;
+						
 						//공장순수익
 						$firstRevenue = $row->get('price') - $firstCost;
+						
 						//수익
 						$profit = $finalSales - $cost - $siteFees;
+						
 						//순수익
 						$netProfit = $profit-$vat-$smallTax;
+						
 						//공장판매가의 20% 마진
 						$revenue20 = $row->get('price') * 0.2; 
+						
 						//예상 광고비
 						$adP = $finalSales * ($row->get('adPercent') / 100);
+						
 						//순수익 - 20%마진 - 광고비
 						$difference = $netProfit-$revenue20-$adP;
+						
 						//마진율
 						$marginRate = ($netProfit)/$finalSales;
 						
@@ -271,6 +287,7 @@ function changeRevenue(cIdx, dIdx){
 						<button class="btn btn-info" type="button" onclick="changeRevenue('<?php echo $cIdx;?>', '<?php echo $row->get('dIdx');?>');" style="padding:4px 8px;"> 변경</button>
 					</td>
 					<td align="right" style="padding:5px;"><?php echo number_format($firstCost);	?></td> 
+					<td align="right" style="padding:5px;"><?php echo number_format($salesCost);	?></td> 
 					<td align="right" style="padding:5px; background-color:black; color:white; font-size:15px; font-weight:bold;"><?php echo number_format($finalSales);	?></td>
 					<td align="right" style="padding:5px;"><?php echo number_format($firstRevenue);	?></td>
 
