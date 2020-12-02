@@ -64,95 +64,14 @@
 				}
 				break;
 			
-			case 5 : //세금
-				include_once ADMIN_CLASS_PATH . '/class.taxPage.php';
-				$M_TaxPage = new M_TaxPage;
+			default :				
+				include_once ADMIN_CLASS_PATH . "/class.pricingPage.php";
+				$M_PricingPage = new M_PricingPage;
+				
+				global $PAGE_PATH;
+				$PAGE_PATH = $PAGE_PATH."/M04";
 
-				switch($MENU_2DEPTH){
-					case 1 : //오프라인
-						switch($P_ACTION){
-							case 'L' : $M_TaxPage->taxList(); break;
-							case 'V' : $M_TaxPage->boardRV('view'); break;
-							default : $M_TaxPage->taxList(); break;
-						}
-				}
-				break;
-
-			case 6 : //작업게시판
-				include_once ADMIN_CLASS_PATH . '/class.boardPage.php';
-				$M_BoardPage = new M_BoardPage;
-
-				switch($MENU_2DEPTH){
-					case 1 : //작업게시판
-						switch($P_ACTION){
-							case 'L' : $M_BoardPage->boardList(); break;
-							case 'R' : $M_BoardPage->boardRV(); break;
-							case 'V' : $M_BoardPage->boardRV('view'); break;
-							case 'P' : $M_BoardPage->boardDataInsertProc(); break;
-							case 'U' : $M_BoardPage->boardDataUpdateProc(); break;
-							case 'D' : $M_BoardPage->boardDataDeleteProc(); break;
-							default : $M_BoardPage->boardList(); break;
-						}
-						break;
-
-					case 3 : //공지사항
-						switch($P_ACTION){
-							case 'L' : $M_BoardPage->noticeList(); break;
-							case 'R' : $M_BoardPage->noticeRV(); break;
-							case 'P' : $M_BoardPage->noticeDataInsertProc(); break;
-							case 'U' : $M_BoardPage->noticeDataUpdateProc(); break;
-							case 'D' : $M_BoardPage->noticeDataDeleteProc(); break;
-							default : $M_BoardPage->noticeList(); break;
-						}
-						break;
-				}
-				break;
-
-			case 7 : //보고서
-				echo "here";
-				include_once ADMIN_CLASS_PATH . '/class.analysisAdPage.php';
-				$M_ADPage = new M_ADPage;
-
-				include_once ADMIN_CLASS_PATH . '/class.reportPage.php';
-				$M_ReportPage = new M_ReportPage;
-
-				switch($MENU_2DEPTH){
-					case 1 : //광고분석
-						switch($P_ACTION){
-							case 'L' : $M_ADPage->adReport(); break;
-							default : $M_ADPage->adReport(); break;
-						}
-						break;
-
-					case 2 : //상품별 판매량
-						switch($P_ACTION){
-							case 'L' : $M_ADPage->salesRateByGoods(); break;
-							default : $M_ADPage->salesRateByGoods(); break;
-						}
-						break;
-					
-					case 3 : //보고서DB 등록
-						echo $P_ACTION;
-						echo "where";
-						switch($P_ACTION){
-							case 'R' : $M_ReportPage->reportRV(); break;
-							case 'I' : $M_ReportPage->InsertByReportDB('COUPANG'); break;
-							default : $M_ReportPage->reportRV(); break;
-						}
-						break;
-					case 4 : //키워드 분석
-						switch($P_ACTION){
-							case 'L' : $M_ReportPage->reportAnaly('COUPANG'); break;
-							default : $M_ReportPage->reportAnaly('COUPANG'); break;
-						}
-						break;
-				}
-				break;
-
-			default :
-				include_once ADMIN_CLASS_PATH . '/class.dashPage.php';
-				$M_DashPage = new M_DashPage;
-				$M_DashPage->dashMain();
+				$M_PricingPage->SalesList();
 				break;
 		}
 		

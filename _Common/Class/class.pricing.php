@@ -139,7 +139,8 @@ class M_PRICING {
 				."	LEFT JOIN Revenue_Info r on r.dIdx = d.idx "
 				." WHERE d.status = 1 "
 				.$addWhere
-				." ORDER BY g.category asc, g.rollType asc, g.rollType, g.gName, g.cost asc, d.count "
+				." ORDER BY g.category ASC, g.rollType ASC, g.count, (case when g.rollType = 30 then g.cost END) ASC, (case when category = 2 then g.gName END) ASC "
+				//." ORDER BY g.category asc, g.rollType asc, g.rollType, g.gName, g.cost asc, d.count "
 				;
 		$row = $db->getListSet($query);
 
