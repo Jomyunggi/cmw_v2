@@ -39,7 +39,7 @@
 								<li><a href="?M0101"><i class="fa fa-caret-right" aria-hidden="true"></i> 게시판</a></li>
 								<li><a href="?M0102"><i class="fa fa-caret-right" aria-hidden="true"></i> 상품</a></li>
 								<li><a href="?M0103"><i class="fa fa-caret-right" aria-hidden="true"></i> 거래처</a></li>
-								<!--li><a href="?M0104"><i class="fa fa-caret-right" aria-hidden="true"></i> 거래처단가</a></li-->
+								<li><a href="?M0101C"><i class="fa fa-caret-right" aria-hidden="true"></i> 거래처단가</a></li>
 							</ul>
 						</li>                      
 						

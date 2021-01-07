@@ -203,7 +203,6 @@ class M_ManagerPage extends M_MANAGER {
 	function coupangTest(){
 		global $PAGE_PATH;
 
-		echo "hi";
 		include_once $PAGE_PATH . '/coupangTest.php'; break;
 	}
 }
