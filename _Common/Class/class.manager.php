@@ -209,7 +209,13 @@ class M_MANAGER {
 		$fees			= $M_FUNC->M_Filter(POST, "fees");
 
 		if($license1 == "")	$license = "";
-		else	$license = $license1."-".$license2."-".$license3;
+		else{
+			if($level == 4){
+				$license = $license1;
+			} else {
+				$license = $license1."-".$license2."-".$license3;
+			}
+		}
 
 		if($tel1 == "")	$tel = "";
 		else	$tel = $tel1."-".$tel2."-".$tel3;
