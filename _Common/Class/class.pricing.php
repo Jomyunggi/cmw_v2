@@ -97,7 +97,7 @@ class M_PRICING {
 		$query = " SELECT idx, companyName, fees, license "
 				." FROM Company_Info "
 				." WHERE status = 1 AND level = 4 "
-				." ORDER BY fees asc "
+				." ORDER BY license * 1 asc "
 				;
 		$row = $db->getListSet($query);
 
@@ -139,7 +139,7 @@ class M_PRICING {
 				."	LEFT JOIN Revenue_Info r on r.dIdx = d.idx "
 				." WHERE d.status = 1 "
 				.$addWhere
-				." ORDER BY g.category asc, g.rollType asc, g.rollType, g.gName, g.cost asc, d.count "
+				." ORDER BY g.category asc, g.rollType asc, g.gName, g.cost asc, d.count "
 				;
 		$row = $db->getListSet($query);
 
@@ -155,7 +155,7 @@ class M_PRICING {
 				."	LEFT JOIN Revenue_Info r on r.dIdx = d.idx "
 				." WHERE d.status = 1 "
 				.$addWhere
-				." ORDER BY g.category asc, g.rollType asc, g.gName, g.cost asc, d.count "
+				." ORDER BY g.category asc, g.rollType asc, g.cost asc, g.gName, d.count "
 				;
 		$row = $db->getListSet($query);
 
