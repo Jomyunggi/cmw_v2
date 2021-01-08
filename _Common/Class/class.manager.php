@@ -128,6 +128,50 @@ class M_MANAGER {
 		}
 	}
 
+	function ChangeMaterialData($mode){
+		global $db, $M_FUNC;
+		
+		$division	= $M_FUNC->M_Filter(POST, "division");
+		$category	= $M_FUNC->M_Filter(POST, "category");
+		$subject	= $M_FUNC->M_Filter(POST, 'subject');
+		$standard	= $M_FUNC->M_Filter(POST, 'standard');
+		$detail		= $M_FUNC->M_Filter(POST, 'detail');
+		$cost		= $M_FUNC->M_Filter(POST, "cost");
+		$vat		= $M_FUNC->M_Filter(POST, "vat");
+		if(!$vat){
+			$vat = 0;
+		}
+
+		$data = array(
+			'division'		=> $division,
+			'category'		=> $category,
+			'subject'		=> $subject,
+			'standard'			=> $standard,
+			'detail'			=> $detail,
+			'cost'			=> $cost,
+			'vat'			=> $vat
+		);
+
+		if($mode == 'insert'){
+			$data['status'] = 1;
+			$data['regUnixtime'] = time();
+
+			$db->insert("Material_Info", $data);
+		} elseif ($mode == 'update') {
+			$m_id = $M_FUNC->M_Filter(POST, 'm_id');
+			$status = $M_FUNC->M_Filter(POST, 'status');
+			
+			$data['status'] = $status;
+
+			$db->update("Material_Info", $data, " WHERE idx = ".$m_id);
+		} else {
+			$m_id = $M_FUNC->M_Filter(GET, 'm_id');
+			$delData['status'] = 9;
+
+			$db->update("Material_Info", $delData, " WHERE idx = ".$m_id);
+		}
+	}
+
 	function getGoodsByIdx($idx){
 		global $db;
 

@@ -1,0 +1,187 @@
+<script>
+$(document).ready(function(){
+	
+});
+
+function doMemberJoin() {
+	var question = "";
+	var p_action = "<?php echo $P_ACTION;?>";
+	var frm = document.frm_join;
+
+	if(valueCheck("category", "카테고리") == false)	return false;
+	if(valueCheck("subject", "품목(상품명)") == false)		return false;
+	if(valueCheck("standard", "규격") == false)		return false;
+	if(valueCheck("cost", "원가") == false)		return false;
+	if(valueCheck("detail", "상세설명") == false)		return false;	
+	
+	if(p_action == 'R'){
+		question = '작성한 상품&재료 등록하시겠습니까?';
+	} else {
+		question = '작성한 상품&재료 수정하시겠습니까?';
+	}
+	if(confirm(question)){
+		frm.submit();
+	} 
+}
+
+function valueCheck(key, msg) {
+	if($("#"+key).val() == "" || $("#"+key).val() == 0) {
+		alert(msg+"을 입력해 주세요");
+		$("#"+key).focus();
+		return false;
+	}
+	return true;
+}
+
+function deleteData(m_id){
+	if(confirm("삭제하시겠습니까?")){
+		location.href = "?M0102P&mode=delete&m_id="+m_id;
+	}
+}
+
+function goBack(){
+	window.location.href="/?M0102L";
+}
+
+function sum(vat){
+	var cost = $('#cost').val();
+	var total = 0;
+
+	total = Number(cost) + Number(vat);
+
+	$('#total').val(total);
+}
+</script>
+
+<div class="container">
+	<div class="contents-wrapper">
+		<h2 class="page-header">&nbsp; 상품&재료 <?php	echo	$P_ACTION == "V" ? "정보" : "등록"; ?></h2>
+	</div>
+
+	<!-- 게시판 등록  -->
+	<div class="contents-wrapper">
+		<form name="frm_join" method="post" action="<?php echo $action;	?>" onsubmit="" enctype="multipart/form-data">
+			<fieldset>
+				<?php echo $M_HTML->input_Hidden($MENU_ID.$P_ACTION, "");	?>
+				<input type="hidden" id="m_id" name="m_id" value="<?php echo $m_id;	?>">
+				<div class="panel panel-default">
+					<table class="table table-bordered">
+						<colgroup>
+							<col width="25%">
+							<col width="25%">
+							<col width="25%">
+							<col width="25%">
+						</colgroup>
+						<tbody>
+							<tr>
+								<th style="height:42px;">분류 *</th>
+								<td>
+									<div class="col-xs-11" style="padding:10px 15px 10px 15px;">
+										<?php if($P_ACTION == 'R'){	?>											
+											<div class="col-xs-8" style="padding:0 5px 0 0px;"><?php echo $M_HTML->input_Radio("division", $this->division, $row->get('division'));	?></div>
+										<?php } else {	?>
+											<div class="col-xs-8" style="padding:0 5px 0 0px;"><?php echo $this->division[$row->get('division')];	?></div>
+										<?php }	?>
+									</div>
+								</td>
+								<th style="height:42px;">카테고리 *</th>
+								<td>
+									<div class="col-xs-11" style="padding:10px 15px 10px 15px;">
+										<?php if($P_ACTION == 'R'){	?>
+											<div class="col-xs-12" style="padding:0 5px 0 0px;"><?php echo $M_HTML->_Select2("category", $this->gCategory, $row->get('category'), "form-control");	?></div>
+										<?php } else {	?>
+											<div class="col-xs-12" style="padding:0 5px 0 0px;"><?php echo $this->gCategory[$row->get('category')];	?></div>
+										<?php }	?>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th style="height:42px;">품목(상품명) *</th>
+								<td>
+									<div class="col-xs-11" style="padding:10px 15px 10px 15px;">
+										<?php echo $M_HTML->input_Text2("subject", $row->get('subject'), "form-control", "height:40px; text-align:right;", "placeholder='품목(상품명)을 입력하시오'");	?>
+									</div>
+								</td>
+								<th style="height:42px;">규격 *</th>
+								<td>
+									<div class="col-xs-11" style="padding:10px 15px 10px 15px;">
+										<?php echo $M_HTML->input_Text2("standard", $row->get('standard'), "form-control", "height:40px; text-align:right;", "placeholder='규격을 입력하시오'");	?>
+									</div>
+								</td>
+								
+							</tr>
+							
+							<tr>
+								<th style="height:42px;">원가 *</th>
+								<td>
+									<div class="col-xs-11" style="padding:10px 15px 10px 15px;">
+										<?php echo $M_HTML->input_Text2("cost", $row->get('cost'), "form-control", "height:40px; text-align:right;", "placeholder='원'");	?>
+									</div>
+								</td>
+								<th style="height:42px;">세액 *</th>
+								<td>
+									<div class="col-xs-11" style="padding:10px 15px 10px 15px;">
+										<?php echo $M_HTML->input_Text2("vat", $row->get('vat'), "form-control", "height:40px; text-align:right;", "placeholder='원' onChange='javascript:sum(this.value);'");	?>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th style="height:42px;">총합계 *</th>
+								<td>
+									<div class="col-xs-11" style="padding:10px 15px 10px 15px;">
+										<?php echo $M_HTML->input_Text2("total", "", "form-control", "height:40px; text-align:right;", "placeholder='원'");	?>
+									</div>
+								</td>
+								<th style="height:42px;">상세설명 *</th>
+								<td>
+									<div class="col-xs-11" style="padding:10px 15px 10px 15px;">
+									<?php if($P_ACTION == 'R'){	?>
+										<?php echo $M_HTML->input_Text2("detail", $row->get('detail'), "form-control", "height:40px;");	?>
+									<?php } else {	?>
+										<div class="col-xs-2" style="padding:0 5px 0 0px;"><?php echo $row->get('detail');	?></div>
+									<?php }	?>
+									</div>
+								</td>
+							</tr>
+							<?php if($mode == "view"){ ?>
+							<tr>
+								<th style="height:30px;">상태</th>
+								<td colspan='3'>
+									<div class="col-xs-12">
+									<?php
+										if($row->get('status') == 9){
+											unset($this->Status[9]);
+										}
+										echo $M_HTML->input_Radio2('status', $this->gStatus, $row->get('status'));	
+									?>
+									</div>									
+								</td>
+							</tr>
+							<?php }	?>
+
+						</tbody>
+					</table>
+				</div><!--/* panel -->
+
+				<div>
+					<?php 
+						if($mode == "view"){ 
+							if($row->get('status') != 9){
+					?>
+					<button type="submit" class="col-xs-2 btn btn-sm btn-danger" onclick="javascript:deleteData(<?php echo $m_id;?>); return false;" >삭제</button>&nbsp;&nbsp;
+					<?php
+							}
+					?>
+					<button type="submit" class="col-xs-2 btn btn-sm btn-primary" onclick="javascript:doMemberJoin(); return false;" style="float:right;">수정</button>
+					<?php } else { ?>
+						<button type="submit" class="col-xs-2 btn btn-sm btn-success" onclick="javascript:doMemberJoin(); return false;" style="float:right;">등록</button>
+					<?php } ?>
+					<button type="submit" class="col-xs-2 btn btn-sm btn-default" onclick="javascript:goBack(); return false;" style="float:none;">취소</button>			
+				</div>
+			</fieldset>
+		</form>
+	</div><!--/* contents-wrapper -->
+	<h3>&nbsp;</h3>
+	<!--/* 회원등록 끝 -->
+
+</div><!-- container -->

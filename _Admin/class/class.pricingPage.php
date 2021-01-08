@@ -39,6 +39,7 @@ class M_PricingPage extends M_PRICING {
 		);
 
 		$this->adPrice = 0.045;
+
 	}
 
 	// Destructor

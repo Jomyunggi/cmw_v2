@@ -36,6 +36,11 @@ class M_ManagerPage extends M_MANAGER {
 			16 => '기타'
 		);
 
+		$this->division = array(
+			0 => '재료',
+			1 => '상품'
+		);
+
 		$this->gStatus = array(
 			1 => '판매',
 			9 => '삭제',
@@ -102,10 +107,15 @@ class M_ManagerPage extends M_MANAGER {
 		global $PAGE_PATH, $P_ACTION, $MENU_ID, $MENU_2DEPTH, $PAGE;
 		global $M_HTML, $M_FUNC;
 
-		$m_id = $M_FUNC->M_Filter(GET, "m_id");				
+		$m_id	= $M_FUNC->M_Filter(GET, "m_id");
+		$gubun	= $M_FUNC->M_Filter(GET, "gubun");
 		
 		if($mode == 'regist'){
-			$action = '/?'.$MENU_ID.'P&mode=insert';
+			if(!$gubun){
+				$action = '/?'.$MENU_ID.'P&mode=insert';
+			} else{
+				$action = '/?'.$MENU_ID.'P&mode=insert&gubun='.$gubun;
+			}
 			$row = new L_ListSet();
 		} else {
 			$action = '/?'.$MENU_ID.'P&mode=update';
@@ -121,13 +131,23 @@ class M_ManagerPage extends M_MANAGER {
 				}
 				include_once $PAGE_PATH . '/boardRV.html'; break;
 			case 2 : 
-				switch($mode){
-					case 'view' : 
-						$row = $this->getGoodsByIdx($m_id);
-						$row->next();
-						break;
+				if($gubun == 'M'){
+					switch($mode){
+						case 'view' : 
+							$row = $this->getGoodsByIdx($m_id);
+							$row->next();
+							break;
+					}
+					include_once $PAGE_PATH . '/materialRV.html'; break;
+				} else {
+					switch($mode){
+						case 'view' : 
+							$row = $this->getGoodsByIdx($m_id);
+							$row->next();
+							break;
+					}
+					include_once $PAGE_PATH . '/goodsRV.html'; break;
 				}
-				include_once $PAGE_PATH . '/goodsRV.html'; break;
 			case 3 : 
 				switch($mode){
 					case 'view' : 
@@ -151,8 +171,9 @@ class M_ManagerPage extends M_MANAGER {
 		global $MENU_ID, $MENU_2DEPTH;
 		global $M_JS, $M_FUNC;
 
-		$mode = $M_FUNC->M_Filter(GET, "mode");
-		$m_id = $M_FUNC->M_Filter(POST, "m_id");
+		$mode	= $M_FUNC->M_Filter(GET, "mode");
+		$m_id	= $M_FUNC->M_Filter(POST, "m_id");
+		$gubun	= $M_FUNC->M_Filter(GET, "gubun");
 			
 		if($mode == 'insert'){
 			$answer = "등록되었습니다";
@@ -169,7 +190,11 @@ class M_ManagerPage extends M_MANAGER {
 			case 1 : 
 				$this->ChangeBoardData($mode); break;
 			case 2 :
-				$this->ChangeGoodsData($mode); break;
+				if(!$gubun){
+					$this->ChangeGoodsData($mode); break;
+				} else {
+					$this->ChangeMaterialData($mode); break;
+				}
 			case 3 :
 				$this->ChangeCompanyData($mode); break;
 			case 4 :

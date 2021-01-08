@@ -13,6 +13,10 @@ function searchSubmit(){
 function goodsRV(){
 	location.href = "/?M0102R";
 }
+
+function materialRV(){
+	location.href = "/?M0102R&gubun=M";
+}
 </script>
 
 <?php
@@ -43,7 +47,7 @@ function goodsRV(){
 <div class="container" style="width:100%;">
 	<div class="contents-wrapper">
 		<h2 class="page-header">
-			판매 상품 <button class="btn btn-sm btn-default" type="bytton" onclick="goodsRV();"><i class="fa fa-envelope" aria-hidden="true"></i> 등록</button>
+			판매 상품
 		</h2>
 	</div>
 
@@ -53,12 +57,59 @@ function goodsRV(){
 				$NO = 1;
 				if($key==0){
 					$subject = '등록된 판매상품';
-					$div_location = " float:left;";
+					$div_location = " float:right;";
 				} else {
 					$subject = '삭제된 판매상품';
-					$div_location = "float:right;";
+					$div_location = "float:left;";
 				}
 	?>
+
+	<div class="contents-wrapper" style="float:left; width:50%;">	
+		<div class="panel panel-default">
+			<table class="table table-bordered table-hover">
+				<colgroup>
+					<col width="10%">
+					<col width="20%">
+					<col width="20%">
+					<col width="10%">
+					<col width="15%">
+					<col width="10%">
+					<col width="15%">
+				</colgroup>
+				<thead>
+					<tr><th colspan='8' style="padding:10px 0 10px 0; font-size:20px; font-weight:500; background:#2F4050; color:white">
+					원재료
+					<button class="btn btn-sm btn-default" type="bytton" onclick="materialRV();"><i class="fa fa-envelope" aria-hidden="true"></i> 등록</button>
+					</th></tr>
+					<tr>
+						<th>#</th>
+						<th>품목</th>
+						<th>상세</th>
+						<th>규격</th>
+						<th>단가</th>
+						<th>부가세</th>
+						<th>합계</th>
+					</tr>
+				</thead>
+				<tbody>
+				<?php 
+					if(count($rowArr[$key]) > 0){
+						foreach($arr as $key => $valArr){
+				?>
+					
+				<?php
+						}
+					} else {	?>
+					<tr align='center'>
+						<td colspan='8'>해당 데이터가 없습니다.</td>
+					</tr>
+				<?php
+					}
+				?>
+				</tbody>
+			</table>
+		</div>
+	</div><!--/* contents-wrapper -->
 
 	<div class="contents-wrapper" style="<?php echo $div_location; ?> width:50%;">	
 		<div class="panel panel-default">
@@ -75,7 +126,9 @@ function goodsRV(){
 				</colgroup>
 				<thead>
 					<tr><th colspan='8' style="padding:10px 0 10px 0; font-size:20px; font-weight:500; background:#2F4050; color:white">
-					<?php echo $subject;?></th></tr>
+					<?php echo $subject;?>
+					<button class="btn btn-sm btn-default" type="bytton" onclick="goodsRV();"><i class="fa fa-envelope" aria-hidden="true"></i> 등록</button>
+					</th></tr>
 					<tr>
 						<th>#</th>
 						<th>카테고리</th>
@@ -157,6 +210,8 @@ function goodsRV(){
 	<?php
 	}	
 	?>
+	
+	
 
 	<div class="clear"></div>
 
