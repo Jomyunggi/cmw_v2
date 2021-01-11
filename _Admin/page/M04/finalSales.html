@@ -262,7 +262,7 @@ function changeRevenue(cIdx, dIdx){
 						$netProfit = $profit-$vat-$smallTax;
 						
 						//공장판매가의 20% 마진
-						$revenue20 = $row->get('price') * 0.2; 
+						$revenue20 = $row->get('price') * 0.25; 
 						
 						//예상 광고비
 						$adP = $finalSales * ($row->get('adPercent') / 100);
