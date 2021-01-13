@@ -140,15 +140,11 @@ class M_PRICING {
 				." WHERE d.status = 1 "
 				.$addWhere
 				." ORDER BY "
-				."	g.category ASC, "
 				."	g.rollType ASC, "
-				//."	g.count, "
 				."	(case when category = 1 then g.gName END) ASC, "
-				."	g.count "
-				//."	(case when g.rollType = 30 then g.cost END) ASC, "
-				//."	(case when category = 2 then g.gName END) ASC "
-				//." ORDER BY g.category asc, g.rollType asc, g.rollType, g.gName, g.cost asc, d.count "
-				//." ORDER BY g.category asc, g.rollType asc, g.gName, g.cost asc, d.count "
+				."	g.count, "
+				."	(case when category = 2 then g.gName END) ASC, "
+				."	g.cost "
 				;
 		$row = $db->getListSet($query);
 
@@ -215,6 +211,34 @@ class M_PRICING {
 				$db->update("Revenue_Info", $data, " WHERE cIdx = ".$cIdx." AND dIdx = ".$dIdx);
 			}
 		}	
+	}
+
+	function getRollType(){
+		global $db;
+
+		$query = " SELECT category, rollType "
+				." FROM Goods_Info "
+				." WHere 1 = 1 "
+				." GROUP BY rollType "
+				." order by category "
+				;
+		$row = $db->getListSet($query);
+		
+		$arr = array();
+		$tmp = 0;
+		if($row->size() >0){
+			for($i=0; $i<$row->size(); $i++){
+				$row->next();
+				
+				if($tmp != $row->get('category')){
+					$arr[$row->get('category')][0] = '전체선택';
+				}
+				$arr[$row->get('category')][$row->get('rollType')] = $row->get('rollType');
+				$tmp = $row->get('category');
+			}
+		} 
+
+		return $arr;
 	}
 }
 ?>
