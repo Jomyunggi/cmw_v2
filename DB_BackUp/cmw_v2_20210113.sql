@@ -13,10 +13,12 @@
 
 
 -- cmw_v2 데이터베이스 구조 내보내기
+DROP DATABASE IF EXISTS `cmw_v2`;
 CREATE DATABASE IF NOT EXISTS `cmw_v2` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `cmw_v2`;
 
 -- 테이블 cmw_v2.account_info 구조 내보내기
+DROP TABLE IF EXISTS `account_info`;
 CREATE TABLE IF NOT EXISTS `account_info` (
   `idx` int(11) NOT NULL AUTO_INCREMENT,
   `accountID` varchar(100) NOT NULL COMMENT '계정ID',
@@ -35,6 +37,7 @@ INSERT INTO `account_info` (`idx`, `accountID`, `accountPW`, `accountName`, `reg
 /*!40000 ALTER TABLE `account_info` ENABLE KEYS */;
 
 -- 테이블 cmw_v2.board_info 구조 내보내기
+DROP TABLE IF EXISTS `board_info`;
 CREATE TABLE IF NOT EXISTS `board_info` (
   `idx` int(11) NOT NULL AUTO_INCREMENT,
   `accountIdx` int(11) NOT NULL COMMENT '계정ID',
@@ -67,6 +70,7 @@ INSERT INTO `board_info` (`idx`, `accountIdx`, `accountName`, `category`, `subje
 /*!40000 ALTER TABLE `board_info` ENABLE KEYS */;
 
 -- 테이블 cmw_v2.company_info 구조 내보내기
+DROP TABLE IF EXISTS `company_info`;
 CREATE TABLE IF NOT EXISTS `company_info` (
   `idx` int(11) NOT NULL AUTO_INCREMENT,
   `companyName` varchar(100) NOT NULL COMMENT '회사명',
@@ -131,6 +135,7 @@ INSERT INTO `company_info` (`idx`, `companyName`, `license`, `addr`, `tel`, `fax
 /*!40000 ALTER TABLE `company_info` ENABLE KEYS */;
 
 -- 테이블 cmw_v2.delivery_info 구조 내보내기
+DROP TABLE IF EXISTS `delivery_info`;
 CREATE TABLE IF NOT EXISTS `delivery_info` (
   `idx` int(11) NOT NULL AUTO_INCREMENT,
   `goodsIdx` int(11) NOT NULL DEFAULT '0' COMMENT '상품번호',
@@ -176,6 +181,7 @@ INSERT INTO `delivery_info` (`idx`, `goodsIdx`, `count`, `size`, `adPercent`, `r
 /*!40000 ALTER TABLE `delivery_info` ENABLE KEYS */;
 
 -- 테이블 cmw_v2.goods_info 구조 내보내기
+DROP TABLE IF EXISTS `goods_info`;
 CREATE TABLE IF NOT EXISTS `goods_info` (
   `idx` int(11) NOT NULL AUTO_INCREMENT,
   `mIdx` int(11) NOT NULL DEFAULT '0' COMMENT '상품번호',
@@ -226,6 +232,7 @@ INSERT INTO `goods_info` (`idx`, `mIdx`, `onoff`, `category`, `rollType`, `lengt
 /*!40000 ALTER TABLE `goods_info` ENABLE KEYS */;
 
 -- 테이블 cmw_v2.material_info 구조 내보내기
+DROP TABLE IF EXISTS `material_info`;
 CREATE TABLE IF NOT EXISTS `material_info` (
   `idx` int(11) NOT NULL AUTO_INCREMENT,
   `division` int(4) NOT NULL DEFAULT '0' COMMENT '상품/재료(1/0)',
@@ -249,6 +256,7 @@ INSERT INTO `material_info` (`idx`, `division`, `subject`, `category`, `detail`,
 /*!40000 ALTER TABLE `material_info` ENABLE KEYS */;
 
 -- 테이블 cmw_v2.revenue_info 구조 내보내기
+DROP TABLE IF EXISTS `revenue_info`;
 CREATE TABLE IF NOT EXISTS `revenue_info` (
   `idx` int(11) NOT NULL AUTO_INCREMENT,
   `cIdx` int(11) NOT NULL DEFAULT '0' COMMENT '회사번호',
@@ -427,6 +435,7 @@ INSERT INTO `revenue_info` (`idx`, `cIdx`, `dIdx`, `revenue`, `regUnixtime`, `st
 /*!40000 ALTER TABLE `revenue_info` ENABLE KEYS */;
 
 -- 테이블 cmw_v2.unitprice_info 구조 내보내기
+DROP TABLE IF EXISTS `unitprice_info`;
 CREATE TABLE IF NOT EXISTS `unitprice_info` (
   `idx` int(11) NOT NULL AUTO_INCREMENT,
   `companyIdx` int(11) NOT NULL COMMENT '거래처ID',
