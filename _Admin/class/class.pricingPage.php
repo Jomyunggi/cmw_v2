@@ -146,8 +146,10 @@ class M_PricingPage extends M_PRICING {
 
 		if($categorys){
 			$addWhere = " AND r.cIdx = ".$cIdx;
-			$addWhere .= " AND g.category = ".$categorys; 
-			$addWhere .= " AND g.rollType in (".implode(',', $getRollArr).") ";
+			$addWhere .= " AND g.category = ".$categorys;
+			if($getRollArr){
+				$addWhere .= " AND g.rollType in (".implode(',', $getRollArr).") ";
+			}
 			
 			if($cDown){
 				$addWhere .= " AND g.count in (".implode(',', $cDown).") ";			
