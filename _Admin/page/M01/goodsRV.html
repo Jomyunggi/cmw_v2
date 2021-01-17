@@ -44,6 +44,32 @@ function deleteData(m_id){
 function goBack(){
 	window.location.href="/?M0102L";
 }
+
+function supply(cost){
+	//10롤은 0.228
+	//나머지는 0.25
+	var rollType = $('#rollType').val();
+	var count = $('#count').val();
+	var supply_price, revenue;
+
+	if(rollType == 24){
+		revenue = 0.255;
+	} else {
+		if(count == 1){
+			revenue = 0.26;
+		} else if(count == 2) {
+			revenue = 0.25;
+		} else {
+			revenue = 0.228;
+		}
+	}
+	
+	supply_price= cost.value/(1-revenue);
+	supply_price = Math.ceil(supply_price / 100) * 100;
+	
+	$('#price').val(supply_price);
+	$('#supplyDiv').html(supply_price);
+}
 </script>
 
 <div class="container">
@@ -114,13 +140,14 @@ function goBack(){
 								<th style="height:42px;">원가 *</th>
 								<td>
 									<div class="col-xs-11" style="padding:10px 15px 10px 15px;">
-										<?php echo $M_HTML->input_Text2("cost", $row->get('cost'), "form-control", "height:40px; text-align:right;", "placeholder='원'");	?>
+										<?php echo $M_HTML->input_Text2("cost", $row->get('cost'), "form-control", "height:40px; text-align:right;", "placeholder='원' onChange='javascript:supply(this);'");	?>
 									</div>
 								</td>
 								<th style="height:42px;">판매가 *</th>
 								<td>
 									<div class="col-xs-11" style="padding:10px 15px 10px 15px;">
-										<?php echo $M_HTML->input_Text2("price", $row->get('price'), "form-control", "height:40px; text-align:right;", "placeholder='원'");	?>
+										<div id='supplyDiv'><?php if($P_ACTION == 'V') echo number_format($row->get('price'));	?></div>
+										<?php	echo $M_HTML->input_Hidden('price', "");	?>
 									</div>
 								</td>
 							</tr>

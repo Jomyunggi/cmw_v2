@@ -133,7 +133,7 @@ class M_PRICING {
 	function getFinalSales($addWhere){
 		global $db;
 
-		$query = " SELECT d.count, d.size, g.category, g.rollType, g.gName, g.count as gCount, g.cost, g.price, d.idx as dIdx, d.adPercent, r.revenue "
+		$query = " SELECT d.count, d.size, g.category, g.rollType, g.gName, g.count as gCount, g.cost, g.price, d.idx as dIdx, d.adPercent, r.revenue, d.adPercent "
 				." FROM Delivery_Info d "
 				."	LEFT JOIN Goods_Info g ON d.goodsIdx = g.idx "
 				."	LEFT JOIN Revenue_Info r on r.dIdx = d.idx "

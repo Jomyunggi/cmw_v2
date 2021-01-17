@@ -49,7 +49,7 @@ class M_PricingPage extends M_PRICING {
 
 		$this->adPrice = 0.045;
 		$this->hopeMargin = 0.23;
-		$this->hopeMargin2 = 0.2;
+		$this->supply_hope = 0.25;
 
 	}
 
@@ -124,7 +124,11 @@ class M_PricingPage extends M_PRICING {
 	function SalesList(){
 		global $PAGE_PATH, $MENU_ID;
 		global $M_HTML, $M_FUNC;
-		
+
+		if(is_null($MENU_ID)){
+			$MENU_ID = "M0402";
+		} 
+
 		$cIdx		= $M_FUNC->M_Filter(GET, 'cIdx');
 		$categorys	= $M_FUNC->M_Filter(GET, 'categorys');
 		$plusCost	= $M_FUNC->M_Filter(GET, "plusCost");

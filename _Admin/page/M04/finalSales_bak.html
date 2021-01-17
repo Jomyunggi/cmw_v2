@@ -9,50 +9,6 @@ $(document).ready(function(){
 			}
 		}
 	});
-
-	$("#rollType01").click(function(){
-		if(this.value == 0){
-			if($("#rollType01").prop("checked")){
-				$("input[id=rollType10]").prop("checked",true);
-				$("input[id=rollType24]").prop("checked",true);
-				$("input[id=rollType30]").prop("checked",true);
-			} else {
-				$("input[id=rollType10]").prop("checked",false);
-				$("input[id=rollType24]").prop("checked",false);
-				$("input[id=rollType30]").prop("checked",false);
-			}
-		}
-	});
-
-	$("#rollType02").click(function(){
-		if(this.value == 0){
-			if($("#rollType02").prop("checked")){
-				$("input[id=rollType16]").prop("checked",true);
-			} else {
-				$("input[id=rollType16]").prop("checked",false);
-			}
-		}
-	});
-
-	$("#rollType04").click(function(){
-		if(this.value == 0){
-			if($("#rollType04").prop("checked")){
-				$("input[id=rollType100]").prop("checked",true);
-			} else {
-				$("input[id=rollType100]").prop("checked",false);
-			}
-		}
-	});
-
-	$("#rollType08").click(function(){
-		if(this.value == 0){
-			if($("#rollType08").prop("checked")){
-				$("input[id=rollType50]").prop("checked",true);
-			} else {
-				$("input[id=rollType50]").prop("checked",false);
-			}
-		}
-	});
 });
 
 function delHangle(evt){	//한글을 지우는 부분, keyup부분에 넣어준다.
@@ -165,34 +121,6 @@ function changeRevenue(cIdx, dIdx){
 	});
 }
 
-function change_adPercent(dIdx){
-	var ajax_url = "/page/ajax/M04/ajax.updateADPercent.php";
-	var adPercent = $('#adPercent'+dIdx).val();
-
-	var ajax_data = {
-		'dIdx'		: dIdx,
-		'adPercent'	: adPercent
-	};
-		
-	$.ajax({
-		url : ajax_url,
-		data : ajax_data,
-		type : 'POST',
-		dataType : 'html',
-		contentType: 'application/x-www-form-urlencoded; charset=utf-8',
-		success: function (response) {
-			if(response == 'success') {
-				alert('변경 되었습니다.');
-			} else {
-				alert('다시한번 확인해주세요.');
-			}
-			location.reload();
-		},
-		failure: function(msg) {
-		}
-	});
-}
-
 function category(CT){
 	var categoryArr = new Array(1,2,4,8,16,32,64,128);
 
@@ -214,11 +142,11 @@ function category(CT){
 }
 
 function allCT(category){
-	//if($("#rollType"+category).prop("checked")){
-	//	$("input[id=rollType"+category+"]").prop("checked",true);
-	//} else {
-	//	$("input[id=rollType"+category+"]").prop("checked",false);
-	//}
+	if($("#rollType"+category).prop("checked")){
+		$("input[id=rollType"+category+"]").prop("checked",true);
+	} else {
+		$("input[id=rollType"+category+"]").prop("checked",false);
+	}
 }
 
 </script>
@@ -257,6 +185,7 @@ function allCT(category){
 						<div style="padding:4px; margin-bottom:5px;">
 							<?php
 								echo $M_HTML->input_Radio2("categorys", $this->Category, $categorys, "onClick='javascript:category(this);'");
+								//echo $M_HTML->input_Checkbox("categorys", $this->Category, '', $categorys);
 							?>
 						</div>
 
@@ -308,9 +237,9 @@ function allCT(category){
 										}
 
 										if($key == 0){
-											echo "<input type='checkbox' id='rollType0".$category."' name='rollType".$category."[]' value='".$key."' ".$checked." onClick='javascript:allCT(".$category.");'>&nbsp;".$value."&nbsp;&nbsp;";
+											echo "<input type='checkbox' id='rollType".$category."' name='rollType".$category."[]' value='".$key."' ".$checked." onClick='javascript:allCT(".$category.");'>&nbsp;".$value."&nbsp;&nbsp;";
 										} else { 
-											echo "<input type='checkbox' id='rollType".$value."' name='rollType".$category."[]' value='".$key."' ".$checked." >&nbsp;".$value."&nbsp;&nbsp;";
+											echo "<input type='checkbox' id='rollType".$category."' name='rollType".$category."[]' value='".$key."' ".$checked." >&nbsp;".$value."&nbsp;&nbsp;";
 										}
 									}
 									if($changeC) echo "</label>";
@@ -360,30 +289,24 @@ function allCT(category){
 
 		<table class="table table-bordered table-hover">
 			<colgroup>
+				<col width="13%">
+				<col width="4%">
+				<col width="8%">
+				<col width="4%">
 				<col width="11%">
 				<col width="5%">
 				<col width="6%">
-				<col width="3%">
+				<col width="7%">
+				<col width="6%">
 
-				<col width="10%">
-
+				<col width="4%">
+				<col width="5%">
+				<col width="5%">
+				<col width="5%">
+				<col width="4%">
 				<col width="4%">
 				<col width="4%">
 				<col width="6%">
-
-				<col width="5%">
-				<col width="4%">
-				<col width="4%">
-				<col width="5%">
-				<col width="5%">
-
-				<col width="10%">
-
-				<col width="4%">
-				
-				<col width="4%">
-				<col width="5%">
-				<col width="5%">
 				
 			</colgroup>
 			<thead>
@@ -396,19 +319,17 @@ function allCT(category){
 					<th rowspan='2' style="padding:10px; vertical-align:middle;">원가</th>
 					<th rowspan='2' style="padding:10px; vertical-align:middle;">공급가</th>
 					<th rowspan='2' style="padding:10px; vertical-align:middle;">판매금액</th>
+					<th rowspan='2' style="padding:10px; vertical-align:middle;">공장<br/>순수익</th>
 					<th colspan='7' style="padding:10px; vertical-align:middle;">총 수익</th>
-					
-					<th rowspan='2' style="padding:10px; vertical-align:middle;">공장</br>마진율</th>
-					<th rowspan='2' style="padding:10px; vertical-align:middle;">수익</br>마진율</th>
-					<th rowspan='2' style="padding:10px; vertical-align:middle;">순수익</br>마진율</th>
+					<th rowspan='2' style="padding:10px; vertical-align:middle;">마진율</th>
 				</tr>
 				<tr style="font-size:12px;">
-					<th style="padding:10px; vertical-align:middle; font-size:10px;">판매수수료</th>
+					<th style="padding:10px; vertical-align:middle;">수익 </th>
 					<th style="padding:10px; vertical-align:middle;">부가세</th>
 					<th style="padding:10px; vertical-align:middle;">종소세</th>
 					<th style="padding:10px; vertical-align:middle;">순수익</th>
-					<th style="padding:10px; vertical-align:middle;">공장수익</th>
-					<th style="padding:10px; vertical-align:middle;">광고비</th>
+					<th style="padding:10px; vertical-align:middle;">25%</th>
+					<th style="padding:10px; vertical-align:middle;">AD</th>
 					<th style="padding:10px; vertical-align:middle;">차액</th>
 				</tr>
 			</thead>
@@ -420,46 +341,58 @@ function allCT(category){
 
 						//사이트명
 						$siteName = $onlineArr[$cIdx]."(".$feesS_Arr[$onlineArr[$cIdx]]." | ".$feesArr[$onlineArr[$cIdx]].")";
-
-						//택배비 2500/3000원으로 차액 공급가에 넣어주기
-						if($row->get('size') == 1 || $row->get('size') == 3){
-							$plusD = 200;
-						} else {
-							$plusD = 300;
-						}
 						
-						$cost = $row->get('cost') + $plusCost;
-						$supply_price = $row->get('price') + $plusCost;
+						//원가 + 알파값
+						$firstCost = $row->get('cost') + $plusCost;
 
 						//최종판매액 구하기		((10-종소세)*(원가+택배비)/(-11*최종마진율+(10-종소세)*(1-사이트판매수수료)))
-						$finalSales = round(($row->get('cost')+$plusCost) / (1 - ($row->get('revenue')/100)), -1);
-						$finalSales = $finalSales * 1.2 + $this->deliveryP[$row->get('size')];
-												
-						//판매사이트 수수료금액 
-						$siteFees = $finalSales * ($feesS_Arr[$onlineArr[$cIdx]]/100);
+						//택배비는 3000원으로 셋팅하고 대짜일때만 3200원으로 측정하기
+						if($row->get('size') == 3){
+							$deliveryP = $this->deliveryP[$row->get('size')];
+						} else {
+							$deliveryP = 3000;
+						}
+						$cost = $firstCost + $deliveryP;		//기존원가를 높여준다(정확한 원가가 아니므로 손해를 생각해서 올려줌)
+						//$finalSales = round(((10-$this->smallTax)*$cost/(-11*($row->get('revenue')/100)+(10-$this->smallTax)*(1-$feesArr[$onlineArr[$cIdx]]/100))), -1);
+						//$finalSales = round($supply_price / (1 - (($row->get('revenue')+$feesArr[$onlineArr[$cIdx]])/100)), -1);
+						//$finalSales = round(($row->get('cost')+$plusCost) / (1 - ($row->get('revenue')/100)), -1);
+						//$finalSales = $finalSales * 1.2 + $this->deliveryP[$row->get('size')];
+						$finalSales = ($row->get('price')+$plusCost) / 0.72;
 
+						//판매가 = (10 - 종)(원가 + 택배비) / (10-종)(1-수)-11*마										
+						//$salesCost =  round(((10-$this->smallTax)*$cost/(-11*$this->hopeMargin+(10-$this->smallTax)*(1-$feesArr[$onlineArr[$cIdx]]/100))), -1);
+						$supply_price = $row->get('price') + $plusCost;
+						
+						//판매사이트 수수료금액 
+						$siteFees = $finalSales * $feesS_Arr[$onlineArr[$cIdx]]/100;
+						
 						//부가세
-						$vat = ($finalSales - $row->get('cost') - $this->deliveryP[$row->get('size')] - $siteFees)/11;
+						$vat = ($finalSales - $cost - $siteFees)/11;
 						
 						//종소세
 						$smallTax = $vat * $this->smallTax;
 						
-						//수익(택배비로 보는 수익도 추가)
-						$profit = $finalSales - $row->get('cost') - $this->deliveryP[$row->get('size')] - $siteFees - $vat - $smallTax;
-
 						//공장순수익
-						$firstRevenue = $row->get('price') - $row->get('cost');
+						$firstRevenue = $row->get('price') - $firstCost;
+						
+						//수익(택배비로 보는 수익도 추가)
+						$profit = $finalSales - ($firstCost + $this->deliveryP[$row->get('size')]) - $siteFees;
+						//$profit = $finalSales - $cost - $siteFees;
+						
+						//순수익
+						$netProfit = $profit-$vat-$smallTax;
+						
+						//공장판매가의 20% 마진
+						$revenue20 = $row->get('price') * 0.25; 
 						
 						//예상 광고비
-						$adP = $row->get('adPercent');
+						$adP = $finalSales * ($row->get('adPercent') / 100);
 						
 						//순수익 - 20%마진 - 광고비
-						$difference = $profit-$firstRevenue-$adP;
+						$difference = $netProfit-$revenue20-$adP;
 						
 						//마진율
-						$marginRate = $profit/$finalSales;
-						$finalRate = $firstRevenue/$row->get('price');
-						$adminusRate = ($profit-$adP)/$finalSales;
+						$marginRate = ($netProfit)/$finalSales;
 						
 						$checkYN = "background-color:blue; color:white;";
 						if($difference < 0){
@@ -468,36 +401,26 @@ function allCT(category){
 			?>
 				<tr>
 					<td align="center" style="padding:5px;"><?php echo $siteName;	?></td>
-					<td align="center" style="padding:5px 5px 5px 10px;"><?php echo $row->get('rollType');	?>롤</td>
+					<td align="left" style="padding:5px 5px 5px 10px;"><?php echo $row->get('rollType');	?>롤</td>
 					<td align="left" style="padding:5px 5px 5px 10px;"><?php echo $row->get('gName');	?></td>
 					<td align="right" style="padding:5px;"><?php echo $row->get('count');	?></td>
-					
 					<td align="center" style="padding:0px;">
 						<input type="text" name="hRevenue" id="hRevenue<?php echo $row->get('dIdx');?>" class="form-control" onkeypress='return isNumberkey(event)' onkeyup='return delHangle(event)' value="<?php echo number_format($row->get('revenue'), 2);?>" style="float:left; width:50%; height:30px; padding:4px; margin-left:8px; font-size:12px;">
 						<button class="btn btn-info" type="button" onclick="changeRevenue('<?php echo $cIdx;?>', '<?php echo $row->get('dIdx');?>');" style="padding:4px 8px;"> 변경</button>
 					</td>
-
-					<td align="right" style="padding:5px;"><?php echo number_format($row->get('cost'));	?></td> 
-					<td align="right" style="padding:5px;"><?php echo number_format($row->get('price'));	?></td> 
+					<td align="right" style="padding:5px;"><?php echo number_format($firstCost);	?></td> 
+					<td align="right" style="padding:5px;"><?php echo number_format($supply_price);	?></td> 
 					<td align="right" style="padding:5px; background-color:black; color:white; font-size:15px; font-weight:bold;"><?php echo number_format($finalSales);	?></td>
-					
-					<td align="right" style="padding:5px;"><?php echo number_format(-$siteFees);	?></td>
-					<td align="right" style="padding:5px;"><?php echo number_format(-$vat);	?></td>
-					<td align="right" style="padding:5px;"><?php echo number_format(-$smallTax);	?></td>
-					<td align="right" style="padding:5px; background-color:black; color:white;"><?php echo number_format($profit);	?></td>
 					<td align="right" style="padding:5px;"><?php echo number_format($firstRevenue);	?></td>
-					
-					<td align="center" style="padding:0px;">
-						<input type="text" name="adPercent" id="adPercent<?php echo $row->get('dIdx');?>" class="form-control" onkeypress='return isNumberkey(event)' onkeyup='return delHangle(event)' value="<?php echo number_format($row->get('adPercent'));?>" style="float:left; width:50%; height:30px; padding:4px; margin-left:8px; font-size:12px; text-align:right;">
-						<button class="btn btn-info" type="button" onclick="change_adPercent('<?php echo $row->get('dIdx');?>');" style="padding:4px 8px;"> 변경</button>
-					</td>
 
+					<td align="right" style="padding:5px;"><?php echo number_format($profit);	?></td>
+					<td align="right" style="padding:5px;">-<?php echo number_format($vat);	?></td>
+					<td align="right" style="padding:5px;">-<?php echo number_format($smallTax);	?></td>
+					<td align="right" style="padding:5px; background-color:black; color:white;"><?php echo number_format($netProfit);	?></td>
+					<td align="right" style="padding:5px;"><?php echo number_format($revenue20);	?></td>
+					<td align="right" style="padding:5px;"><?php echo number_format($adP);	?></td>
 					<td align="right" style="padding:5px;<?php echo $checkYN;?>"><?php echo number_format($difference);	?></td>
-
-					<td align="right" style="padding:5px;"><?php echo number_format($finalRate*100, 2);	?>%</td>
 					<td align="right" style="padding:5px;"><?php echo number_format($marginRate*100, 2);	?>%</td>
-					<td align="right" style="padding:5px;"><?php echo number_format($adminusRate*100, 2);	?>%</td>
-					
 				</tr>
 			<?php
 					}
