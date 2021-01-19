@@ -30,7 +30,8 @@ class M_PricingPage extends M_PRICING {
 					0 => '전체선택',
 					1 => 1,
 					2 => 2,
-					3 => 3
+					3 => 3,
+					4 => 4
 				)
 		);
 

@@ -361,7 +361,7 @@ function allCT(category){
 		<table class="table table-bordered table-hover">
 			<colgroup>
 				<col width="11%">
-				<col width="5%">
+				<col width="4%">
 				<col width="6%">
 				<col width="3%">
 
@@ -381,7 +381,7 @@ function allCT(category){
 
 				<col width="4%">
 				
-				<col width="4%">
+				<col width="5%">
 				<col width="5%">
 				<col width="5%">
 				
@@ -398,12 +398,12 @@ function allCT(category){
 					<th rowspan='2' style="padding:10px; vertical-align:middle;">판매금액</th>
 					<th colspan='7' style="padding:10px; vertical-align:middle;">총 수익</th>
 					
-					<th rowspan='2' style="padding:10px; vertical-align:middle;">공장</br>마진율</th>
-					<th rowspan='2' style="padding:10px; vertical-align:middle;">수익</br>마진율</th>
-					<th rowspan='2' style="padding:10px; vertical-align:middle;">순수익</br>마진율</th>
+					<th rowspan='2' style="padding:10px; vertical-align:middle;">이익률</br>(원가대비)</th>
+					<th rowspan='2' style="padding:10px; vertical-align:middle;">마진율</br>(판가대비)</th>
+					<th rowspan='2' style="padding:10px; vertical-align:middle;">순마진율</th>
 				</tr>
 				<tr style="font-size:12px;">
-					<th style="padding:10px; vertical-align:middle; font-size:10px;">판매수수료</th>
+					<th style="padding:10px; vertical-align:middle; font-size:11px;">판매수수료</th>
 					<th style="padding:10px; vertical-align:middle;">부가세</th>
 					<th style="padding:10px; vertical-align:middle;">종소세</th>
 					<th style="padding:10px; vertical-align:middle;">순수익</th>
@@ -432,8 +432,8 @@ function allCT(category){
 						$supply_price = $row->get('price') + $plusCost;
 
 						//최종판매액 구하기		((10-종소세)*(원가+택배비)/(-11*최종마진율+(10-종소세)*(1-사이트판매수수료)))
-						$finalSales = round(($row->get('cost')+$plusCost) / (1 - ($row->get('revenue')/100)), -1);
-						$finalSales = $finalSales * 1.2 + $this->deliveryP[$row->get('size')];
+						$finalSales = ($row->get('cost')+$plusCost) / (1 - ($row->get('revenue')/100));
+						$finalSales = round($finalSales * 1.2 + $this->deliveryP[$row->get('size')], -1);
 												
 						//판매사이트 수수료금액 
 						$siteFees = $finalSales * ($feesS_Arr[$onlineArr[$cIdx]]/100);
@@ -458,7 +458,7 @@ function allCT(category){
 						
 						//마진율
 						$marginRate = $profit/$finalSales;
-						$finalRate = $firstRevenue/$row->get('price');
+						$finalRate = $profit/$row->get('cost');
 						$adminusRate = ($profit-$adP)/$finalSales;
 						
 						$checkYN = "background-color:blue; color:white;";
