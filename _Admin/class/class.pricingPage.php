@@ -136,7 +136,7 @@ class M_PricingPage extends M_PRICING {
 		$getRollArr	= $_GET['rollType'.$categorys];
 		$cDown		= $_GET['cDown'];
 
-		if($plusCost == '') $plusCost = 300;
+		if($plusCost == '') $plusCost = 200;
 
 		//Company에서 온라인거래처만 가져온다.
 		$onlineArr = $this->getCompanyByOn('idx', 'companyName');
