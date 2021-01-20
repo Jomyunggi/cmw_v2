@@ -64,6 +64,8 @@ function supply(cost){
 		}
 	} else if(rollType == 100 || rollType == 50) {
 			revenue = 0.215;
+	} else {
+		revenue = 0.245;
 	}
 	
 	supply_price= cost.value/(1-revenue);
