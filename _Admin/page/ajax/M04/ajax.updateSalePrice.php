@@ -7,7 +7,7 @@
 	$salePrice		= $M_FUNC->M_Filter(POST, "salePrice");
 
 	$data = array(
-		'salePrice'	=>	$salePrice
+		'revenue'	=>	$hRevenue
 	);
 
 	$db->update("Revenue_Info", $data, " WHERE cIdx = ".$cIdx." AND dIdx = ". $dIdx);
