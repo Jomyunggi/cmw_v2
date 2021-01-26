@@ -194,13 +194,15 @@ function change_adPercent(dIdx){
 }
 
 function changeSalePrice(cIdx, dIdx){
-	var ajax_url = "/page/ajax/M04/ajax.updateDelivery.php";
+	var ajax_url = "/page/ajax/M04/ajax.updateSalePrice.php";
 	var salePrice = $('#salePrice'+dIdx).val();
+	var h_revenue = $('#h_revenue'+dIdx).val();
 
 	var ajax_data = {
 		'cIdx'		: cIdx,
 		'dIdx'		: dIdx,
-		'salePrice'	: salePrice
+		'salePrice'	: salePrice,
+		'h_revenue'	: h_revenue
 	};
 		
 	$.ajax({
@@ -509,14 +511,15 @@ function allCT(category){
 						<!--input type="text" name="hRevenue" id="hRevenue<?php echo $row->get('dIdx');?>" class="form-control" onkeypress='return isNumberkey(event)' onkeyup='return delHangle(event)' value="<?php echo number_format($row->get('revenue'), 2);?>" style="float:left; width:40%; height:30px; padding:4px; margin-left:8px; font-size:12px;">
 						<button class="btn btn-info" type="button" onclick="changeRevenue('<?php echo $cIdx;?>', '<?php echo $row->get('dIdx');?>');" style="padding:4px 6px;"> 변경</button-->
 						<?php echo number_format($row->get('revenue'), 2)."<br/>";	?>
-							<?php echo number_format($h_revenue, 2);	?>
+						<?php echo number_format($h_revenue, 2);	?>
 					</td>
 
 					<td align="right" style="padding:5px;"><?php echo number_format($row->get('cost'));	?></td> 
 					<td align="right" style="padding:5px;"><?php echo number_format($row->get('price'));	?></td> 
 					<td align="right" style="padding:5px; background-color:black; color:white; font-size:15px; font-weight:bold;">
 						<input type="text" name="salePrice" id="salePrice<?php echo $row->get('dIdx');?>" class="form-control" value="<?php echo number_format($row->get('salePrice'));?>" style="float:left; width:55%; height:30px; padding:4px; margin-left:8px; font-size:12px;">
-						<button class="btn btn-info" type="button" onclick="changeSalePrice('<?php echo $cIdx;?>', '<?php echo $row->get('dIdx');?>');" style="padding:4px 6px;"> 변경</button>	
+						<button class="btn btn-info" type="button" onclick="changeSalePrice('<?php echo $cIdx;?>', '<?php echo $row->get('dIdx');?>');" style="padding:4px 6px;"> 변경</button>
+						<?php echo $M_HTML->input_Hidden("h_revenue".$row->get('dIdx'), $h_revenue);	?>
 						<?php echo number_format($finalSales);	?>
 					</td>
 					

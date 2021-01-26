@@ -4,10 +4,10 @@
 	
 	$cIdx			= $M_FUNC->M_Filter(POST, "cIdx");
 	$dIdx			= $M_FUNC->M_Filter(POST, "dIdx");
-	$salePrice		= $M_FUNC->M_Filter(POST, "salePrice");
+	$h_revenue		= $M_FUNC->M_Filter(POST, "h_revenue");
 
 	$data = array(
-		'salePrice'	=>	$salePrice
+		'revenue'	=>	$h_revenue
 	);
 
 	$db->update("Revenue_Info", $data, " WHERE cIdx = ".$cIdx." AND dIdx = ". $dIdx);
