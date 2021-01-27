@@ -49,6 +49,7 @@ function supply(cost){
 	//10롤은 0.228
 	//나머지는 0.25
 	var rollType = $('#rollType').val();
+	var length = $('#length').val();
 	var count = $('#count').val();
 	var supply_price, revenue;
 
@@ -65,11 +66,16 @@ function supply(cost){
 	} else if(rollType == 100 || rollType == 50) {
 			revenue = 0.215;
 	} else {
-		revenue = 0.245;
+		if(length >= 200){
+			revenue = 0.231;
+		} else {
+			revenue = 0.25;
+		}
 	}
+
 	
 	supply_price= cost.value/(1-revenue);
-	supply_price = Math.ceil(supply_price / 100) * 100;
+	supply_price = Math.round(supply_price / 100) * 100;
 	
 	$('#price').val(supply_price);
 	$('#supplyDiv').html(supply_price);

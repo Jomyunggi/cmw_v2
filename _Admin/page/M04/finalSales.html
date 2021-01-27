@@ -464,23 +464,23 @@ function allCT(category){
 						$supply_price = $row->get('price') + $plusCost;
 
 						//최종판매액 구하기		((10-종소세)*(원가+택배비)/(-11*최종마진율+(10-종소세)*(1-사이트판매수수료)))
-						$finalSales = ($row->get('cost')+$plusCost) / (1 - ($row->get('revenue')/100));
-						$finalSales = round($finalSales * 1.2 + $this->deliveryP[$row->get('size')], -1);
+						//$finalSales = ($row->get('cost')+$plusCost) / (1 - ($row->get('revenue')/100));
+						//$finalSales = round($finalSales * 1.2 + $this->deliveryP[$row->get('size')], -1);
 
 						//희망마진율
 						$h_revenue = (-(($row->get('cost')+$plusCost)*1.2)/($row->get('salePrice')-$this->deliveryP[$row->get('size')]) + 1) * 100;
 												
 						//판매사이트 수수료금액 
-						$siteFees = $finalSales * ($feesS_Arr[$onlineArr[$cIdx]]/100);
+						$siteFees = $row->get('salePrice') * ($feesS_Arr[$onlineArr[$cIdx]]/100);
 
 						//부가세
-						$vat = ($finalSales - $row->get('cost') - $this->deliveryP[$row->get('size')] - $siteFees)/11;
+						$vat = ($row->get('salePrice') - $row->get('cost') - $this->deliveryP[$row->get('size')] - $siteFees)/11;
 						
 						//종소세
 						$smallTax = $vat * $this->smallTax;
 						
 						//수익(택배비로 보는 수익도 추가)
-						$profit = $finalSales - $row->get('cost') - $this->deliveryP[$row->get('size')] - $siteFees - $vat - $smallTax;
+						$profit = $row->get('salePrice') - $row->get('cost') - $this->deliveryP[$row->get('size')] - $siteFees - $vat - $smallTax;
 
 						//공장순수익
 						$firstRevenue = $row->get('price') - $row->get('cost');
@@ -492,9 +492,9 @@ function allCT(category){
 						$difference = $profit-$firstRevenue-$adP;
 						
 						//마진율
-						$marginRate = $profit/$finalSales;
+						$marginRate = $profit/$row->get('salePrice');
 						$finalRate = $profit/$row->get('cost');
-						$adminusRate = ($profit-$adP)/$finalSales;
+						$adminusRate = ($profit-$adP)/$row->get('salePrice');
 						
 						$checkYN = "background-color:blue; color:white;";
 						if($difference < 0){
@@ -510,7 +510,6 @@ function allCT(category){
 					<td align="center" style="padding:0px;">
 						<!--input type="text" name="hRevenue" id="hRevenue<?php echo $row->get('dIdx');?>" class="form-control" onkeypress='return isNumberkey(event)' onkeyup='return delHangle(event)' value="<?php echo number_format($row->get('revenue'), 2);?>" style="float:left; width:40%; height:30px; padding:4px; margin-left:8px; font-size:12px;">
 						<button class="btn btn-info" type="button" onclick="changeRevenue('<?php echo $cIdx;?>', '<?php echo $row->get('dIdx');?>');" style="padding:4px 6px;"> 변경</button-->
-						<?php echo number_format($row->get('revenue'), 2)."<br/>";	?>
 						<?php echo number_format($h_revenue, 2);	?>
 					</td>
 
@@ -520,7 +519,6 @@ function allCT(category){
 						<input type="text" name="salePrice" id="salePrice<?php echo $row->get('dIdx');?>" class="form-control" value="<?php echo number_format($row->get('salePrice'));?>" style="float:left; width:55%; height:30px; padding:4px; margin-left:8px; font-size:12px;">
 						<button class="btn btn-info" type="button" onclick="changeSalePrice('<?php echo $cIdx;?>', '<?php echo $row->get('dIdx');?>');" style="padding:4px 6px;"> 변경</button>
 						<?php echo $M_HTML->input_Hidden("h_revenue".$row->get('dIdx'), $h_revenue);	?>
-						<?php echo number_format($finalSales);	?>
 					</td>
 					
 					<td align="right" style="padding:5px;"><?php echo number_format(-$siteFees);	?></td>
