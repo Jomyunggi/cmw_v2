@@ -141,6 +141,7 @@ class M_PRICING {
 				.$addWhere
 				." ORDER BY "
 				."	g.rollType ASC, "
+				."	(case when category = 1 then g.gName END) ASC, "
 				."	g.count, "
 				."	(case when category = 2 then g.gName END) ASC, "
 				."	g.cost "

@@ -133,6 +133,7 @@ class M_PricingPage extends M_PRICING {
 		$cIdx		= $M_FUNC->M_Filter(GET, 'cIdx');
 		$categorys	= $M_FUNC->M_Filter(GET, 'categorys');
 		$plusCost	= $M_FUNC->M_Filter(GET, "plusCost");
+		$gName	= $M_FUNC->M_Filter(GET, "gName");
 		$getRollArr	= $_GET['rollType'.$categorys];
 		$cDown		= $_GET['cDown'];
 
@@ -159,6 +160,11 @@ class M_PricingPage extends M_PRICING {
 			if($cDown){
 				$addWhere .= " AND g.count in (".implode(',', $cDown).") ";			
 			}
+
+			if($gName){
+				$addWhere .= " AND g.gName like '%".$gName."%' ";
+			}
+
 			$row = $this->getFinalSales($addWhere);
 		} else {
 			$row = new L_ListSet();

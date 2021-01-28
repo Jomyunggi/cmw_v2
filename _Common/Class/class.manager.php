@@ -78,7 +78,7 @@ class M_MANAGER {
 		$query = " SELECT * "
 				." FROM Goods_Info "
 				." WHERE status <> 99 "
-				." ORDER BY category asc, rollType asc "
+				." ORDER BY category asc, rollType asc, length asc, gName asc, count asc "
 				;
 		$row = $db->getListSet($query);
 
