@@ -68,8 +68,9 @@
 
 							<ul class="nav nav-second-level" id="menu4" style="background-color:#FCFCFC;">
 								<li><a href="?M0401"><i class="fa fa-caret-right" aria-hidden="true"></i> 상품별 택배비</a></li>
-								<li><a href="?M0403"><i class="fa fa-caret-right" aria-hidden="true"></i> 사이트별 마진율</a></li>
+								<!--li><a href="?M0403"><i class="fa fa-caret-right" aria-hidden="true"></i> 사이트별 마진율</a></li-->
 								<li><a href="?M0402"><i class="fa fa-caret-right" aria-hidden="true"></i> 마진별 가격</a></li>
+								<li><a href="?M0404"><i class="fa fa-caret-right" aria-hidden="true"></i> 마진별 가격2</a></li>
                             </ul>
                         </li>
                     </ul>

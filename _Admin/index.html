@@ -61,6 +61,14 @@
 							default : $M_PricingPage->S_revenueList(); break;
 						}
 						break;
+
+					case 4 : //마진별 가격
+						switch($P_ACTION) {
+							case 'L' : $M_PricingPage->SalesList2(); break;
+							case 'P' : $M_PricingPage->SalesProc($mode); break;
+							default : $M_PricingPage->SalesList2(); break;
+						}
+					break;
 				}
 				break;
 			

@@ -177,11 +177,18 @@ class M_PricingPage extends M_PRICING {
 		global $PAGE_PATH, $MENU_ID;
 		global $M_HTML, $M_FUNC;
 
-		$cIdx		= $M_FUNC->M_Filter(GET, 'cIdx');
-		$categorys	= $_GET['categorys'];
-		$plusCost	= $M_FUNC->M_Filter(GET, "plusCost");
+		if(is_null($MENU_ID)){
+			$MENU_ID = "M0402";
+		} 
 
-		if($plusCost == '') $plusCost = 300;
+		$cIdx		= $M_FUNC->M_Filter(GET, 'cIdx');
+		$categorys	= $M_FUNC->M_Filter(GET, 'categorys');
+		$plusCost	= $M_FUNC->M_Filter(GET, "plusCost");
+		$gName	= $M_FUNC->M_Filter(GET, "gName");
+		$getRollArr	= $_GET['rollType'.$categorys];
+		$cDown		= $_GET['cDown'];
+
+		if($plusCost == '') $plusCost = 200;
 
 		//Company에서 온라인거래처만 가져온다.
 		$onlineArr = $this->getCompanyByOn('idx', 'companyName');
@@ -189,16 +196,32 @@ class M_PricingPage extends M_PRICING {
 		$feesS_Arr = $this->getCompanyByOn('companyName', 'license');
 		unset($onlineArr[0]);
 		unset($feesArr[0]);
+		unset($this->Category[0]);
+		
+		//카테고리별 롤타입가져오기
+		$rollArr = $this->getRollType();
 
-		if(count($categorys)){
+		if($categorys){
 			$addWhere = " AND r.cIdx = ".$cIdx;
-			$addWhere .= " AND g.category in (".implode(',', $categorys).") "; 
+			$addWhere .= " AND g.category = ".$categorys;
+			if($getRollArr){
+				$addWhere .= " AND g.rollType in (".implode(',', $getRollArr).") ";
+			}
+			
+			if($cDown){
+				$addWhere .= " AND g.count in (".implode(',', $cDown).") ";			
+			}
+
+			if($gName){
+				$addWhere .= " AND g.gName like '%".$gName."%' ";
+			}
+
 			$row = $this->getFinalSales($addWhere);
 		} else {
 			$row = new L_ListSet();
 		}
 
-		include_once $PAGE_PATH . '/finalSales.html';
+		include_once $PAGE_PATH . '/finalSales_bak.html';
 	}
 
 	function S_revenueList(){

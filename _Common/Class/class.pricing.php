@@ -76,7 +76,25 @@ class M_PRICING {
 			$data['status'] = 1;
 			$data['regUnixtime'] = time();
 
+			//택배별로 insert할때 각 온라인 사이트별 다 넣어준다
+			$companyArr = $this->getCompanyByOn('idx', 'idx');
+			unset($companyArr[0]);
+
 			$db->insert("Delivery_Info", $data);
+			$dIdx = $db->getInsertID();
+
+			foreach($companyArr as $key => $value){
+				$R_data = array(
+					'cIdx'			=> $key,
+					'dIdx'			=> $dIdx,
+					'salePrice'		=> 0,
+					'revenue'		=>	0,
+					'regUnixtime'	=> time(),
+					'status'		=> 1
+				);
+
+				$db->insert('Revenue_Info', $R_data);
+			}
 		} elseif ($mode == 'update') {
 			$m_id = $M_FUNC->M_Filter(POST, 'm_id');
 			
