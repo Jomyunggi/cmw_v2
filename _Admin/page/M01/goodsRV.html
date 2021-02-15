@@ -58,13 +58,16 @@ function supply(cost){
 	} else if(rollType == 30) {
 		if(count == 1){
 			revenue = 0.26;
-		} else if(count == 2) {
+		} else if(count == 2 || count == 4) {
 			revenue = 0.25;
 		} else {
 			revenue = 0.228;
 		}
 	} else if(rollType == 100 || rollType == 50) {
 			revenue = 0.215;
+	} else if(rollType == 10) {
+		revenue = 0.23;
+
 	} else {
 		if(length >= 200){
 			revenue = 0.231;

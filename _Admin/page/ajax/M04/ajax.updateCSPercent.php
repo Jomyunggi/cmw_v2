@@ -3,10 +3,12 @@
 	@include_once "Inc/inc.include.php";
 	
 	$dIdx			= $M_FUNC->M_Filter(POST, "dIdx");
-	$adPercent		= $M_FUNC->M_Filter(POST, "adPercent");
+	$csPercent		= $M_FUNC->M_Filter(POST, "csPercent");
+
+	if(!$csPercent) $csPercent = 0;
 
 	$data = array(
-		'adPercent'	=>	$adPercent
+		'csPercent'	=>	$csPercent
 	);
 
 	$db->update("Delivery_Info", $data, " WHERE idx = ".$dIdx);

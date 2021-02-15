@@ -13,7 +13,10 @@ class M_PricingPage extends M_PRICING {
 		$this->D_size = array(
 			1 => '소',
 			2 => '중',
-			3 => '대'
+			3 => '대',
+			4 => '소2',
+			5 => '중2',
+			6 => '대2'
 		);
 
 		$this->Category = array(
@@ -35,12 +38,17 @@ class M_PricingPage extends M_PRICING {
 				)
 		);
 
-		$this->smallTax = 0.4;
+		$this->smallTax = 0.45;
+		$this->target_Margin = 0.05;
 
 		$this->deliveryP = array(
 			1	=> 2300,
 			2	=> 2700,
-			3	=> 3200
+			3	=> 3200,
+			4	=> 4600,
+			5	=> 5400,
+			6	=> 6400
+
 		);
 		
 		$this->adPriceYN = array(
@@ -183,12 +191,9 @@ class M_PricingPage extends M_PRICING {
 
 		$cIdx		= $M_FUNC->M_Filter(GET, 'cIdx');
 		$categorys	= $M_FUNC->M_Filter(GET, 'categorys');
-		$plusCost	= $M_FUNC->M_Filter(GET, "plusCost");
 		$gName	= $M_FUNC->M_Filter(GET, "gName");
 		$getRollArr	= $_GET['rollType'.$categorys];
 		$cDown		= $_GET['cDown'];
-
-		if($plusCost == '') $plusCost = 200;
 
 		//Company에서 온라인거래처만 가져온다.
 		$onlineArr = $this->getCompanyByOn('idx', 'companyName');

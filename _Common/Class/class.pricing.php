@@ -11,7 +11,7 @@ class M_PRICING {
 	function getD_P_Date(){
 		global $db;
 
-		$query = " SELECT g.idx as goodsIdx, d.idx, d.count, d.size, g.gName, g.rollType, d.adPercent "
+		$query = " SELECT g.idx as goodsIdx, d.idx, d.count, d.size, g.gName, g.rollType "
 				." FROM Delivery_Info d "
 				." LEFT JOIN Goods_Info g on d.goodsIdx = g.idx "
 				." WHERE d.status = 1 "
@@ -35,7 +35,7 @@ class M_PRICING {
 			for($i=0; $i<$row->size(); $i++){
 				$row->next();
 
-				$arr[$row->get('idx')] = $row->get('gName')." ".$row->get('rollType');
+				$arr[$row->get('idx')] = $row->get('gName')." ".$row->get('rollType')." ".$row->get('count');
 			}
 		}
 
@@ -45,7 +45,7 @@ class M_PRICING {
 	function getDeliberyByIdx($m_id){
 		global $db;
 
-		$query = " SELECT g.idx as goodsIdx, d.idx, d.count, d.size, g.gName, g.rollType, d.adPercent "
+		$query = " SELECT g.idx as goodsIdx, d.idx, d.count, d.size, g.gName, g.rollType "
 				." FROM Delivery_Info d "
 				." LEFT JOIN Goods_Info g on d.goodsIdx = g.idx "
 				." WHERE d.status = 1 "
@@ -63,13 +63,13 @@ class M_PRICING {
 		$goodsIdx		= $M_FUNC->M_Filter(POST, "goodsIdx");
 		$count			= $M_FUNC->M_Filter(POST, 'count');
 		$size			= $M_FUNC->M_Filter(POST, "size");
-		$adPercent		= $M_FUNC->M_Filter(POST, "adPercent");
+		$csPercent		= $M_FUNC->M_Filter(POST, "csPercent");
 
 		$data = array(
 			'goodsIdx'		=> $goodsIdx,
 			'count'			=> $count,
 			'size'			=> $size,
-			'adPercent'		=> $adPercent
+			'csPercent'		=> $csPercent
 		);
 
 		if($mode == 'insert'){
@@ -151,7 +151,7 @@ class M_PRICING {
 	function getFinalSales($addWhere){
 		global $db;
 
-		$query = " SELECT d.count, d.size, g.category, g.rollType, g.gName, g.count as gCount, g.cost, g.price, d.idx as dIdx, d.adPercent, r.revenue, d.adPercent, r.salePrice "
+		$query = " SELECT d.count, d.size, g.category, g.rollType, g.gName, g.count as gCount, g.cost, g.price, d.idx as dIdx, r.revenue,  r.salePrice, d.csPercent "
 				." FROM Delivery_Info d "
 				."	LEFT JOIN Goods_Info g ON d.goodsIdx = g.idx "
 				."	LEFT JOIN Revenue_Info r on r.dIdx = d.idx "
@@ -172,7 +172,7 @@ class M_PRICING {
 	function getD_GoodsByArr($addWhere, $key){
 		global $db;
 
-		$query = " SELECT d.count, d.size, g.category, g.rollType, g.gName, g.count as gCount, g.cost, g.price, d.idx as dIdx, d.adPercent, r.revenue "
+		$query = " SELECT d.count, d.size, g.category, g.rollType, g.gName, g.count as gCount, g.cost, g.price, d.idx as dIdx, r.revenue "
 				." FROM Delivery_Info d "
 				."	LEFT JOIN Goods_Info g ON d.goodsIdx = g.idx "
 				."	LEFT JOIN Revenue_Info r on r.dIdx = d.idx "

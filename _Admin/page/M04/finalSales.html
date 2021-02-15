@@ -467,7 +467,7 @@ function category(CT){
 
 						//공장순수익(부가세,종소세 빼주기)
 						$firstRevenue = $row->get('price') - $row->get('cost');
-						$firstRevenue = $firstRevenue - ($firstRevenue/11) - ($firstRevenue/11)*0.4;
+						$firstRevenue = $firstRevenue - ($firstRevenue/11) - ($firstRevenue/11) * $this->smallTax;
 						
 						//예상 광고비
 						$adP = $row->get('adPercent');
