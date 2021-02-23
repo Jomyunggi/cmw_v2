@@ -15,6 +15,7 @@ class M_PRICING {
 				." FROM Delivery_Info d "
 				." LEFT JOIN Goods_Info g on d.goodsIdx = g.idx "
 				." WHERE d.status = 1 "
+				." ORDER BY g.rollType asc, g.gName asc, g.count asc "
 				;
 		$row = $db->getListSet($query);
 
@@ -45,7 +46,7 @@ class M_PRICING {
 	function getDeliberyByIdx($m_id){
 		global $db;
 
-		$query = " SELECT g.idx as goodsIdx, d.idx, d.count, d.size, g.gName, g.rollType "
+		$query = " SELECT g.idx as goodsIdx, d.idx, d.count, d.size, g.gName, g.rollType, d.csPercent "
 				." FROM Delivery_Info d "
 				." LEFT JOIN Goods_Info g on d.goodsIdx = g.idx "
 				." WHERE d.status = 1 "
@@ -64,6 +65,7 @@ class M_PRICING {
 		$count			= $M_FUNC->M_Filter(POST, 'count');
 		$size			= $M_FUNC->M_Filter(POST, "size");
 		$csPercent		= $M_FUNC->M_Filter(POST, "csPercent");
+		if($csPercent == "") $csPercent = 0;
 
 		$data = array(
 			'goodsIdx'		=> $goodsIdx,
@@ -72,13 +74,13 @@ class M_PRICING {
 			'csPercent'		=> $csPercent
 		);
 
+		//택배별로 insert할때 각 온라인 사이트별 다 넣어준다
+		$companyArr = $this->getCompanyByOn('idx', 'idx');
+		unset($companyArr[0]);
+
 		if($mode == 'insert'){
 			$data['status'] = 1;
 			$data['regUnixtime'] = time();
-
-			//택배별로 insert할때 각 온라인 사이트별 다 넣어준다
-			$companyArr = $this->getCompanyByOn('idx', 'idx');
-			unset($companyArr[0]);
 
 			$db->insert("Delivery_Info", $data);
 			$dIdx = $db->getInsertID();
@@ -101,6 +103,27 @@ class M_PRICING {
 			unset($data['goodsIdx']);
 
 			$db->update("Delivery_Info", $data, " WHERE idx = ".$m_id);
+
+			foreach($companyArr as $key => $value){
+				$rQuery = " SELECT count(*) as cnt "
+						 ." FROM Revenue_Info "
+						 ." where dIdx = ".$m_id." AND cIdx =".$key
+						 ;
+				$rRow = $db->getListSet($rQuery);
+				$rRow->next();
+
+				if($rRow->get('cnt') == 0){
+					$R_data = array(
+						'cIdx'			=> $key,
+						'dIdx'			=> $m_id,
+						'salePrice'		=> 0,
+						'revenue'		=>	0,
+						'regUnixtime'	=> time(),
+						'status'		=> 1
+					);
+					$db->insert('Revenue_Info', $R_data);
+				}			
+			}
 		} else {
 			$m_id = $M_FUNC->M_Filter(GET, 'm_id');
 			$delData['status'] = 9;

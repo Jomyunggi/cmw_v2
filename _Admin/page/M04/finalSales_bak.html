@@ -493,7 +493,7 @@ function category(CT){
 						<button class="btn btn-info" type="button" onclick="change_adPercent('<?php echo $row->get('dIdx');?>');" style="padding:4px 6px;"> 변경</button>
 					</td>
 
-					<td rowspan='3' align="right" style="padding:5px;<?php echo $checkYN;?>"><?php echo number_format($target_margin, 3);	?></td>
+					<td rowspan='3' align="right" style="padding:5px;<?php echo $checkYN;?>"><?php echo number_format($target_margin, 4)*100;	?></td>
 
 					<td rowspan='3' align="right" style="padding:5px;"><?php echo number_format($target_margin*$row->get('salePrice'));	?></td>					
 				</tr>
