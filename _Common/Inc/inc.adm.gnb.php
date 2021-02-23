@@ -23,11 +23,13 @@
 						$className2 = "";
 						$className3 = "";
 						$className4 = "";
+						$className5 = "";
 						switch(substr($MENU_ID, 0, 3)){
 							case "M01" : $className1 = "active"; break;
 							case "M02" : $className2 = "active"; break;
 							case "M03" : $className3 = "active"; break;
 							case "M04" : $className4 = "active"; break;
+							case "M05" : $className5 = "active"; break;
 							break;
 						}
 
@@ -69,8 +71,17 @@
 							<ul class="nav nav-second-level" id="menu4" style="background-color:#FCFCFC;">
 								<li><a href="?M0401"><i class="fa fa-caret-right" aria-hidden="true"></i> 상품별 택배비</a></li>
 								<!--li><a href="?M0403"><i class="fa fa-caret-right" aria-hidden="true"></i> 사이트별 마진율</a></li-->
+								<!--li><a href="?M0402"><i class="fa fa-caret-right" aria-hidden="true"></i> 마진별 가격</a></li-->
 								<li><a href="?M0402"><i class="fa fa-caret-right" aria-hidden="true"></i> 마진별 가격</a></li>
-								<li><a href="?M0404"><i class="fa fa-caret-right" aria-hidden="true"></i> 마진별 가격2</a></li>
+                            </ul>
+                        </li>
+						<li>
+                            <a href="?M0501" class="<?php echo $className5; ?>"><i class="fa fa-check fa-fw"></i> 
+							광고보고서<span class="fa arrow"></span></a>
+
+							<ul class="nav nav-second-level" id="menu5" style="background-color:#FCFCFC;">
+								<li><a href="?M0501"><i class="fa fa-caret-right" aria-hidden="true"></i> 보고서 업로드</a></li>
+								<li><a href="?M0502"><i class="fa fa-caret-right" aria-hidden="true"></i> 광고분석</a></li>
                             </ul>
                         </li>
                     </ul>

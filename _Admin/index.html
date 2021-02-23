@@ -51,7 +51,7 @@
 							case 'P' : $M_PricingPage->SalesProc($mode); break;
 							default : $M_PricingPage->SalesList(); break;
 						}
-						break;
+						break;					
 
 					case 3 :	//사이트별 마진율
 						switch($P_ACTION) {
@@ -62,13 +62,24 @@
 						}
 						break;
 
-					case 4 : //마진별 가격
-						switch($P_ACTION) {
-							case 'L' : $M_PricingPage->SalesList2(); break;
-							case 'P' : $M_PricingPage->SalesProc($mode); break;
-							default : $M_PricingPage->SalesList2(); break;
-						}
-					break;
+					//case 2 : //마진별 가격
+					//	switch($P_ACTION) {
+					//		case 'L' : $M_PricingPage->SalesList(); break;
+					//		case 'P' : $M_PricingPage->SalesProc($mode); break;
+					//		default : $M_PricingPage->SalesList(); break;
+					//	}
+					//	break;
+				} 
+				break;
+
+			case 5 : //광고보고서
+				include_once ADMIN_CLASS_PATH . '/class.reportPage.php';
+				$M_ReportPage = new M_ReportPage;
+
+				switch($P_ACTION) {
+					case 'L' : $M_ReportPage->managerList(); break;
+					case 'V' : $M_ReportPage->managerRV('view'); break;
+					default : $M_ReportPage->managerList(); break;
 				}
 				break;
 			
