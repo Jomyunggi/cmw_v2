@@ -77,9 +77,9 @@
 				$M_ReportPage = new M_ReportPage;
 
 				switch($P_ACTION) {
-					case 'L' : $M_ReportPage->managerList(); break;
-					case 'V' : $M_ReportPage->managerRV('view'); break;
-					default : $M_ReportPage->managerList(); break;
+					case 'R'	: $M_ReportPage->reportUpload(); break;
+					case 'P'	: $M_ReportPage->reportInsert(); break;
+					default		: $M_ReportPage->reportUpload(); break;
 				}
 				break;
 			

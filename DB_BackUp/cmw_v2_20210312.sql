@@ -11,12 +11,43 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
+
+-- cmw_v2 데이터베이스 구조 내보내기
+DROP DATABASE IF EXISTS `cmw_v2`;
+CREATE DATABASE IF NOT EXISTS `cmw_v2` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `cmw_v2`;
+
+-- 테이블 cmw_v2.account_info 구조 내보내기
+CREATE TABLE IF NOT EXISTS `account_info` (
+  `idx` int(11) NOT NULL AUTO_INCREMENT,
+  `accountID` varchar(100) NOT NULL COMMENT '계정ID',
+  `accountPW` varchar(255) NOT NULL COMMENT '계정PW',
+  `accountName` varchar(100) NOT NULL COMMENT '계정이름',
+  `regUnixtime` int(11) NOT NULL DEFAULT '0',
+  `status` int(4) NOT NULL DEFAULT '1' COMMENT '상태 1: 사용, 4:중지, 9:삭제',
+  PRIMARY KEY (`idx`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
 -- 테이블 데이터 cmw_v2.account_info:~0 rows (대략적) 내보내기
 DELETE FROM `account_info`;
 /*!40000 ALTER TABLE `account_info` DISABLE KEYS */;
 INSERT INTO `account_info` (`idx`, `accountID`, `accountPW`, `accountName`, `regUnixtime`, `status`) VALUES
 	(1, 'shim', '7a0d42341d7d97ef1a065f295638a5e8', '쉼', 1555000000, 1);
 /*!40000 ALTER TABLE `account_info` ENABLE KEYS */;
+
+-- 테이블 cmw_v2.board_info 구조 내보내기
+CREATE TABLE IF NOT EXISTS `board_info` (
+  `idx` int(11) NOT NULL AUTO_INCREMENT,
+  `accountIdx` int(11) NOT NULL COMMENT '계정ID',
+  `accountName` varchar(100) NOT NULL COMMENT '계정이름',
+  `category` int(4) NOT NULL COMMENT '카테고리',
+  `subject` varchar(255) DEFAULT NULL,
+  `content` varchar(255) DEFAULT NULL,
+  `regUnixtime` int(11) NOT NULL DEFAULT '0',
+  `status` int(4) NOT NULL DEFAULT '1' COMMENT '상태',
+  PRIMARY KEY (`idx`) USING BTREE,
+  KEY `accountIdx` (`accountIdx`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 -- 테이블 데이터 cmw_v2.board_info:~12 rows (대략적) 내보내기
 DELETE FROM `board_info`;
@@ -35,6 +66,24 @@ INSERT INTO `board_info` (`idx`, `accountIdx`, `accountName`, `category`, `subje
 	(11, 1, '쉼', 2, '광고 - 매출최적화작업', '문제&#13;&#10;&#9;캠페인 한개당 상품 많을수록 좋다&#13;&#10;&#9;&#13;&#10;&#13;&#10;광고 효율up 상품을 넣어야지 더 최적화가 잘된다&#13;&#10;부스터업효과&#13;&#10;&#13;&#10;&#13;&#10;&#13;&#10;상품 중복이되면 피해를 본다.&#13;&#10;', 1602056437, 1),
 	(12, 1, '쉼', 4, '금이동 위치에 3pl', 'https://cafe.naver.com/soho/2352861', 1602125564, 1);
 /*!40000 ALTER TABLE `board_info` ENABLE KEYS */;
+
+-- 테이블 cmw_v2.company_info 구조 내보내기
+CREATE TABLE IF NOT EXISTS `company_info` (
+  `idx` int(11) NOT NULL AUTO_INCREMENT,
+  `companyName` varchar(100) NOT NULL COMMENT '회사명',
+  `license` varchar(100) DEFAULT NULL COMMENT '사업자번호',
+  `addr` varchar(255) DEFAULT NULL COMMENT '주소',
+  `tel` varchar(100) DEFAULT NULL COMMENT '전화번호',
+  `fax` varchar(100) DEFAULT NULL COMMENT '팩스',
+  `senior` varchar(100) DEFAULT NULL COMMENT '대표자명',
+  `email` varchar(100) DEFAULT NULL COMMENT '이메일',
+  `level` int(4) NOT NULL COMMENT '레벨',
+  `taxYN` int(4) NOT NULL COMMENT '세금여부 0, 1로 구분',
+  `fees` float NOT NULL DEFAULT '0',
+  `status` int(4) NOT NULL DEFAULT '1' COMMENT '상태',
+  `regUnixtime` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`idx`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8;
 
 -- 테이블 데이터 cmw_v2.company_info:~40 rows (대략적) 내보내기
 DELETE FROM `company_info`;
@@ -81,6 +130,46 @@ INSERT INTO `company_info` (`idx`, `companyName`, `license`, `addr`, `tel`, `fax
 	(41, '스마트스토어', '5.85--', '', '', '', '', '', 4, 0, 6, 1, 1605247661),
 	(42, '롯데ON', '6.91', '', '', '', '', '', 4, 0, 10, 1, 1605248284);
 /*!40000 ALTER TABLE `company_info` ENABLE KEYS */;
+
+-- 테이블 cmw_v2.coupang_report 구조 내보내기
+CREATE TABLE IF NOT EXISTS `coupang_report` (
+  `idx` int(11) NOT NULL AUTO_INCREMENT,
+  `date` int(4) NOT NULL DEFAULT '0' COMMENT '날짜',
+  `campaign` varchar(255) NOT NULL COMMENT '캠페인',
+  `goodsName` varchar(255) NOT NULL COMMENT '상품명',
+  `optionN` int(11) NOT NULL DEFAULT '0' COMMENT '상품 옵션번호',
+  `keyword` varchar(255) NOT NULL COMMENT '키워드',
+  `view` int(11) NOT NULL DEFAULT '0' COMMENT '노출수',
+  `click` int(11) NOT NULL DEFAULT '0' COMMENT '클릭수',
+  `cpc` int(11) NOT NULL DEFAULT '0' COMMENT '광고비',
+  `clickRate` float NOT NULL DEFAULT '0' COMMENT '클릭률',
+  `salesCnt` int(11) NOT NULL DEFAULT '0' COMMENT '판매수량',
+  `salesCnt_D` int(11) NOT NULL DEFAULT '0' COMMENT '직접판매수량',
+  `salesCnt_I` int(11) NOT NULL DEFAULT '0' COMMENT '간접판매수량',
+  `salesPrice` int(11) NOT NULL DEFAULT '0' COMMENT '매출액',
+  `salesPrice_D` int(11) NOT NULL DEFAULT '0' COMMENT '직접 전환매출액',
+  `salesPrice_I` int(11) NOT NULL DEFAULT '0' COMMENT '간접 전환매출액',
+  `roas` float NOT NULL DEFAULT '0' COMMENT '광고수익률',
+  PRIMARY KEY (`idx`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 테이블 데이터 cmw_v2.coupang_report:~0 rows (대략적) 내보내기
+DELETE FROM `coupang_report`;
+/*!40000 ALTER TABLE `coupang_report` DISABLE KEYS */;
+/*!40000 ALTER TABLE `coupang_report` ENABLE KEYS */;
+
+-- 테이블 cmw_v2.delivery_info 구조 내보내기
+CREATE TABLE IF NOT EXISTS `delivery_info` (
+  `idx` int(11) NOT NULL AUTO_INCREMENT,
+  `goodsIdx` int(11) NOT NULL DEFAULT '0' COMMENT '상품번호',
+  `count` int(4) NOT NULL DEFAULT '0' COMMENT '수량',
+  `size` int(4) NOT NULL DEFAULT '1' COMMENT '1:소, 2:중, 3:대',
+  `csPercent` float NOT NULL DEFAULT '0' COMMENT 'cs충당율',
+  `regUnixtime` int(11) NOT NULL DEFAULT '0',
+  `status` int(4) NOT NULL DEFAULT '1' COMMENT '상태값',
+  PRIMARY KEY (`idx`) USING BTREE,
+  KEY `goodsIdx` (`goodsIdx`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
 
 -- 테이블 데이터 cmw_v2.delivery_info:~46 rows (대략적) 내보내기
 DELETE FROM `delivery_info`;
@@ -140,6 +229,24 @@ INSERT INTO `delivery_info` (`idx`, `goodsIdx`, `count`, `size`, `csPercent`, `r
 	(52, 54, 6, 5, 2.63, 1615277938, 1);
 /*!40000 ALTER TABLE `delivery_info` ENABLE KEYS */;
 
+-- 테이블 cmw_v2.goods_info 구조 내보내기
+CREATE TABLE IF NOT EXISTS `goods_info` (
+  `idx` int(11) NOT NULL AUTO_INCREMENT,
+  `mIdx` int(11) NOT NULL DEFAULT '0' COMMENT '상품번호',
+  `onoff` int(4) NOT NULL DEFAULT '0' COMMENT '온/오프라인(1/0)',
+  `category` int(4) NOT NULL DEFAULT '0' COMMENT '카테고리',
+  `rollType` int(4) NOT NULL DEFAULT '0' COMMENT '롤타입',
+  `length` int(4) NOT NULL DEFAULT '0' COMMENT '길이',
+  `gName` varchar(100) DEFAULT NULL COMMENT '상품명',
+  `count` int(4) DEFAULT '0' COMMENT '수량',
+  `cost` int(4) DEFAULT '0' COMMENT '원가',
+  `price` int(4) NOT NULL DEFAULT '0' COMMENT '판매가',
+  `status` int(4) NOT NULL DEFAULT '1' COMMENT '상태',
+  `regUnixtime` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`idx`) USING BTREE,
+  KEY `mIdx` (`mIdx`)
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8;
+
 -- 테이블 데이터 cmw_v2.goods_info:~46 rows (대략적) 내보내기
 DELETE FROM `goods_info`;
 /*!40000 ALTER TABLE `goods_info` DISABLE KEYS */;
@@ -198,12 +305,42 @@ INSERT INTO `goods_info` (`idx`, `mIdx`, `onoff`, `category`, `rollType`, `lengt
 	(54, 0, 0, 1, 24, 24, '새피아', 6, 22052, 29600, 1, 1615277903);
 /*!40000 ALTER TABLE `goods_info` ENABLE KEYS */;
 
+-- 테이블 cmw_v2.material_info 구조 내보내기
+CREATE TABLE IF NOT EXISTS `material_info` (
+  `idx` int(11) NOT NULL AUTO_INCREMENT,
+  `division` int(4) NOT NULL DEFAULT '0' COMMENT '상품/재료(1/0)',
+  `subject` varchar(100) DEFAULT NULL COMMENT '품목',
+  `category` int(4) NOT NULL DEFAULT '0' COMMENT '카테고리',
+  `detail` varchar(100) DEFAULT NULL COMMENT '상세명',
+  `standard` varchar(100) DEFAULT NULL COMMENT '규격',
+  `vat` int(4) DEFAULT '0' COMMENT '부가세',
+  `cost` int(4) DEFAULT '0' COMMENT '원가',
+  `status` int(4) NOT NULL DEFAULT '1' COMMENT '상태',
+  `regUnixtime` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`idx`) USING BTREE,
+  KEY `category` (`category`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
 -- 테이블 데이터 cmw_v2.material_info:~0 rows (대략적) 내보내기
 DELETE FROM `material_info`;
 /*!40000 ALTER TABLE `material_info` DISABLE KEYS */;
 INSERT INTO `material_info` (`idx`, `division`, `subject`, `category`, `detail`, `standard`, `vat`, `cost`, `status`, `regUnixtime`) VALUES
 	(1, 1, '순수', 1, '16', '30', 0, 3885, 1, 1610086667);
 /*!40000 ALTER TABLE `material_info` ENABLE KEYS */;
+
+-- 테이블 cmw_v2.revenue_info 구조 내보내기
+CREATE TABLE IF NOT EXISTS `revenue_info` (
+  `idx` int(11) NOT NULL AUTO_INCREMENT,
+  `cIdx` int(11) NOT NULL DEFAULT '0' COMMENT '회사번호',
+  `dIdx` int(11) NOT NULL DEFAULT '0' COMMENT '배달 번호',
+  `salePrice` int(4) NOT NULL DEFAULT '0' COMMENT '판매가',
+  `revenue` float NOT NULL DEFAULT '0' COMMENT '상품마진율',
+  `regUnixtime` int(11) NOT NULL DEFAULT '0',
+  `status` int(4) NOT NULL DEFAULT '1' COMMENT '상태값',
+  PRIMARY KEY (`idx`) USING BTREE,
+  KEY `dIdx` (`dIdx`) USING BTREE,
+  KEY `companyIdx` (`cIdx`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=506 DEFAULT CHARSET=utf8;
 
 -- 테이블 데이터 cmw_v2.revenue_info:~401 rows (대략적) 내보내기
 DELETE FROM `revenue_info`;
@@ -619,6 +756,19 @@ INSERT INTO `revenue_info` (`idx`, `cIdx`, `dIdx`, `salePrice`, `revenue`, `regU
 	(504, 37, 52, 0, 0, 1615277938, 1),
 	(505, 36, 52, 0, 0, 1615277938, 1);
 /*!40000 ALTER TABLE `revenue_info` ENABLE KEYS */;
+
+-- 테이블 cmw_v2.unitprice_info 구조 내보내기
+CREATE TABLE IF NOT EXISTS `unitprice_info` (
+  `idx` int(11) NOT NULL AUTO_INCREMENT,
+  `companyIdx` int(11) NOT NULL COMMENT '거래처ID',
+  `goodsIdx` int(11) NOT NULL DEFAULT '0' COMMENT '상품번호',
+  `companyName` varchar(100) NOT NULL COMMENT '거래처명',
+  `price` int(4) NOT NULL COMMENT '가격',
+  `regUnixtime` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`idx`) USING BTREE,
+  KEY `companyIdx` (`companyIdx`) USING BTREE,
+  KEY `goodsIdx` (`goodsIdx`)
+) ENGINE=InnoDB AUTO_INCREMENT=144 DEFAULT CHARSET=utf8;
 
 -- 테이블 데이터 cmw_v2.unitprice_info:~141 rows (대략적) 내보내기
 DELETE FROM `unitprice_info`;

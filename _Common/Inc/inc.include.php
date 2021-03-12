@@ -19,7 +19,7 @@ include_once COMMON_CLASS . "/class.file.php";
 if($_SERVER["HTTP_HOST"] == "cmw.local.jmg"){
 	$db					= new M_DB("TEST");
 } elseif($_SERVER["HTTP_HOST"] == "cmw_v2.local.jmg") {
-	$db					= new M_DB("TEST");
+	$db					= new M_DB();
 } else {
 	$db					= new M_DB();
 }

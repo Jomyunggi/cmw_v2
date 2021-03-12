@@ -17,10 +17,10 @@ class M_DB {
 			$this->db_user		= DB_TEST_USER;
 			$this->db_pwd		= DB_TEST_PASS;
 		} else {
-			$this->db_host		= DB_HOST;
-			$this->db_name		= DB_NAME;
-			$this->db_user		= DB_USER;
-			$this->db_pwd		= DB_PASS;
+			$this->db_host		= DB_v2_HOST;
+			$this->db_name		= DB_v2_NAME;
+			$this->db_user		= DB_v2_USER;
+			$this->db_pwd		= DB_v2_PASS;
 		}
 		
 		$charset = "utf-8";

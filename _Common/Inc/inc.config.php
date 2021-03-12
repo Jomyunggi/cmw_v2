@@ -60,10 +60,10 @@ define("DB_NAME",						"");
 define("DB_USER",						"");
 define("DB_PASS",						"");
 } elseif ($_SERVER["HTTP_HOST"] == "cmw_v2.local.jmg") {
-define("DB_TEST_HOST",								"localhost");
-define("DB_TEST_NAME",								"cmw_v2");
-define("DB_TEST_USER",								"cmw");
-define("DB_TEST_PASS",								"dj1rn2wh3#");
+define("DB_v2_HOST",								"localhost");
+define("DB_v2_NAME",								"cmw_v2");
+define("DB_v2_USER",								"cmw");
+define("DB_v2_PASS",								"dj1rn2wh3#");
 define("DB_HOST",						"");
 define("DB_NAME",						"");
 define("DB_USER",						"");
