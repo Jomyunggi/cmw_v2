@@ -16,7 +16,10 @@ class M_PricingPage extends M_PRICING {
 			3 => '대',
 			4 => '소2',
 			5 => '중2',
-			6 => '대2'
+			6 => '대2',
+			7 => '소3',
+			8 => '중3',
+			9 => '대3'
 		);
 
 		$this->Category = array(
@@ -34,7 +37,8 @@ class M_PricingPage extends M_PRICING {
 					1 => 1,
 					2 => 2,
 					3 => 3,
-					4 => 4
+					4 => 4,
+					6 => 6
 				)
 		);
 
@@ -47,8 +51,10 @@ class M_PricingPage extends M_PRICING {
 			3	=> 3200,
 			4	=> 4600,
 			5	=> 5400,
-			6	=> 6400
-
+			6	=> 6400,
+			7	=> 6900,
+			8	=> 8100,
+			9	=> 9600
 		);
 		
 		$this->adPriceYN = array(

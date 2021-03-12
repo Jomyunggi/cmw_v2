@@ -135,7 +135,8 @@ class M_PricingPage extends M_PRICING {
 		
 		$M_JS->Go_URL('/?'. $MENU_ID . $p_action, $answer);	
 	}
-
+	
+	/*
 	function SalesList(){
 		global $PAGE_PATH, $MENU_ID;
 		global $M_HTML, $M_FUNC;
@@ -186,8 +187,9 @@ class M_PricingPage extends M_PRICING {
 
 		include_once $PAGE_PATH . '/finalSales.html';
 	}
+	*/
 
-	function SalesList2(){
+	function SalesList(){
 		global $PAGE_PATH, $MENU_ID;
 		global $M_HTML, $M_FUNC;
 
