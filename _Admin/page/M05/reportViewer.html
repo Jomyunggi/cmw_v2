@@ -1,0 +1,187 @@
+<script type="text/javascript" src="<?php	echo JS_DIR;	?>/adm_common.js"></script>
+
+<script>
+	$(document).ready(function(){
+		
+	});
+
+	function searchSubmit(){
+		var frm = document.search_frm;
+		frm.submit();
+	}
+
+	function searching(){
+		window.location.href="/?M0301S&searchYear="+$('#searchYear').val()+"&searchMonth="+$('#searchMonth').val();
+	}
+</script>
+<div class="container"  style="width:100%;">
+	<div class="contents-wrapper">
+		<h2 class="page-header">키워드 분석</h2>
+	</div>
+
+	<!--/* 해당 월 합계 끝  ---------------------------------------------------------------------------------------------------------------------->
+	<div class="contents-wrapper" style='float:left;'>
+		<div class="panel panel-default">
+			<div class="panel-heading text-center">
+				<?php 
+					echo $M_HTML->b_Form("search_frm", "", "get", 0);
+					echo $M_HTML->input_Hidden($MENU_ID.$P_ACTION, "");
+					echo $M_HTML->input_Hidden("PAGE", $PAGE);
+				?>
+				<div class="form-inline">
+					<div class="form-group input-group" style="text-align:end; padding: 15px 0 15px 0;">
+					<?php
+						echo "오픈마켓 : ". $M_HTML->Input_Radio('companyIdx', $companyArr);
+						echo "날짜 : ". $M_HTML->Input_text('startdate', '') ." ~ ". $M_HTML->Input_text('enddate', '');
+					?>
+					</div>
+					<br/>
+					<div class="form-group input-group">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button" onclick="javascript:searchSubmit();"><i class="fa fa-search"></i> 검색</button>
+						</span>	
+					</div>
+					
+				</div>
+				<?php
+					echo $M_HTML->e_Form();
+				?>
+			</div>
+			<table class="table table-bordered table-hover">
+				<colgroup>
+					<col width="5%">
+					<col width="10%">
+					<col width="13%">
+					<col width="10%">
+					<col width="4%">
+
+					<col width="4%">
+					<col width="4%">
+					<col width="5%">
+					<col width="4%">
+					<col width="4%">
+
+					<col width="5%">
+					<col width="5%">
+					<col width="5%">
+					<col width="5%">
+					<col width="5%">
+					<col width="5%">
+					<col width="5%">
+					<!--col width="5%"-->
+				</colgroup>
+				<thead>
+					<tr>
+						<th style="padding:10px;">날짜</th>
+						<th style="padding:10px;">캠페인명</th>
+						<th style="padding:10px;">소재명</th>
+						<th style="padding:10px;">키워드</th>
+						<th style="padding:10px;">노출수</th>
+						<th style="padding:10px;">클릭수</th>
+						<th style="padding:10px;">클릭률(CTR)</th>
+						<th style="padding:10px;">클릭당 광고비(CPC)</th>
+						<th style="padding:10px;">광고비</th>
+						<th style="padding:10px;">전환수</th>
+						<th style="padding:10px;">전환율(CVR)</th>
+						<th style="padding:10px;">전환매출액</th>
+						<th style="padding:10px;">전환당비용(CPS)</th>
+						<th style="padding:10px;">광고수익률(ROAS)</th>
+						<th style="padding:10px;">객단가</th>
+						<!--th style="padding:10px;">최대 전환단가</th>
+						<th style="padding:10px;">최대 클릭단가</th-->
+						<th style="padding:10px;">클릭가치</th>
+						<th style="padding:10px;">최대 클릭단가</th>
+					</tr>
+				</thead>
+
+				<tbody>
+				<?php
+					if($reportRow->size() > 0){
+						$NO = $reportRow->size();
+						$tmpName = "";
+						$tmpYN = false;
+						for($i=0; $i<$reportRow->size(); $i++){
+							$reportRow->next();
+
+							$keyword = $reportRow->get('keyword');
+							if($i > 0){
+								if($tmpName != $keyword){
+									$tmpYN = true;
+								} else{
+									$tmpYN = false;
+								}
+							}
+
+							if($tmpYN){
+								echo "<tr><td colspan='16' style='padding:2px; background-color:#a4a4a4;'></td></tr>";
+							}
+
+							//CTR 구하기 | 클릭수 / 노출수 * 100
+							$ctr = $this->divisionZero($reportRow->get('T_click'), $reportRow->get('T_impress'), true);
+							$cpc = $reportRow->get('T_adPrice') / $reportRow->get('T_click');
+							//전환율(CVR) | 전환수 / 클릭수 * 100
+							$cvr = $this->divisionZero($reportRow->get('T_D_sale1'), $reportRow->get('T_click'), true);
+							//전환당비용(CPS) | 광고비용 / 전환수
+							$cps = $this->divisionZero($reportRow->get('T_adPrice'), $reportRow->get('T_D_sale1'));
+							//광고수익률(ROAS) | 매출액 / 광고비 * 100
+							$roas = $this->divisionZero($reportRow->get('T_D_sales1'), $reportRow->get('T_adPrice'), true);
+							//객단가 | 키워드 중에 해당 단어가 포함되어 있으면 해당 상품가로 가져온다
+							/*$element = 0;
+							foreach($this->unitPrice as $key => $value){
+								if(strpos($reportRow->get('keyword'), $key)){
+									$element = $value;
+								}
+							}
+							$unitPrice = $element;*/
+							$unitPrice = round($reportRow->get('T_D_sales1')/$reportRow->get('T_D_sale1'), 0);
+							//최대 전환단가 | 객단가 / ROAS (1000%로하기)
+							$MaxCprice = $this->divisionZero($unitPrice, 10);
+							//최대 클릭단가 | 최대 전환단가 x 전환율
+							$MaxClickP = $MaxCprice * $cvr / 100;
+
+							
+							/****************************2020.07.17 자료내용으로 재분석한 내용추가************************************
+							********************* 클릭가치 = 객단가 x 전환율,  최대 클릭단가 = 클릭가치 / 목표수익률 **********************/
+							$clickValue = $unitPrice * $cvr / 100;
+							$MaxClickP2 = $clickValue / 10;	//묙표수익률은 1000%로 잡는다.
+				?>
+					<tr align='right'>
+						<td style="padding: 3px;" align='center'><?php echo date('Y.m.d', strtotime($reportRow->get('date')));	?></td>
+						<td style="padding-left:7px;" align='left'><?php echo $reportRow->get('campaignName');	?></td>
+						<td style="padding-left:7px;" align='left'><?php echo $reportRow->get('itemName');	?></td>
+						<td style="padding-right:7px;"><?php echo $keyword;	?></td>
+						<td style="padding-right:7px;"><?php echo number_format($reportRow->get('T_impress'));	?></td>
+						<td style="padding-right:7px;"><?php echo number_format($reportRow->get('T_click'));	?></td>
+						<td style="padding-right:7px;"><?php echo round($ctr, 2);	?>%</td>
+						<td style="padding-right:7px;"><?php echo round($cpc, 0);	?></td>
+						<td style="padding-right:7px;"><?php echo number_format($reportRow->get('T_adPrice'));	?></td>						
+						<td style="padding-right:7px;"><?php echo number_format($reportRow->get('T_D_sale1'));	?></td>
+						<td style="padding-right:7px;"><?php echo round($cvr, 2);	?>%</td>
+						<td style="padding-right:7px;"><?php echo number_format($reportRow->get('T_D_sales1'));	?></td>
+						<td style="padding-right:7px;"><?php echo number_format(round($cps, 0));	?></td>
+						<td style="padding-right:7px;"><?php echo number_format(round($roas, 2));	?>%</td>
+						<td style="padding-right:7px;"><?php echo number_format($unitPrice);	?></td>
+						<!--td style="padding-right:7px;"><?php echo number_format($MaxCprice);	?></td>
+						<td style="padding-right:7px;"><?php echo number_format($MaxClickP);	?></td-->
+						<td style="padding-right:7px;"><?php echo number_format($clickValue);	?></td>
+						<td style="padding-right:7px;"><?php echo number_format($MaxClickP2);	?></td>
+					</tr>
+				<?php
+							$NO--;
+							$tmpName = $keyword;
+						}
+					} else {
+				?>
+					<tr align='center'><td colspan='16'>검색된 데이터가 없습니다.</td></tr>
+				<?php
+					}
+				?>
+				</tbody>
+			</table>
+		</div><!--/* panel -->
+	</div><!--/* contents-wrapper 1-->
+	<!--/* 해당 월 합계 끝  ---------------------------------------------------------------------------------------------------------------------->
+
+</div><!-- container -->
+
+<div style="clear:both;"></div>

@@ -1,4 +1,9 @@
 <?php
+	//error_reporting(E_ALL);
+	//ini_set('display_errors', '1');
+	ini_set('memory_limit', '-1');
+	@set_time_limit(0);
+
 	@include_once "../../common/setCommonPath.php";
 	@include_once "Inc/inc.include.php";
 	include_once COMMON_CLASS . '/PHPExcel_1.8.0/Classes/PHPExcel.php';
@@ -81,18 +86,23 @@
 						}
 					} 
 				}
-
-				$roas = number_format($arr[30] / $arr[13] * 100, 2);
+				
+				if($arr[30] != 0 && $arr[13] != 0){
+					$roas = number_format($arr[30] / $arr[13] * 100, 2);
+					$roas = str_replace(",", "", $roas);
+				} else {
+					$roas = 0;
+				}
 				
 				$insertData[$num] = array(
 					'date'			=> $arr[0],
-					'campain'		=> $arr[4],	
+					'campaign'		=> $arr[4],	
 					'goodsName'		=> $arr[8],	
 					'optionN'		=> $arr[9],	
 					'keyword'		=> $arr[10],	
 					'view'			=> $arr[11],
 					'click'			=> $arr[12],
-					'cpc'			=> $arr[13],
+					'cpc'			=> $arr[13], 
 					'clickRate'		=> $arr[14],
 					'salesCnt'		=> $arr[27],
 					'salesCnt_D'	=> $arr[28],
@@ -102,19 +112,14 @@
 					'salesPrice_I'	=> $arr[32],
 					'roas'			=> $roas
 				);
+
+				if($num != 0){
+					if($insertData[$num]['keyword'] != ''){
+						$db->insert("Coupang_Report", $insertData[$num]);
+					}
+				}
 				$num++;
 			}
 		break;
 	}
-	
-
-	foreach($insertData as $key => $arr){
-
-	}
-	unset($insertData[0]);
-	echo "<pre>";
-	print_r($insertData);
-	exit;
-
-	
 ?>

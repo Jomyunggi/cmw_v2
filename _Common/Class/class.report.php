@@ -33,5 +33,23 @@ class M_REPORT {
 
 		return $arr;
 	}
+
+	function getReportBySQL($select, $from, $where, $group, $having, $order){
+		global $db;
+
+		$query = " SELECT ".$select
+				." FROM " .$from
+				." WHERE " .$where
+				;
+		if($group != '') $query += " GROUP BY " .$group;
+		if($having != '') $query += " HAVING " .$group;
+		if($order != '') $query += " ORDER BY " .$group;
+
+	
+
+		$row = $db->getListSet($query);
+
+		return $row;
+	}
 }
 ?>
