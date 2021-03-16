@@ -34,18 +34,38 @@ class M_REPORT {
 		return $arr;
 	}
 
-	function getReportBySQL($select, $from, $where, $group, $having, $order){
+	function getReportByCampaign($companyIdx, $startD, $endD){
 		global $db;
 
-		$query = " SELECT ".$select
-				." FROM " .$from
-				." WHERE " .$where
-				;
-		if($group != '') $query += " GROUP BY " .$group;
-		if($having != '') $query += " HAVING " .$group;
-		if($order != '') $query += " ORDER BY " .$group;
+		switch($companyIdx){
+			case 35 : $table = "Coupang_Report"; break;
+		}
 
-	
+		$query = " SELECT campaign, sum(view) as view, sum(click) as click, sum(cpc) as cpc, sum(salesCnt) as salesCnt, "
+				." sum(salesCnt_D) as salesCnt_D, sum(salesCnt_I) as salesCnt_I, sum(salesPrice) as salesPrice,  sum(salesPrice_D) as salesPrice_D, sum(salesPrice_I) as salesPrice_I "
+				." FROM ".$table
+				." WHERE 1=1 "
+				." GROUP BY campaign "
+				;	
+
+		$row = $db->getListSet($query);
+
+		return $row;
+	}
+
+	function getReportByGoods($companyIdx, $startD, $endD, $campaign){
+		global $db;
+
+		switch($companyIdx){
+			case 35 : $table = "Coupang_Report"; break;
+		}
+
+		$query = " SELECT campaign, sum(view) as view, sum(click) as click, sum(cpc) as cpc, sum(salesCnt) as salesCnt, "
+				." sum(salesCnt_D) as salesCnt_D, sum(salesCnt_I) as salesCnt_I, sum(salesPrice) as salesPrice,  sum(salesPrice_D) as salesPrice_D, sum(salesPrice_I) as salesPrice_I "
+				." FROM ".$table
+				." WHERE 1=1 AND campaign = '".$campaign."' "
+				." GROUP BY goodsName "
+				;	
 
 		$row = $db->getListSet($query);
 

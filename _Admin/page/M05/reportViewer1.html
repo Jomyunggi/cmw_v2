@@ -1,0 +1,149 @@
+<script type="text/javascript" src="<?php	echo JS_DIR;	?>/adm_common.js"></script>
+
+<script>
+	$(function(){
+		$('#startD').datepicker({
+			changeMonth: true,
+			dateFormat : 'yymmdd',
+			showAnim : 'slideDown',
+			onClose: function( selectedDate ) {
+				$( '#startD' ).datepicker( 'option', 'minDate', selectedDate );
+			}
+		});
+		$('#endD').datepicker({
+			changeMonth: true,
+			dateFormat : 'yymmdd',
+			showAnim : 'slideDown',
+			onClose: function( selectedDate ) {
+				$( '#endD' ).datepicker( 'option', 'minDate', selectedDate );
+			}
+		});
+	});
+
+	function searchSubmit(){
+		var frm = document.search_frm;
+		
+		if(frm.companyIdx.value == ''){
+			alert('해당 오픈마켓을 선택해주세요');
+			return false;
+		}
+		if(frm.startD.value == '' || frm.endD.value == ''){
+			alert('검색일을 선택해주세요');
+			return false;
+		}
+
+		frm.submit();
+	}
+</script>
+<div class="container">
+	<div class="contents-wrapper">
+		<h2 class="page-header">키워드 분석</h2>
+	</div>
+
+	<!--/* 해당 월 합계 끝  ---------------------------------------------------------------------------------------------------------------------->
+	<div class="contents-wrapper" style="padding-top:6px;">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<?php 
+					echo $M_HTML->b_Form("search_frm", "", "get", 0);
+					echo $M_HTML->input_Hidden($MENU_ID.$P_ACTION, "");
+					echo $M_HTML->input_Hidden("PAGE", $PAGE);
+				?>
+				<div class="form-inline">
+					<div style="float:left; width:14%;">
+						<a href="#layer1" class="btn btn-sm btn-default" style="width:75%;"><i class="fa fa-users fa-lg"></i> 오픈마켓</a>
+					</div>
+					<div style="padding:4px; margin-bottom:5px;">
+						<?php
+							echo $M_HTML->input_Radio2("companyIdx", $companyArr, $companyIdx);
+						?>
+					</div>
+					<div style="clear:both;"></div>
+
+					<div style="float:left; width:14%;">
+						<a href="#layer1" class="btn btn-sm btn-default" style="width:75%;"><i class="fa fa-tags fa-lg"></i> 기간 선택</a>
+					</div>
+					<div style="padding:4px; margin-bottom:5px;">
+						<?php
+							echo $M_HTML->input_text("startD", $startD, '', 'width:100px; text-align:center;', 'placeholder="시작일"');
+							echo " ~ ";
+							echo $M_HTML->input_text("endD", $endD, '', 'width:100px; text-align:center;', 'placeholder="종료일"');
+						?>
+					</div>
+					<div style="clear:both;"></div>
+						
+
+					<div style="text-align:right; margin-bottom:10px;">
+						<button class="btn btn-primary" type="button" onclick="searchSubmit();" style="padding:5px 15px;"><i class="fa fa-search"></i> 검색</button>
+					</div>
+					
+					
+				</div>
+				<?php
+					echo $M_HTML->e_Form();
+				?>
+			</div>
+			<table class="table table-bordered table-hover">
+				<colgroup>
+					<col width="20%">
+					<col width="10%">
+					<col width="10%">
+					<col width="10%">
+					<col width="10%">
+					<col width="10%">
+					<col width="10%">
+					<col width="20%">
+				</colgroup>
+				<thead>
+					<tr>
+						<th style="padding:10px; font-size:14px;">캠페인명</th>
+						<th style="padding:10px; font-size:14px;">노출수</th>
+						<th style="padding:10px; font-size:14px;">클릭수</th>
+						<th style="padding:10px; font-size:14px;">광고비</th>
+						<th style="padding:10px; font-size:14px;">전환수</th>
+						<th style="padding:10px; font-size:14px;">전환율(CVR)</th>
+						<th style="padding:10px; font-size:14px;">전환매출</th>
+						<th style="padding:10px; font-size:14px;">광고수익률(ROAS)</th>
+					</tr>
+				</thead>
+
+				<tbody style="font-size:14px;">
+				<?php
+					if($row->size() > 0){
+						$NO = $row->size();
+						for($i=0; $i<$row->size(); $i++){
+							$row->next();
+							
+							$cvr = $row->get('salesCnt') / $row->get('click') * 100;
+							$roas = $row->get('salesPrice') / $row->get('cpc') * 100;
+
+							$url = "/?M0502&companyIdx=".$companyIdx."&startD=".$startD."&endD=".$endD."&step=2&campaign=".$row->get('campaign');
+				?>
+					<tr align='right' data-href="<?php echo $url;?>">
+						<td align='center'><?php echo $row->get('campaign');	?></td>
+						<td style="padding-right:7px;"><?php echo number_format($row->get('view'));	?></td>
+						<td style="padding-right:7px;"><?php echo number_format($row->get('click'));	?></td>
+						<td style="padding-right:7px;"><?php echo number_format($row->get('cpc'));	?></td>						
+						<td style="padding-right:7px;"><?php echo number_format($row->get('salesCnt'));	?></td>
+						<td style="padding-right:7px;"><?php echo round($cvr, 2);	?>%</td>
+						<td style="padding-right:7px;"><?php echo number_format($row->get('salesPrice'));	?></td>
+						<td style="padding-right:7px;"><?php echo number_format($roas, 2);	?>%</td>
+					</tr>
+				<?php
+							$NO--;
+						}
+					} else {
+				?>
+					<tr align='center'><td colspan='16'>검색된 데이터가 없습니다.</td></tr>
+				<?php
+					}
+				?>
+				</tbody>
+			</table>
+		</div><!--/* panel -->
+	</div><!--/* contents-wrapper 1-->
+	<!--/* 해당 월 합계 끝  ---------------------------------------------------------------------------------------------------------------------->
+
+</div><!-- container -->
+
+<div style="clear:both;"></div>

@@ -70,22 +70,29 @@ class M_ReportPage extends M_REPORT {
 		global $PAGE_PATH, $MENU_ID, $P_ACTION, $PAGE;
 		global $M_HTML;
 
-		$select = $this->variable_check(GET, 'select', '');
-		$from = $this->variable_check(GET, 'from', '');
-		$where = $this->variable_check(GET, 'where', '');
-		$group = $this->variable_check(GET, 'group', '');
-		$having = $this->variable_check(GET, 'having', '');
-		$order = $this->variable_check(GET, 'order', '');
+		$companyIdx = $this->variable_check(GET, 'companyIdx', '');
+		$startD = $this->variable_check(GET, 'startD', '');
+		$endD = $this->variable_check(GET, 'endD', '');
+		$step = $this->variable_check(GET, 'step', 1);
+		$campaign = $this->variable_check(GET, 'campaign', '');
 	
 		//판매처 정보 다 가져오기
 		$companyArr = $this->getCompanyArr(array()," and level = 4 ");
 		
-		if($from != ''){
-			$row = $this->getReportBySQL($select, $from, $where, $group, $having, $order);
+		if($companyIdx != '' && $startD != '' && $endD != ''){
+			switch($step){
+				case 1 : $row = $this->getReportByCampaign($companyIdx, $startD, $endD); break;
+				case 2 : $row = $this->getReportByGoods($companyIdx, $startD, $endD, $campaign); break;
+			}
 		} else {
 			$row = new L_ListSet();
 		}
-		include_once $PAGE_PATH . '/reportViewer.html';
+
+		switch($step){
+			case 1 :	include_once $PAGE_PATH . '/reportViewer1.html'; break;
+			case 2 :	include_once $PAGE_PATH . '/reportViewer2.html'; break;
+		}
+				
 	}
 }
 
