@@ -1,0 +1,148 @@
+<script type="text/javascript" src="<?php	echo JS_DIR;	?>/adm_common.js"></script>
+
+<script>
+	$(function(){
+	});
+</script>
+<div class="container">
+	<div class="contents-wrapper">
+		<h2 class="page-header">캠페인 > 상품 > 키워드 보고서</h2>
+	</div>
+
+	<!--/* 해당 월 합계 끝  ---------------------------------------------------------------------------------------------------------------------->
+	<div class="contents-wrapper" style="padding-top:6px;">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<?php 
+					echo $M_HTML->b_Form("search_frm", "", "get", 0);
+					echo $M_HTML->input_Hidden($MENU_ID.$P_ACTION, "");
+					echo $M_HTML->input_Hidden("PAGE", $PAGE);
+				?>
+				<div class="form-inline">
+					<div style="float:left; width:14%;">
+						<a href="#layer1" class="btn btn-sm btn-default" style="width:75%;"><i class="fa fa-users fa-lg"></i> 오픈마켓</a>
+					</div>
+					<div style="padding:4px; margin-bottom:5px;">
+						<?php
+							echo $M_HTML->input_Radio2("companyIdx", $companyArr, $companyIdx);
+						?>
+					</div>
+					<div style="clear:both;"></div>
+
+					<div style="float:left; width:14%; height:100%; padding-top:4px;">
+						<a href="#layer2" class="btn btn-sm btn-default" style="width:75%; height:33px;"><i class="fa fa-calendar fa-lg"></i> 기간 선택</a>
+					</div>
+					<div style="padding:4px; margin-bottom:5px;">
+						<?php	echo $M_HTML->_Select2("searchTerm", $this->searchTerm[0], $searchTerm, "form-control", " disabled ", "style='width:25%; text-decoration:underline; line-height:2px; direction:rtl;'");	?>
+					</div>
+					<div style="clear:both;"></div>
+						
+
+					<div style="text-align:right; margin:5px 0 5px 0;">
+						<?php
+						$back_url = "window.location.href='/?M0502&companyIdx=".$companyIdx."&searchTerm=".$searchTerm."&step=2&campaign=".$campaign."'";
+					?>
+						<button class="btn btn-success" type="button" onclick="<?php echo $back_url; ?>" style="padding:5px 15px;"><i class="fa fa-mail-reply"></i> 상품 보고서</button>
+					</div>
+					
+					
+				</div>
+				<?php
+					echo $M_HTML->e_Form();
+				?>
+			</div>
+			<table class="table table-bordered table-hover">
+				<colgroup>
+					<col width="15%">
+					<col width="5.5%">
+					<col width="5.5%">
+					<col width="6%">
+					<col width="5.5%">
+					<col width="5.5%">
+					<col width="7%">
+					<col width="5.5%">
+					<col width="5.5%">
+					<col width="8%">
+					<col width="6%">
+					<col width="7%">
+					<col width="9%">
+					<col width="9%">
+				</colgroup>
+				<thead>
+					<tr>
+						<th style="padding:10px; font-size:14px;">키워드</th>
+						<th style="padding:10px; font-size:14px;">노출수</th>
+						<th style="padding:10px; font-size:14px;">클릭수</th>
+						<th style="padding:10px; font-size:14px;">CTR</th>
+						<th style="padding:10px; font-size:14px;">광고비</th>
+						<th style="padding:10px; font-size:14px;">전환수</th>
+						<th style="padding:10px; font-size:14px;">전환매출</th>
+						<th style="padding:10px; font-size:14px;">CPA</th>
+						<th style="padding:10px; font-size:14px;">CVR</th>
+						<th style="padding:10px; font-size:14px;">광고수익률</th>
+						<th style="padding:10px; font-size:14px;">객단가</th>
+						<th style="padding:10px; font-size:14px;">희망ROAS</th>
+						<th style="padding:10px; font-size:14px;">최대전환단가</th>
+						<th style="padding:10px; font-size:14px;">최대클릭단가</th>
+					</tr>
+				</thead>
+
+				<tbody style="font-size:14px;">
+				<?php
+					if($row->size() > 0){
+						$NO = $row->size();
+						for($i=0; $i<$row->size(); $i++){
+							$row->next();
+							$tr_color = '';
+							
+							$ctr = $row->get('click') / $row->get('view') * 100;
+							$cvr = $row->get('salesCnt') / $row->get('click') * 100;
+							$cpa = $row->get('cpc') / $row->get('salesCnt');
+							$roas = $row->get('salesPrice') / $row->get('cpc') * 100;
+
+							$cost = $row->get('salesPrice') / $row->get('salesCnt');
+							$hope_roas = 800;
+							$max_cvr_cost = $cost /($hope_roas/100);
+							$max_click_cost = $max_cvr_cost * $cvr / 100;
+
+							if($roas <= 500){
+								$tr_color = "background-color:red; color:white;";
+							}
+
+							$url = "/?M0502&companyIdx=".$companyIdx."&searchTerm=".$searchTerm."&step=4&campaign=".$row->get('campaign')."&optionN=".$row->get('optionN')."&keyword=".$row->get('keyword');
+				?>
+					<tr align='right' data-href="<?php echo $url;?>" style="<?php echo $tr_color; ?>">
+						<td align='left' style="padding-left:10px;"><?php echo $row->get('keyword');	?></td>
+						<td style="padding-right:7px;"><?php echo number_format($row->get('view'));	?></td>
+						<td style="padding-right:7px;"><?php echo number_format($row->get('click'));	?></td>
+						<td style="padding-right:7px;"><?php echo round($ctr, 2);	?>%</td>
+						<td style="padding-right:7px;"><?php echo number_format($row->get('cpc'));	?></td>						
+						<td style="padding-right:7px;"><?php echo number_format($row->get('salesCnt'));	?></td>
+						<td style="padding-right:7px;"><?php echo number_format($row->get('salesPrice'));	?></td>
+						<td style="padding-right:7px;"><?php echo number_format($cpa);	?></td>
+						<td style="padding-right:7px;"><?php echo round($cvr, 2);	?>%</td>						
+						<td style="padding-right:7px;"><?php echo number_format($roas, 1);	?>%</td>
+						<td style="padding-right:7px;"><?php echo number_format($cost);	?></td>
+						<td style="padding-right:7px;"><?php echo number_format($hope_roas)."%";	?></td>
+						<td style="padding-right:7px;"><?php echo number_format($max_cvr_cost);	?></td>
+						<td style="padding-right:7px;"><?php echo number_format($max_click_cost);	?></td>
+					</tr>
+				<?php
+							$NO--;
+							$tmpName = $keyword;
+						}
+					} else {
+				?>
+					<tr align='center'><td colspan='16'>검색된 데이터가 없습니다.</td></tr>
+				<?php
+					}
+				?>
+				</tbody>
+			</table>
+		</div><!--/* panel -->
+	</div><!--/* contents-wrapper 1-->
+	<!--/* 해당 월 합계 끝  ---------------------------------------------------------------------------------------------------------------------->
+
+</div><!-- container -->
+
+<div style="clear:both;"></div>

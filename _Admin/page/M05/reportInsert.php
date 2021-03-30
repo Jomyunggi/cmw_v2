@@ -85,6 +85,10 @@
 							M_JS::Go_URL('/?M0501', "기존 보고서 컬럼값이 변경된 것으로 의심됩니다.\\n 확인 후 다시 업로드해주세요.");
 						}
 					} 
+				} else {
+					if($arr[10] == '' || $arr[12] == 0 || $arr[13] == 0){
+						continue;
+					}
 				}
 				
 				if($arr[30] != 0 && $arr[13] != 0){
@@ -114,7 +118,7 @@
 				);
 
 				if($num != 0){
-					if($insertData[$num]['keyword'] != ''){
+					if($insertData[$num]['keyword'] != ''){  
 						$db->insert("Coupang_Report", $insertData[$num]);
 					}
 				}

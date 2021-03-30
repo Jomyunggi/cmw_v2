@@ -93,6 +93,13 @@
 							default		: $M_ReportPage->getReportData(); break;
 						}
 					break;
+
+					case 3 :	//광고보고서 > 광고분석
+						switch($P_ACTION){
+							case 'V'	: $M_ReportPage->getReportByOption(); break;
+							default		: $M_ReportPage->getReportByOption(); break;
+						}
+					break;
 				}
 				break;
 			

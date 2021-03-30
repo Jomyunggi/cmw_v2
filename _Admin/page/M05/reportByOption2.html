@@ -1,0 +1,233 @@
+<script type="text/javascript" src="<?php	echo JS_DIR;	?>/adm_common.js"></script>
+
+<script>
+	$(function(){
+		$('#startD').datepicker({
+			changeMonth: true,
+			dateFormat : 'yymmdd',
+			showAnim : 'slideDown',
+			onClose: function( selectedDate ) {
+				$( '#startD' ).datepicker( 'option', 'minDate', selectedDate );
+			}
+		});
+		$('#endD').datepicker({
+			changeMonth: true,
+			dateFormat : 'yymmdd',
+			showAnim : 'slideDown',
+			onClose: function( selectedDate ) {
+				$( '#endD' ).datepicker( 'option', 'minDate', selectedDate );
+			}
+		});
+	});
+
+	function searchSubmit(){
+		var frm = document.search_frm;
+		
+		if(frm.companyIdx.value == ''){
+			alert('해당 오픈마켓을 선택해주세요');
+			return false;
+		}
+		if(frm.searchTerm.value == ''){
+			alert('검색일을 선택해주세요');
+			return false;
+		}
+		if(frm.optionN.value == ''){
+			alert('상품옵션명을 입력해주세요');
+			return false;
+		}
+
+		frm.submit();
+	}
+</script>
+<div class="container">
+	<div class="contents-wrapper">
+		<h2 class="page-header">옵션별 보고서</h2>
+	</div>
+
+	<!--/* 해당 월 합계 끝  ---------------------------------------------------------------------------------------------------------------------->
+	<div class="contents-wrapper" style="padding-top:6px;">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<?php 
+					echo $M_HTML->b_Form("search_frm", "", "get", 0);
+					echo $M_HTML->input_Hidden($MENU_ID.$P_ACTION, "");
+					echo $M_HTML->input_Hidden("PAGE", $PAGE);
+				?>
+				<div class="form-inline">
+					<div style="float:left; width:14%;">
+						<a href="#layer1" class="btn btn-sm btn-default" style="width:75%;"><i class="fa fa-users fa-lg"></i> 오픈마켓</a>
+					</div>
+					<div style="padding:4px; margin-bottom:5px;">
+						<?php
+							echo $M_HTML->input_Radio2("companyIdx", $companyArr, $companyIdx);
+						?>
+					</div>
+					<div style="clear:both;"></div>
+
+					<div style="float:left; width:14%; height:100%; padding-top:4px;">
+						<a href="#layer2" class="btn btn-sm btn-default" style="width:75%; height:33px;"><i class="fa fa-calendar fa-lg"></i> 기간 선택</a>
+					</div>
+					<div style="padding:4px; margin-bottom:5px;">
+						<?php	echo $M_HTML->_Select2("searchTerm", $this->searchTerm[0], $searchTerm, "form-control", "", "style='width:50%; text-decoration:underline; line-height:2px; direction:rtl;'");	?>
+					</div>
+					<div style="clear:both;"></div>
+
+					<div style="float:left; width:14%; height:100%; padding-top:4px;">
+						<a href="#layer2" class="btn btn-sm btn-default" style="width:75%; height:33px;"><i class="fa fa-cubes fa-lg"></i> 상품옵션 선택</a>
+					</div>
+					<div style="padding:4px; margin-bottom:5px;">
+						<?php	echo $M_HTML->_Select2("optionN", $infoArr, $optionN, "form-control", "", "style='width:50%; text-decoration:underline; line-height:2px; direction:rtl;'");	?>
+					</div>
+					<div style="clear:both;"></div>
+
+					<div style="float:left; width:14%;">
+						<a href="#layer1" class="btn btn-sm btn-default" style="width:75%;"><i class="fa fa-users fa-lg"></i> ROAS</a>
+					</div>
+					<div style="padding:4px; margin-bottom:5px;">
+						<?php
+							echo $M_HTML->input_Radio2("roas", $roasArr, $roas);
+						?>
+					</div>
+						
+
+					<div style="text-align:right; margin:5px 0 5px 0;">
+					<?php
+						$back_url = "window.location.href='/?M0503&companyIdx=".$companyIdx."&searchTerm=".$searchTerm."&step=1&optionN=".$optionN."&roas=".$roas."'";
+					?>
+						<button class="btn btn-success" type="button" onclick="<?php echo $back_url; ?>" style="padding:5px 15px;"><i class="fa fa-mail-reply"></i> 상품 보고서</button>
+					</div>
+					
+					
+				</div>
+				<?php
+					echo $M_HTML->e_Form();
+				?>
+			</div>
+			<table class="table table-bordered table-hover">
+				<colgroup>
+					<col width="4%">
+					<col width="8%">
+					<col width="18%">
+					<col width="7%">
+					<col width="7%">
+					<col width="7%">
+					<col width="7%">
+					<col width="7%">
+					<col width="7%">
+					<col width="7%">
+					<col width="7%">
+					<col width="7%">
+					<col width="7%">
+				</colgroup>
+				<thead>
+					<tr>
+						<th style="padding:10px; font-size:14px;">#</th>
+						<th style="padding:10px; font-size:14px;">날짜</th>
+						<th style="padding:10px; font-size:14px;">키워드</th>
+						<th style="padding:10px; font-size:14px;">노출수</th>
+						<th style="padding:10px; font-size:14px;">클릭수</th>
+						<th style="padding:10px; font-size:14px;">CTR</th>
+						<th style="padding:10px; font-size:14px;">광고비</th>
+						<th style="padding:10px; font-size:14px;">1클릭비용</th>
+						<th style="padding:10px; font-size:14px;">전환수</th>
+						<th style="padding:10px; font-size:14px;">전환매출</th>
+						<th style="padding:10px; font-size:14px;">CPA</th>
+						<th style="padding:10px; font-size:14px;">CVR</th>						
+						<th style="padding:10px; font-size:14px;">ROAS</th>
+					</tr>
+				</thead>
+
+				<tbody style="font-size:14px;">
+				<tr align='right' style="font-size:14.5px; height:30px; color:blue">
+					<th colspan='3' align='center'><?php echo $keyword;	?></th>
+					<th id='view' style="padding:7px;"></th>
+					<th id='click' style="padding:7px;"></th>
+					<th id='ctr' style="padding:7px;"></th>
+					<th id='cpc' style="padding:7px;"></th>	
+					<th id='cpc_1cost' style="padding:7px;"></th>	
+					<th id='cnt' style="padding:7px;"></th>
+					<th id='price' style="padding:7px;"></th>
+					<th id='cpa' style="padding:7px;"></th>
+					<th id='cvr' style="padding:7px;"></th>
+					<th id='roas' style="padding:7px;"></th>
+				</tr>
+				<?php
+					if($row->size() > 0){
+						$NO = $row->size();
+						$view_T = 0;
+						$click_T = 0;
+						$cpc_T = 0;
+						$cnt_T = 0;
+						$price_T = 0;
+						for($i=0; $i<$row->size(); $i++){
+							$row->next();
+
+							$view_T += $row->get('view');
+							$click_T += $row->get('click');
+							$cpc_T += $row->get('cpc');
+							$cnt_T += $row->get('salesCnt');
+							$price_T += $row->get('salesPrice');
+							
+							$click_1cost = number_format($row->get('cpc') / $row->get('click'));
+							$ctr = $row->get('click') / $row->get('view') * 100;
+							$cpa = $row->get('cpc') / $row->get('salesCnt');
+							$cvr = $row->get('salesCnt') / $row->get('click') * 100;
+							$roas = $row->get('salesPrice') / $row->get('cpc') * 100;
+				?>
+					<tr align='right'>
+						<td align='center'><?php echo $NO;	?></td>
+						<td align='left' style="padding-left:10px;"><?php echo $row->get('date');	?></td>
+						<td align='left' style="padding-left:10px;"><?php echo $row->get('keyword');	?></td>
+						<td style="padding-right:7px;"><?php echo number_format($row->get('view'));	?></td>				
+						<td style="padding-right:7px;"><?php echo number_format($row->get('click'));	?></td>
+						<td style="padding-right:7px;"><?php echo round($ctr, 2);	?>%</td>
+						<td style="padding-right:7px;"><?php echo number_format($row->get('cpc'));	?></td>						
+						<td style="padding-right:7px;"><?php echo number_format($click_1cost);	?></td>
+						<td style="padding-right:7px;"><?php echo number_format($row->get('salesCnt'));	?></td>
+						<td style="padding-right:7px;"><?php echo number_format($row->get('salesPrice'));	?></td>
+						<td style="padding-right:7px;"><?php echo number_format($cpa);	?></td>
+						<td style="padding-right:7px;"><?php echo round($cvr, 2);	?>%</td>
+						<td style="padding-right:7px;"><?php echo round($roas, 2);	?>%</td>
+					</tr>
+				<?php
+							$NO--;
+						}
+
+						$cpc_1cost_T = number_format(($cpc_T/$click_T));
+						$ctr_T = number_format($click_T / $view_T * 100, 2)."%";
+						$cpa_T = number_format($cpc_T / $cnt_T);
+						$cvr_T = number_format($cnt_T / $click_T * 100, 2)."%";
+						$roas_T = number_format($price_T/$cpc_T * 100, 1)."%";
+						$view_T = number_format($view_T);
+						$cpc_T = number_format($cpc_T);
+						$cnt_T = number_format($cnt_T);
+						$price_T = number_format($price_T);
+					} else {
+				?>
+					<tr align='center'><td colspan='16'>검색된 데이터가 없습니다.</td></tr>
+				<?php
+					}
+				?>
+				</tbody>
+			</table>
+		</div><!--/* panel -->
+	</div><!--/* contents-wrapper 1-->
+	<!--/* 해당 월 합계 끝  ---------------------------------------------------------------------------------------------------------------------->
+
+</div><!-- container -->
+
+<div style="clear:both;"></div>
+<script type="text/javascript">
+	$(function(){
+		$('#view').html("<?php echo $view_T; ?>");
+		$('#click').html("<?php echo $click_T; ?>");
+		$('#ctr').html("<?php echo $ctr_T; ?>");
+		$('#cpc').html("<?php echo $cpc_T; ?>");
+		$('#cpc_1cost').html("<?php echo $cpc_1cost_T; ?>");
+		$('#cnt').html("<?php echo $cnt_T; ?>");
+		$('#price').html("<?php echo $price_T; ?>");
+		$('#cpa').html("<?php echo $cpa_T; ?>");
+		$('#cvr').html("<?php echo $cvr_T; ?>");
+		$('#roas').html("<?php echo $roas_T; ?>");
+	});
+</script>
