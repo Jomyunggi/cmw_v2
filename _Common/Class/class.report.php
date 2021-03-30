@@ -179,6 +179,15 @@ class M_REPORT {
 
 	function getKeywordByOption($companyIdx, $searchTerm, $optionN, $keyword, $roas, $group, $having){
 		global $db;
+		
+		//검색일 일수로 전환
+		if($searchTerm == 9){
+			$dateDifference = abs(time() - strtotime('20191120'));
+			$differ_day = round($dateDifference / (60 * 60 *24), 0) ;
+		} else {
+			$dateDifference = abs($this->searchTerm[1][$searchTerm][1] - $this->searchTerm[1][$searchTerm][0]);
+			$differ_day = $dateDifference / (60 * 60 *24) ;
+		}
 
 		switch($companyIdx){
 			case 35 : $table = "Coupang_Report"; break;
@@ -190,9 +199,16 @@ class M_REPORT {
 		}
 		$column = " optionN, keyword, sum(view) as view, sum(click) as click, sum(cpc) as cpc, sum(salesCnt) as salesCnt, "
 				." sum(salesCnt_D) as salesCnt_D, sum(salesCnt_I) as salesCnt_I, sum(salesPrice) as salesPrice,  sum(salesPrice_D) as salesPrice_D, sum(salesPrice_I) as salesPrice_I "
+				." , sum(salesCnt) / sum(click) * 100 as cvr "
 				." , sum(salesPrice) / sum(cpc) * 100 as roas "
+				." , case when sum(view) < ". $differ_day." then 1 else 2 end orderRate "
 				;
-		$order = " ORDER BY roas desc ";
+
+		$order = " ORDER BY orderRate desc "
+				." , (case when sum(view) >= ". $differ_day." then sum(salesCnt) / sum(click) * 100 end) desc "
+				." , (case when sum(view) < ". $differ_day." then sum(view) end) desc "
+				;
+
 		if($keyword !=''){
 			$column = " date, optionN, keyword, view, click, cpc, salesCnt, salesCnt_D, salesCnt_I, salesPrice, salesPrice_D, salesPrice_I, salesPrice / cpc * 100 as roas ";
 			$addWhere .= " AND keyword = '".$keyword."' ";

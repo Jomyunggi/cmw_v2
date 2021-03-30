@@ -62,11 +62,11 @@
 			$arr[$NO]['salesCnt']		= number_format($row->get('salesCnt'));
 			$arr[$NO]['salesPrice']	= number_format($row->get('salesPrice'));
 			$arr[$NO]['cvr']			= number_format($cvr, 2)."%";
-			$arr[$NO]['roas']			= number_format($roas, 2)."%";
+			$arr[$NO]['roas']			= number_format($roas, 1)."%";
 
 			$NO--;
 		}
-
+		
 		$arr[$row->size()+1]['view']		= number_format($view_T);
 		$arr[$row->size()+1]['click']		= number_format($click_T);
 		$arr[$row->size()+1]['ctr']			= number_format($click_T / $view_T * 100, 2)."%";
@@ -79,10 +79,5 @@
 	}
 
 	sort($arr);
-
-	echo "<pre>";
-	print_r($arr);
-	exit;
-
 	echo json_encode($arr);
 ?>

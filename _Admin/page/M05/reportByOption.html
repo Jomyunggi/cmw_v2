@@ -51,26 +51,36 @@
 					var len = Object.keys(response).length;
 					if(len > 0){
 						$.each(response, function(no, entry){
-							tmp = '<tr>'
-									+'<td>'+entry['num']+'</td>'
-									+'<td>'+entry['companyName']+'</td>'
-									+'<td>'+entry['recipient']+'</td>'
-									+'<td>'+entry['boxCnt']+'</td>'
-									+'<td>'+entry['totalP']+'</td>'
-									+'<td>'+entry['price']+'</td>'
-									+'<td>'+entry['exceptP']+'</td>'
-									+'<td style="text-align:left; padding-left:10px;">'+entry['dealName']+'</td>'
-								+'</tr>';
+							if(no == 0){
+								tmp = '<tr align="center" style="font-size:15px;">'
+										+'<th colspan="10" style="padding:4px 0 4px 0;">'+keyword+'</th>'
+										+'</tr>'
+										+'<tr align="center" style="background-color:blue; color:white;">'
+										+'<td style="padding:4px 0 4px 0;">-</td>';
+							} else {
+								tmp = '<tr align="center">'
+										+'<td>'+entry['date']+'</td>';
+							}
+							tmp +='<td>'+entry['view']+'</td>'
+								+'<td>'+entry['click']+'</td>'
+								+'<td>'+entry['ctr']+'</td>'
+								+'<td>'+entry['cpc']+'</td>'
+								+'<td>'+entry['click_1cost']+'</td>'
+								+'<td>'+entry['salesCnt']+'</td>'
+								+'<td>'+entry['salesPrice']+'</td>'
+								+'<td>'+entry['cvr']+'</td>'
+								+'<td>'+entry['roas']+'</td>'
+							+'</tr>';
 							html = html + tmp;
 						});
 					} else {
-						html += '<tr><td colspan="7">상세내역이 없습니다.</td></tr>';	
+						html += '<tr><td colspan="10">상세내역이 없습니다.</td></tr>';	
 					}
 					$('#detailPage').html(html);
 				}
 			},
 			failure: function(msg) {
-				$(".Front_detailPage").show();
+				$(".keywordDetail").show();
 				alert(msg);
 			}
 		});		
@@ -185,8 +195,8 @@
 							$cvr = $row->get('salesCnt') / $row->get('click') * 100;
 							$roas = $row->get('salesPrice') / $row->get('cpc') * 100;
 				?>
-					<tr class="data_url" align='right' data-href="javascript:detailBydate('<?php echo $row->get('keyword');?>');">
-						<td align='center'><?php echo $NO;	?></td>
+					<tr class="data_url" align='right' data-href="javascript:detailBydate('<?php echo $row->get('keyword');?>');" style='padding:2px 0 2px 0;'>
+						<td align='center' style="padding:4px 0 4px 0;"><?php echo $NO;	?></td>
 						<td align='left' style="padding-left:10px;"><?php echo $row->get('keyword');	?></td>
 						<td style="padding-right:7px;"><?php echo number_format($row->get('view'));	?></td>
 						<td style="padding-right:7px;"><?php echo number_format($row->get('click'));	?></td>
@@ -212,16 +222,16 @@
 	</div>
 
 	<div class="contents-wrapper keywordDetail" style="display:none; float:right; width:45%;">
-		<div class="panel-heading" style="padding:0px;">
+		<div class="panel-heading" style="padding:0px; font-weight:1;">
 			<table class="table table-bordered table-hover" >
 				<colgroup>
-					<col width="8%">
+					<col width="10%">
+					<col width="9%">
+					<col width="9%">
 					<col width="10%">
 					<col width="10%">
-					<col width="10%">
-					<col width="10%">
-					<col width="10%">
-					<col width="10%">
+					<col width="11%">
+					<col width="9%">
 					<col width="10%">
 					<col width="10%">
 					<col width="12%">
@@ -241,7 +251,7 @@
 					</tr>
 				</thead>
 
-				<tbody style="font-size:12.5px;">
+				<tbody id="detailPage" style="font-size:12px;">
 				
 				</tbody>
 			</table>
