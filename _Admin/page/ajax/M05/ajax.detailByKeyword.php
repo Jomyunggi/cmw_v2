@@ -48,7 +48,7 @@
 			$cnt_T += $row->get('salesCnt');
 			$price_T += $row->get('salesPrice');
 			
-			$click_1cost = number_format($row->get('cpc') / $row->get('click'));
+			$click_1cost = $row->get('cpc') / $row->get('click');
 			$ctr = $row->get('click') / $row->get('view') * 100;
 			$cvr = $row->get('salesCnt') / $row->get('click') * 100;
 			$roas = $row->get('salesPrice') / $row->get('cpc') * 100;

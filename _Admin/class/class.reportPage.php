@@ -43,31 +43,6 @@ class M_ReportPage extends M_REPORT {
 					9	=> array(0,0)
 			)
 		);
-
-		/*
-		$this->searchTerm = array(
-			1	=>	'어제 : '.date('Y-m-d', $this->yesterday)." ~ ".date('Y-m-d', $this->yesterday) ,
-			2	=>	'최근 7일 : '.date('Y-m-d', $this->a_week_ago)." ~ ".date('Y-m-d', $this->yesterday) ,
-			3	=>	'최근 30일 : '.date('Y-m-d',$this->month_30)." ~ ".date('Y-m-d', $this->yesterday) ,
-			4	=>	'지난달 : '.date('Y-m-d',$this->prev_month)." ~ ".date('Y-m-t', $this->prev_month),
-			5	=>	'최근 2개월 : '.date('Y-m-d',$this->prev_month)." ~ ".date('Y-m-d', $this->yesterday),
-			6	=>	'최근 3개월 : '.date('Y-m-d',$this->prev2_month)." ~ ".date('Y-m-d', $this->yesterday),
-			7	=>	'최근 6개월 : '.date('Y-m-d',$this->prev6_month)." ~ ".date('Y-m-d', $this->yesterday),
-			8	=>	'최근 1년 : '.date('Y-m-d',$this->prev1_year)." ~ ".date('Y-m-d', $this->yesterday)
-		);
-
-		$this->TermArr = array(
-			1	=> array($this->today_date, $this->today_date),
-			2	=> array($this->yesterday, $this->yesterday),
-			4	=> array($this->a_week_ago, $this->today_date),
-			5	=> array($this->last_week1, $this->last_week2),
-			6	=> array($this->this_month, $this->today_date),
-			7	=> array($this->prev_month, date('Y-m-t', $this->prev_month)),
-			8	=> array($this->prev_month, $this->today_date),
-			9	=> array($this->prev2_month, $this->today_date),
-			10	=> array($this->prev5_month, $this->today_date)
-		);
-		*/
 		parent::__construct();
 
 	}
@@ -165,8 +140,7 @@ class M_ReportPage extends M_REPORT {
 		global $M_HTML;
 
 		$companyIdx = $this->variable_check(GET, 'companyIdx', '');
-		$searchTerm = $this->variable_check(GET, 'searchTerm', date('Ymd', $this->yesterday));
-		$step = $this->variable_check(GET, 'step', 1);
+		$searchTerm = $this->variable_check(GET, 'searchTerm', 1);
 		$optionN = $this->variable_check(GET, 'optionN', 0);
 		$keyword = $this->variable_check(GET, 'keyword', '');
 		$roas = $this->variable_check(GET, 'roas', 0);
@@ -179,27 +153,39 @@ class M_ReportPage extends M_REPORT {
 		//상품 옵션ID와 상품명 가져오기
 		$infoArr = $this->getOption_goodsName($companyIdx);
 		
-
-		switch($step){
-			case 1 :	
-				$html = '/reportByOption.html'; 
-				$group = ' GROUP BY keyword';
-				$having = ' Having roas > 0 ';
-				break;
-			case 2 :	
-				$html = '/reportByOption2.html';
-				$group = '';
-				$having = '';
-				break;
-			default : 
-				$html = '/reportByOption.html'; 
-				$group = ' GROUP BY keyword';
-				$having = ' Having roas > 0 ';
-				break;
-		}	
+		$html = '/reportByOption.html'; 
+		$group = ' GROUP BY keyword';
+		$having = ' Having roas > 0 ';
 		
 		if($companyIdx != '' && $searchTerm != '' && $optionN != 0){
 			$row = $this->getKeywordByOption($companyIdx, $searchTerm, $optionN, $keyword, $roas, $group, $having);
+		} else {
+			$row = new L_ListSet();
+		}
+
+		include_once $PAGE_PATH . $html; break;
+	}
+
+	function getReportByKeyword(){
+		global $PAGE_PATH, $MENU_ID, $P_ACTION, $PAGE;
+		global $M_HTML;
+
+		$companyIdx = $this->variable_check(GET, 'companyIdx', '');
+		$searchTerm = $this->variable_check(GET, 'searchTerm', 9);
+		$optionN = $this->variable_check(GET, 'optionN', 0);
+
+		//판매처 정보 다 가져오기
+		$companyArr = $this->getCompanyArr(array()," and level = 4 ");
+		
+		//상품 옵션ID와 상품명 가져오기
+		$infoArr = $this->getOption_goodsName($companyIdx);
+		
+		$html = '/reportByKeyword.html'; 
+		$group = ' GROUP BY keyword';
+		$having = ' Having cvr > 0 ';
+		
+		if($companyIdx != '' && $searchTerm != '' && $optionN != 0){
+			$row = $this->getOptionByKeyword($companyIdx, $searchTerm, $optionN, $group, $having);
 		} else {
 			$row = new L_ListSet();
 		}

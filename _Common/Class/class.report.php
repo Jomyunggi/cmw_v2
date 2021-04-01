@@ -182,7 +182,7 @@ class M_REPORT {
 		
 		//검색일 일수로 전환
 		if($searchTerm == 9){
-			$dateDifference = abs(time() - strtotime('20191120'));
+			$dateDifference = abs(time() - strtotime('20191101'));
 			$differ_day = round($dateDifference / (60 * 60 *24), 0) ;
 		} else {
 			$dateDifference = abs($this->searchTerm[1][$searchTerm][1] - $this->searchTerm[1][$searchTerm][0]);
@@ -230,6 +230,45 @@ class M_REPORT {
 				. $order
 				;	
 
+		$row = $db->getListSet($query);
+
+		return $row;
+	}
+
+	function getOptionByKeyword($companyIdx, $searchTerm, $optionN, $group, $having){
+		global $db;
+
+		//검색일 일수로 전환
+		if($searchTerm == 9){
+			$dateDifference = abs(time() - strtotime('20191101'));
+			$differ_day = round($dateDifference / (60 * 60 *24), 0) ;
+		} else {
+			$dateDifference = abs($this->searchTerm[1][$searchTerm][1] - $this->searchTerm[1][$searchTerm][0]);
+			$differ_day = $dateDifference / (60 * 60 *24) ;
+		}
+		
+		switch($companyIdx){
+			case 35 : $table = "Coupang_Report"; break;
+		}
+		
+		$addWhere = '';
+		if($this->searchTerm[1][$searchTerm][0] != 0){
+			$addWhere .= " AND date between ".date('Ymd', $this->searchTerm[1][$searchTerm][0])." AND ".date('Ymd', $this->searchTerm[1][$searchTerm][1])." ";
+		}
+
+		$query = " SELECT keyword, min(cpc/click) as minCPC, max(cpc/click) as maxCPC, sum(salesCnt)/sum(click)*100 as cvr, count(*) as cnt "
+				." , sum(view) as view, sum(click) as click, sum(salesCnt) as salesCnt, sum(salesPrice) as salesPrice, sum(cpc) as cpc "
+				." , case when sum(view) < ". $differ_day." then 1 else 2 end orderRate "
+				." FROM ". $table
+				." WHERE optionN = '". $optionN ."' "
+				. $addWhere
+				. $group
+				. $having
+				." and salesCnt >= (cnt*0.33) AND view > 20 "
+				." ORDER BY orderRate desc "
+				." , (case when sum(view) >= ".$differ_day." then sum(salesCnt)/sum(click)*100 end) desc "
+				." , (case when sum(view) < ".$differ_day." then sum(view) end) desc "
+				;
 		$row = $db->getListSet($query);
 
 		return $row;

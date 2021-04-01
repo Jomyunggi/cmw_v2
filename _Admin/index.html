@@ -100,6 +100,13 @@
 							default		: $M_ReportPage->getReportByOption(); break;
 						}
 					break;
+
+					case 4 :	//광고보고서 > 키워드 단가측정
+						switch($P_ACTION){
+							case 'V'	: $M_ReportPage->getReportByKeyword(); break;
+							default		: $M_ReportPage->getReportByKeyword(); break;
+						}
+					break;
 				}
 				break;
 			

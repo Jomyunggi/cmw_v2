@@ -83,6 +83,7 @@
 								<li><a href="?M0501"><i class="fa fa-caret-right" aria-hidden="true"></i> 보고서 업로드</a></li>
 								<li><a href="?M0502"><i class="fa fa-caret-right" aria-hidden="true"></i> 캠페인별 분석</a></li>
 								<li><a href="?M0503"><i class="fa fa-caret-right" aria-hidden="true"></i> 상품별 분석</a></li>
+								<li><a href="?M0504"><i class="fa fa-caret-right" aria-hidden="true"></i> 키워드 단가측정</a></li>
                             </ul>
                         </li>
                     </ul>
