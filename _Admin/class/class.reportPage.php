@@ -115,7 +115,7 @@ class M_ReportPage extends M_REPORT {
 
 		//판매처 정보 다 가져오기
 		$companyArr = $this->getCompanyArr(array()," and level = 4 ");
-		
+
 		if($companyIdx != '' && $searchTerm != ''){
 			switch($step){
 				case 1 : $row = $this->getReportByCampaign($companyIdx, $searchTerm); break;
@@ -126,7 +126,7 @@ class M_ReportPage extends M_REPORT {
 		} else {
 			$row = new L_ListSet();
 		}
-
+		
 		switch($step){
 			case 1 :	include_once $PAGE_PATH . '/reportViewer1.html'; break;
 			case 2 :	include_once $PAGE_PATH . '/reportViewer2.html'; break;
@@ -166,7 +166,7 @@ class M_ReportPage extends M_REPORT {
 		include_once $PAGE_PATH . $html; break;
 	}
 
-	function getReportByKeyword(){
+	function keywordCheck(){
 		global $PAGE_PATH, $MENU_ID, $P_ACTION, $PAGE;
 		global $M_HTML;
 

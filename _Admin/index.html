@@ -77,7 +77,7 @@
 			case 5 : //광고보고서
 				include_once ADMIN_CLASS_PATH . '/class.reportPage.php';
 				$M_ReportPage = new M_ReportPage;
-				
+
 				switch($MENU_2DEPTH) {
 					case 1 :	//광고보고서 > 보고서 업로드
 						switch($P_ACTION) {
@@ -103,8 +103,8 @@
 
 					case 4 :	//광고보고서 > 키워드 단가측정
 						switch($P_ACTION){
-							case 'V'	: $M_ReportPage->getReportByKeyword(); break;
-							default		: $M_ReportPage->getReportByKeyword(); break;
+							case 'V'	: $M_ReportPage->keywordCheck(); break;
+							default		: $M_ReportPage->keywordCheck(); break;
 						}
 					break;
 				}

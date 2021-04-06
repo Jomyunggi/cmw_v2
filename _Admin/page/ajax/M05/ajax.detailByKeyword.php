@@ -52,7 +52,8 @@
 			$ctr = $row->get('click') / $row->get('view') * 100;
 			$cvr = $row->get('salesCnt') / $row->get('click') * 100;
 			$roas = $row->get('salesPrice') / $row->get('cpc') * 100;
-
+			
+			$arr[$NO]['cnt']			= 0;
 			$arr[$NO]['date']			= date('Y/m/d', strtotime($row->get('date')));
 			$arr[$NO]['view']			= number_format($row->get('view'));
 			$arr[$NO]['click']		= number_format($row->get('click'));
@@ -67,6 +68,7 @@
 			$NO--;
 		}
 		
+		$arr[$row->size()+1]['cnt']			= number_format($row->size());
 		$arr[$row->size()+1]['view']		= number_format($view_T);
 		$arr[$row->size()+1]['click']		= number_format($click_T);
 		$arr[$row->size()+1]['ctr']			= number_format($click_T / $view_T * 100, 2)."%";
@@ -79,5 +81,6 @@
 	}
 
 	sort($arr);
+	
 	echo json_encode($arr);
 ?>

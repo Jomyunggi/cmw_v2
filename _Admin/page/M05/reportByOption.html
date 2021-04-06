@@ -48,12 +48,15 @@
 				$(".keywordDetail").show();
 
 				if(response){
+					response.sort(function(a,b){
+						return a - b;
+					});
 					var len = Object.keys(response).length;
 					if(len > 0){
 						$.each(response, function(no, entry){
-							if(no == 0){
+							if(entry['cnt'] != 0){
 								tmp = '<tr align="center" style="font-size:15px;">'
-										+'<th colspan="10" style="padding:4px 0 4px 0;">'+keyword+'</th>'
+										+'<th colspan="10" style="padding:4px 0 4px 0;">'+keyword+'('+entry['cnt']+'일)</th>'
 										+'</tr>'
 										+'<tr align="center" style="background-color:blue; color:white;">'
 										+'<td style="padding:4px 0 4px 0;">-</td>';

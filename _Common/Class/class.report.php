@@ -264,7 +264,7 @@ class M_REPORT {
 				. $addWhere
 				. $group
 				. $having
-				." and salesCnt >= (cnt*0.33) AND view > 20 "
+				//." and salesCnt >= floor(cnt*0.3) AND view > 20 "
 				." ORDER BY orderRate desc "
 				." , (case when sum(view) >= ".$differ_day." then sum(salesCnt)/sum(click)*100 end) desc "
 				." , (case when sum(view) < ".$differ_day." then sum(view) end) desc "
